@@ -1,0 +1,85 @@
+OBJECT Modification "CDC Template Field"(Table 6085580)
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.06.19;
+    Time=00:00:00;
+    Version List=DCW13.70.00.5.50,ALR007;
+  }
+  PROPERTIES
+  {
+    Target="CDC Template Field"(Table 6085580);
+  }
+  CHANGES
+  {
+    { Insertion         ;InsertAfter="Transfer Blank Values"(Field 67);
+                         ChangedElements=FieldCollection
+                         {
+                           { 50001;  ;Substitution Field  ;Code20        ;TableRelation="CDC Template Field".Code WHERE (Template No.=FIELD(Template No.),
+                                                                                                                         Type=CONST(Line));
+                                                                          OnValidate=VAR
+                                                                                       CKLAdvLineRecognitionMgt@1000000000 : Codeunit 61000;
+                                                                                     BEGIN
+                                                                                       IF "Substitution Field" <> '' THEN
+                                                                                         CKLAdvLineRecognitionMgt.SetTemplateToALRProcessing("Template No.");
+                                                                                     END;
+
+                                                                          DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Ersatzfeld;
+                                                                                     ENU=Substitution Field] }
+                           { 50002;  ;Anchor Field        ;Code20        ;TableRelation="CDC Template Field".Code WHERE (Template No.=FIELD(Template No.),
+                                                                                                                         Type=CONST(Line));
+                                                                          DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Anker Feld;
+                                                                                     ENU=Anchor Field] }
+                           { 50003;  ;Sorting             ;Integer       ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Sortierung;
+                                                                                     ENU=Sorting] }
+                           { 50004;  ;Field Position      ;Option        ;DataClassification=ToBeClassified;
+                                                                          CaptionML=DEU=Feldposition;
+                                                                          OptionCaptionML=[DEU=" ,öber Anker,Unter Anker";
+                                                                                           ENU=" ,Above anchor,Below anchor"];
+                                                                          OptionString=[ ,AboveAnchor,BelowAnchor] }
+                           { 50005;  ;Max. Bottom Position;Integer       ;DataClassification=ToBeClassified }
+                           { 50006;  ;Min. Top Position   ;Integer       ;DataClassification=ToBeClassified }
+                           { 50007;  ;Get Value from Previous Value;Boolean;
+                                                                          OnValidate=BEGIN
+                                                                                       TESTFIELD("Substitution Field",'');
+                                                                                     END;
+
+                                                                          DataClassification=ToBeClassified;
+                                                                          CaptionML=DEU=Wert vom vorherigen Wert kopieren }
+                           { 50011;  ;Advanced Line Recognition Type;Option;
+                                                                          DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Erw. Zeilenerkennung Art;
+                                                                                     ENU=Advanced Line Recognition Type];
+                                                                          OptionCaptionML=[DEU=Standard,Mit Anker verknÅpftes Feld,Feldsuche mit Caption,Feldsuche mit SpaltenÅberschrift,Gruppierungsfeld mit Caption;
+                                                                                           ENU=Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption];
+                                                                          OptionString=Default,LinkedToAnchorField,FindFieldByCaptionInPosition,FindFieldByColumnHeading,GroupValue }
+                           { 50012;  ;Offset Top          ;Integer       ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Offset Oben;
+                                                                                     ENU=Offset Top] }
+                           { 50013;  ;Offset Bottom       ;Integer       ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Offset Unten;
+                                                                                     ENU=Offset Height] }
+                           { 50014;  ;Offset Left         ;Integer       ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Offset Links;
+                                                                                     ENU=Offset Left] }
+                           { 50015;  ;Offset Right        ;Integer       ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Offset Rechts;
+                                                                                     ENU=Offset Width] }
+                         }
+                          }
+    { PropertyModification;
+                         Property=Version List;
+                         OriginalValue=DCW13.70.00.5.50;
+                         ModifiedValue=DCW13.70.00.5.50,ALR007 }
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
