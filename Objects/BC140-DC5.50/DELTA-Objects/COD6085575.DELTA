@@ -2,9 +2,10 @@ OBJECT Modification "CDC Capture Engine"(Codeunit 6085575)
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
-    Version List=DCW13.70.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW13.70.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -112,7 +113,7 @@ OBJECT Modification "CDC Capture Engine"(Codeunit 6085575)
     { PropertyModification;
                          Property=Version List;
                          OriginalValue=DCW13.70.00.5.50;
-                         ModifiedValue=DCW13.70.00.5.50,ALR007 }
+                         ModifiedValue=DCW13.70.00.5.50,ALR }
   }
   CODE
   {

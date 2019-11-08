@@ -2,9 +2,10 @@ OBJECT Codeunit 61002 Adv. Purch. Doc. - Line Val.
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
-    Version List=ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
   }
   PROPERTIES
   {

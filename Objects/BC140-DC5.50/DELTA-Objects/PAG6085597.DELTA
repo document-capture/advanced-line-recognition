@@ -2,10 +2,10 @@ OBJECT Modification "CDC Document Lines ListPart"(Page 6085597)
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
+    Date=08.11.19;
+    Time=12:00:00;
     Modified=Yes;
-    Version List=DCW17.00.00.5.50,ALR007;
+    Version List=DCW17.00.00.5.50.02,ALR;
   }
   PROPERTIES
   {
@@ -70,8 +70,8 @@ OBJECT Modification "CDC Document Lines ListPart"(Page 6085597)
                           }
     { PropertyModification;
                          Property=Version List;
-                         OriginalValue=DCW17.00.00.5.50;
-                         ModifiedValue=DCW17.00.00.5.50,ALR007 }
+                         OriginalValue=DCW17.00.00.5.50.02;
+                         ModifiedValue=DCW17.00.00.5.50.02,ALR }
   }
   CODE
   {

@@ -2,9 +2,10 @@ OBJECT Modification "CDC Template Field"(Table 6085580)
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
-    Version List=DCW13.70.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW13.70.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -68,12 +69,27 @@ OBJECT Modification "CDC Template Field"(Table 6085580)
                            { 50015;  ;Offset Right        ;Integer       ;DataClassification=ToBeClassified;
                                                                           CaptionML=[DEU=Offset Rechts;
                                                                                      ENU=Offset Width] }
+                           { 50020;  ;ALR Value Caption Offset X;Integer ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Wert Suchtext Offset X;
+                                                                                     ENU=Caption Offset X] }
+                           { 50021;  ;ALR Value Caption Offset Y;Integer ;DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Wert Suchtext Offset Y;
+                                                                                     ENU=Caption Offset Y] }
+                           { 50022;  ;ALR Typical Value Field Width;Decimal;
+                                                                          DataClassification=ToBeClassified;
+                                                                          CaptionML=[DEU=Typische Wert Feldbreite;
+                                                                                     ENU=Field Width];
+                                                                          DecimalPlaces=0:5 }
                          }
                           }
+    { Insertion         ;OnModify=BEGIN
+                                    //IF CONFIRM('TEST') THEN;
+                                  END;
+                                   }
     { PropertyModification;
                          Property=Version List;
                          OriginalValue=DCW13.70.00.5.50;
-                         ModifiedValue=DCW13.70.00.5.50,ALR007 }
+                         ModifiedValue=DCW13.70.00.5.50,ALR }
   }
   CODE
   {

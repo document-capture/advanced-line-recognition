@@ -2,9 +2,10 @@ OBJECT Table 6085580 CDC Template Field
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=DCW13.70.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW13.70.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -19,6 +20,10 @@ OBJECT Table 6085580 CDC Template Field
 
                "Source Table Filter GUID" := CREATEGUID;
                SetOrderRecords;
+             END;
+
+    OnModify=BEGIN
+               //IF CONFIRM('TEST') THEN;
              END;
 
     OnDelete=VAR
@@ -452,6 +457,17 @@ OBJECT Table 6085580 CDC Template Field
     { 50015;  ;Offset Right        ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DEU=Offset Rechts;
                                                               ENU=Offset Width] }
+    { 50020;  ;ALR Value Caption Offset X;Integer ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Wert Suchtext Offset X;
+                                                              ENU=Caption Offset X] }
+    { 50021;  ;ALR Value Caption Offset Y;Integer ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Wert Suchtext Offset Y;
+                                                              ENU=Caption Offset Y] }
+    { 50022;  ;ALR Typical Value Field Width;Decimal;
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Typische Wert Feldbreite;
+                                                              ENU=Field Width];
+                                                   DecimalPlaces=0:5 }
   }
   KEYS
   {
@@ -701,9 +717,10 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
   }
   PROPERTIES
   {
@@ -715,12 +732,12 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
   {
     VAR
       Text001@1000000000 : TextConst 'DEU=Zuweisung abgebrochen, da kein Feld fr die Verknpfung ausgew„hlt worden sind!;ENU=Linking cancelled because you didn''t select fields for linking!';
-      Text002@1000000001 : TextConst 'DEU=Das Feld "%1" ist nun mit dem Ankerfeld "%2" verknpft!;ENU=%1 fields have been linked to the line identification field!';
+      Text002@1000000001 : TextConst 'DEU=Das Feld "%1" ist nun mit dem Ankerfeld "%2" verknpft!;ENU=The field "%1" is now linked to the line identification field "%2"!';
       Text003@1000000002 : TextConst 'DEU=Das Ankerfeld %1 ist noch nicht trainiert!;ENU=The line identification %1 field is not trained yet!';
       Text004@1000000003 : TextConst 'DEU=Bitte den Beispielwert fr %1 (%2) in der ersten Belegzeile trainieren!;ENU=Please train the example value for %1 in the first document line!';
       Text005@1000000004 : TextConst 'DEU=Bitte w„hlen Sie zuerst das Ankerfeld aus!;ENU=Please choose the line identification field first!';
       Text006@1000000005 : TextConst 'DEU=Codeunit %1 existiert nicht!;ENU=Codeunit %1 does not exist!';
-      Text007@1113400000 : TextConst 'DEU=Es wurden %1 Felder fr die Verarbeitung von Captions in der Zeile eingerichtet.;ENU=%1 fields have been linked to the line identification field!';
+      Text007@1113400000 : TextConst 'DEU="Das Feld ""%1"" wird nun innerhalb der Position ber die Spaltenberschrift ""%2"" gesucht. ";ENU=The field "%1" will now be searched via the column heading "%2".';
       Text008@1113400001 : TextConst 'DEU=Fehler! Fr Feld %1 wurde noch keine Caption hinterlegt! Bitte pflegen Sie die Caption zuerst.;ENU=Error! For the field %1 hasn|t been trained a caption! Please train the caption first.';
       Text009@1113400002 : TextConst 'DEU=Das Feld "%1" ist als versetztes Feld mit šberschrift konfiguriert.;ENU=The value for field "%1" will be searched by the column heading now.';
       Text011@1113400004 : TextConst 'DEU=Bitte w„hlen Sie zuerst das Feld aus, fr welches Sie das Ersatzfeld einrichten m”chten.;ENU=Please choose the line identification field first!';
@@ -729,8 +746,6 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
       Text015@1113400008 : TextConst 'DEU=Bitte w„hlen Sie das Feld aus, welches ber die šberschrift gefunden werden soll.;ENU=Select the field that should be found by the column heading.';
       Text016@1113400009 : TextConst 'DEU="Bitte w„hlen Sie das Feld aus, welches innerhalb der Position ber die Caption gefunden werden soll. ";ENU=Choose the field whose value should be found by the caption in the current line.';
       Text017@1113400010 : TextConst 'DEU="Das Feld ""%1"" wird nun innerhalb der Position ber die Caption gesucht. ";ENU=The value of field "%1" will now been searched via the caption in the current line.';
-      Text018@1113400011 : TextConst 'DEU=Bitte w„hlen Sie das Feld aus, welches als Gruppenfeld konfiguriert werden soll.;ENU=Choose the field, which should be configured as group field.';
-      Text019@1113400012 : TextConst 'DEU=Das Feld "%1" ist nun als Gruppenfeld eingerichtet.;ENU="The field ""%1"" is now configured as group field. "';
       Text020@1000000006 : TextConst 'DEU=Es gibt noch kein trainiertes Feld fr die erste Position! Bitte trainieren Sie erst ein Feld in der Position.;ENU=There is no trained field for the first position yet! Please train one field in the position first.';
 
     PROCEDURE SetToAnchorLinkedField@1000000010(VAR TempDocumentLine@1000000008 : Record 6085596);
@@ -790,7 +805,6 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
         MESSAGE(Text002,LinkedField."Field Name",AnchorField."Field Name");
       END ELSE
         MESSAGE(Text014);
-
     END;
 
     PROCEDURE SetToFieldSearchWithColumnHeding@1113400003(VAR TempDocumentLine@1113400002 : Record 6085596);
@@ -812,7 +826,7 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
       TemplateFieldCaption.SETRANGE("Template No.",SelectedField."Template No.");
       TemplateFieldCaption.SETRANGE(Code,SelectedField.Code);
       TemplateFieldCaption.SETRANGE(Type,TemplateFieldCaption.Type::Line);
-      IF TemplateFieldCaption.ISEMPTY THEN
+      IF TemplateFieldCaption.FINDFIRST THEN
         ERROR(Text008, SelectedField.Code);
 
       // Find the value of the selected field
@@ -830,7 +844,7 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
 
       IF SelectedField.MODIFY(TRUE) THEN BEGIN
         SetTemplateToALRProcessing(TempDocumentLine."Template No.");
-        MESSAGE(Text009, SelectedField."Field Name");
+        MESSAGE(Text007, SelectedField."Field Name",TemplateFieldCaption.Caption);
       END ELSE
         MESSAGE(Text014);
     END;
@@ -841,6 +855,8 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
       SelectedField@1113400001 : Record 6085580;
       SelectedFieldDocumentValue@1000000002 : Record 6085593;
       TemplateFieldCaption@1000000000 : Record 6085581;
+      DocumentPage@1000000004 : Record 6085591;
+      CaptureEngine@1000000003 : Codeunit 6085575;
     BEGIN
       // Find field value of a normal position field
       GetLineIdentifierValue(LineIdentFieldDocumentValue, TempDocumentLine."Document No.", TempDocumentLine."Template No.");
@@ -854,13 +870,28 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
       TemplateFieldCaption.SETRANGE("Template No.",SelectedField."Template No.");
       TemplateFieldCaption.SETRANGE(Code,SelectedField.Code);
       TemplateFieldCaption.SETRANGE(Type,TemplateFieldCaption.Type::Line);
-      IF TemplateFieldCaption.ISEMPTY THEN
+      IF NOT TemplateFieldCaption.FINDFIRST THEN
         ERROR(Text008,SelectedField.Code);
 
       // Find the value of the selected field
       GetSelectedFieldValue(SelectedFieldDocumentValue,SelectedField,TempDocumentLine."Document No.",TempDocumentLine."Template No.");
 
       ResetField(SelectedField);
+
+      // 009 >>>
+      IF (SelectedFieldDocumentValue.Right - SelectedFieldDocumentValue.Left) > 0 THEN BEGIN
+        DocumentPage.GET(TempDocumentLine."Document No.",TempDocumentLine."Page No.");
+        SelectedField."ALR Typical Value Field Width" := ROUND((SelectedFieldDocumentValue.Right - SelectedFieldDocumentValue.Left)
+                                                               / CaptureEngine.GetDPIFactor(150,DocumentPage."TIFF Image Resolution"),1);
+      END;
+
+      IF (SelectedFieldDocumentValue.Top <> 0) AND (TemplateFieldCaption.Top <> 0) AND (SelectedFieldDocumentValue.Left <> 0) AND (TemplateFieldCaption.Left <> 0) THEN BEGIN
+          SelectedField."ALR Value Caption Offset X" := SelectedFieldDocumentValue.Left - TemplateFieldCaption.Left;
+          SelectedField."ALR Value Caption Offset Y" := SelectedFieldDocumentValue.Top - TemplateFieldCaption.Top;
+      END;
+
+      SelectedField."Caption Mandatory" := TRUE;
+      // 009 <<<
 
       // Setup field for field search by caption
       SelectedField."Advanced Line Recognition Type" := SelectedField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition;
@@ -903,6 +934,11 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
         CLEAR(Sorting);
         CLEAR("Substitution Field");
         CLEAR("Get Value from Previous Value");
+        CLEAR("ALR Typical Value Field Width");
+        CLEAR("Typical Field Height");
+        CLEAR("Caption Mandatory");
+        CLEAR("ALR Value Caption Offset X");
+        CLEAR("ALR Value Caption Offset Y");
       END;
     END;
 
@@ -1016,7 +1052,7 @@ OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
       Ver Date     Usr Change
       -----------------------------------------------------
       001 20180301 SRA Initial Commit
-      002 20180325 SRA New functions for Caption in Line and Offset Line
+      00 220180325 SRA New functions for Caption in Line and Offset Line
                        Renamed of existing functions
       004 20180717 SRA Redesign, new funtionality
       006 20190219 SRA New Function to reset a selectable field to standard capturing
@@ -1031,9 +1067,10 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
   }
   PROPERTIES
   {
@@ -1052,6 +1089,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       CaptureMgt@1160040001 : Codeunit 6085576;
       DocumentComment@1000000000 : Record 6085594;
       Text002@1000000001 : TextConst 'DEU=Zeilenidentifikationsfeld %1 - %2 verwendet!';
+      MandatoryFieldBuffer@1000000002 : TEMPORARY Record 6085595;
 
     PROCEDURE Code@1000000000();
     VAR
@@ -1066,7 +1104,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       Document.BuildTempLinesTable(TempDocLine);
 
       IF TempDocLine.FINDSET THEN BEGIN
-        FillSortedFieldBuffer(TempSortedDocumentField,TempDocLine);
+        FillSortedFieldBuffer(TempSortedDocumentField, MandatoryFieldBuffer, TempDocLine);
         REPEAT
           TempSortedDocumentField.SETCURRENTKEY("Document No.","Sort Order");
           IF TempSortedDocumentField.FINDFIRST THEN
@@ -1161,15 +1199,22 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
               CaptureEngine.SetLineRegion(i,lFromTopPos,i,lToBottomPos);
 
 
-        Word := CaptureEngine.CaptureField(Document,TempDocLine."Page No.",CurrField,FALSE);
+        CurrField."Caption Offset X" := CurrField."ALR Value Caption Offset X";
+        CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
+        CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
+
+        Word := CaptureEngine.CaptureField(Document,lCurrPage."Page No.",CurrField,FALSE);
+
         IF Word <> '' THEN BEGIN
           IF (DocumentValue.GET(Document."No.",TRUE,CurrField.Code,0)) THEN BEGIN
             DocumentValueCopy := DocumentValue;
             DocumentValueCopy."Line No." := TempDocLine."Line No.";
+            DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
             DocumentValueCopy.INSERT;
             DocumentValue.DELETE;
           END;
           CaptureMgt.UpdateFieldValue(Document."No.",TempDocLine."Page No.",TempDocLine."Line No.",CurrField,Word,FALSE,FALSE);
+
           EXIT(TRUE);
         END;
       END;
@@ -1301,6 +1346,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
     VAR
       TemplateField@1000000000 : Record 6085580;
       DocumentValue@1113400002 : Record 6085593;
+      SubstitutionDocumentValue@1000000002 : Record 6085593;
       SubstitutionField@1113400003 : Record 6085580;
     BEGIN
       // Function goes through all field, setted up with substitution fields.
@@ -1311,8 +1357,16 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         REPEAT
           IF NOT DocumentValue.GET(TempDocLine."Document No.",TRUE,TemplateField.Code,TempDocLine."Line No.") THEN
             IF SubstitutionField.GET(TempDocLine."Template No.",SubstitutionField.Type::Line,TemplateField."Substitution Field") THEN
-              IF DocumentValue.GET(TempDocLine."Document No.",TRUE,SubstitutionField.Code,TempDocLine."Line No.") THEN
-                CaptureMgt.UpdateFieldValue(TempDocLine."Document No.",TempDocLine."Page No.",TempDocLine."Line No.",TemplateField,DocumentValue."Value (Text)",FALSE,FALSE);
+              IF SubstitutionDocumentValue.GET(TempDocLine."Document No.",TRUE,SubstitutionField.Code,TempDocLine."Line No.") THEN BEGIN
+                CaptureMgt.UpdateFieldValue(TempDocLine."Document No.",TempDocLine."Page No.",TempDocLine."Line No.",TemplateField,SubstitutionDocumentValue."Value (Text)",FALSE,FALSE);
+                IF DocumentValue.GET(TempDocLine."Document No.",TRUE,TemplateField.Code,TempDocLine."Line No.") THEN BEGIN
+                  DocumentValue.Top := SubstitutionDocumentValue.Top;
+                  DocumentValue.Bottom := SubstitutionDocumentValue.Bottom;
+                  DocumentValue.Left := SubstitutionDocumentValue.Left;
+                  DocumentValue.Right := SubstitutionDocumentValue.Right;
+                  DocumentValue.MODIFY;
+                END;
+              END;
         UNTIL TemplateField.NEXT = 0;
     END;
 
@@ -1350,6 +1404,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Document No.",TempDocLine."Document No.");
         SETRANGE("Is Value",TRUE);
         SETRANGE(Type,Type::Line);
+        SETFILTER("Page No.", '>%1',0);
 
         GetCurrLinePosition(DocumentValue,TempDocLine."Line No.",NextLineTopPage, NextLineTopPos, NextLineBottomPage, NextLineBottomPos);
 
@@ -1374,9 +1429,15 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
           SETRANGE("Is Value",FALSE);
           SETRANGE(Type,Type::Header);
           SETFILTER(Top,'>%1',NextLineBottomPos);
-          IF FINDSET(FALSE,FALSE) THEN
+          SETRANGE("Line No.", 0);
+          IF FINDSET(FALSE,FALSE) THEN BEGIN
+            IF "Page No." > NextLineBottomPage THEN BEGIN
+              NextLineBottomPage := "Page No.";
+              //??? NextLineTopPos := 0;
+              NextLineTopPage := "Page No.";
+            END;
             NextLineBottomPos := Top
-          ELSE BEGIN
+          END ELSE BEGIN
             CurrPage.GET(TempDocLine."Document No.",NextLineBottomPage);
             NextLineBottomPos := CurrPage."Bottom Word Pos.";
           END;
@@ -1412,6 +1473,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Document No.",TempDocLine."Document No.");
         SETRANGE("Is Value",TRUE);
         SETRANGE(Type,Type::Line);
+        SETFILTER("Page No.", '>%1',0);
 
         GetCurrLinePosition(DocumentValue,TempDocLine."Line No.",CurrLineTopPage,CurrLineTopPos,CurrLineBottomPage,CurrLineBottomPos);
 
@@ -1469,23 +1531,25 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Line No.",LineNo);
         IF FINDSET THEN
         REPEAT
-          IF ("Page No." < CurrLineTopPage) OR (CurrLineTopPage = 0) THEN BEGIN
-            CurrLineTopPage := "Page No.";
-            CLEAR(CurrLineTopPos);
+          IF MandatoryFieldBuffer.GET(DocumentValue.GETFILTER("Document No."),Code) THEN BEGIN
+            IF ("Page No." < CurrLineTopPage) OR (CurrLineTopPage = 0) THEN BEGIN
+              CurrLineTopPage := "Page No.";
+              CLEAR(CurrLineTopPos);
+            END;
+
+            IF ("Page No." > CurrLineBottomPage) OR (CurrLineBottomPage = 0)  THEN BEGIN
+              CurrLineBottomPage := "Page No.";
+              CLEAR(CurrLineBottomPos);
+            END;
+
+            IF CurrLineTopPage = "Page No." THEN
+              IF (Top < CurrLineTopPos) OR (CurrLineTopPos = 0) THEN
+                CurrLineTopPos := Top;
+
+            IF CurrLineBottomPage = "Page No." THEN
+              IF (Bottom > CurrLineBottomPos) OR (CurrLineBottomPos = 0) THEN
+                CurrLineBottomPos := Bottom ;
           END;
-
-          IF ("Page No." > CurrLineBottomPage) OR (CurrLineBottomPage = 0)  THEN BEGIN
-            CurrLineBottomPage := "Page No.";
-            CLEAR(CurrLineBottomPos);
-          END;
-
-          IF CurrLineTopPage = "Page No." THEN
-            IF (Top < CurrLineTopPos) OR (CurrLineTopPos = 0) THEN
-              CurrLineTopPos := Top;
-
-          IF CurrLineBottomPage = "Page No." THEN
-            IF (Bottom > CurrLineBottomPos) OR (CurrLineBottomPos = 0) THEN
-              CurrLineBottomPos := Bottom ;
         UNTIL NEXT = 0;
       END;
     END;
@@ -1630,20 +1694,29 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       EXIT(TRUE);
     END;
 
-    LOCAL PROCEDURE FillSortedFieldBuffer@1113400004(VAR TempSortedDocumentField@1113400000 : Record 6085595;TempDocLine@1113400003 : TEMPORARY Record 6085596);
+    LOCAL PROCEDURE FillSortedFieldBuffer@1113400004(VAR TempSortedDocumentField@1113400000 : Record 6085595;VAR MandatoryField@1000000000 : Record 6085595;TempDocLine@1113400003 : TEMPORARY Record 6085596);
     VAR
       TemplateField@1113400001 : Record 6085580;
     BEGIN
       WITH TemplateField DO BEGIN
         SETRANGE("Template No.",TempDocLine."Template No.");
         SETRANGE(Type,Type::Line);
-        SETFILTER("Advanced Line Recognition Type", '<>%1',"Advanced Line Recognition Type"::Default);
+        //SETFILTER("Advanced Line Recognition Type", '<>%1',"Advanced Line Recognition Type"::Default);
         IF FINDSET THEN
           REPEAT
-            TempSortedDocumentField."Document No." := TempDocLine."Document No.";
-            TempSortedDocumentField."Sort Order" := Sorting;
-            TempSortedDocumentField."Field Code" := Code;
-            TempSortedDocumentField.INSERT;
+            IF "Advanced Line Recognition Type" <> "Advanced Line Recognition Type"::Default THEN BEGIN
+              TempSortedDocumentField."Document No." := TempDocLine."Document No.";
+              TempSortedDocumentField."Sort Order" := Sorting;
+              TempSortedDocumentField."Field Code" := Code;
+              TempSortedDocumentField.INSERT;
+            END ELSE BEGIN
+              IF Required THEN BEGIN
+                MandatoryField."Document No." := TempDocLine."Document No.";
+                MandatoryField."Sort Order" := Sorting;
+                MandatoryField."Field Code" := Code;
+                MandatoryField.INSERT;
+              END;
+            END;
           UNTIL NEXT = 0;
       END;
     END;
@@ -1695,6 +1768,8 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       001 20180326 SRA Initial Commit
       002 20180325 SRA New functions
       007 20190613 SRA New Object number due to conflicts with the default training objects
+      008 20191106 SRA Bug with Page 0 error message fixed
+                       Bug fixed that resulted in wrong data when a page break was inside lines of a position
       -----------------------------------------------------
     }
     END.
@@ -1705,9 +1780,10 @@ OBJECT Codeunit 61002 Adv. Purch. Doc. - Line Val.
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
   }
   PROPERTIES
   {
@@ -1754,9 +1830,10 @@ OBJECT Codeunit 6085575 CDC Capture Engine
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=DCW13.70.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW13.70.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -2559,9 +2636,10 @@ OBJECT Page 6085586 CDC Template Field Card
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=DCW16.00.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW16.00.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -3255,6 +3333,18 @@ OBJECT Page 6085586 CDC Template Field Card
     { 1000000007;2;Field  ;
                 SourceExpr="Offset Right" }
 
+    { 1000000028;2;Field  ;
+                SourceExpr="ALR Value Caption Offset X";
+                Importance=Additional }
+
+    { 1000000029;2;Field  ;
+                SourceExpr="ALR Value Caption Offset Y";
+                Importance=Additional }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="ALR Typical Value Field Width";
+                Importance=Additional }
+
     { 6085580;1;Part      ;
                 Name=Template Field Translations;
                 SubPageLink=Template No.=FIELD(Template No.),
@@ -3422,9 +3512,10 @@ OBJECT Page 6085597 CDC Document Lines ListPart
 {
   OBJECT-PROPERTIES
   {
-    Date=06/13/19;
-    Time=12:00:00 AM;
-    Version List=DCW17.00.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW17.00.00.5.50.02,ALR;
   }
   PROPERTIES
   {
@@ -4146,8 +4237,16 @@ OBJECT Page 6085597 CDC Document Lines ListPart
         Document.BuildTempLinesTable(Rec);
         CurrPage.UPDATE(FALSE);
       END ELSE
-        IF GET("Document No.",CurrLineNo) THEN
+        IF LineIsInserted("Document No.",CurrLineNo) THEN
           CurrPage.UPDATE(TRUE);
+    END;
+
+    LOCAL PROCEDURE LineIsInserted@1(DocumentNo@1001 : Code[20];LineNo@1002 : Integer) : Boolean;
+    VAR
+      TempDocumentLine@1000 : TEMPORARY Record 6085596;
+    BEGIN
+      TempDocumentLine.COPY(Rec,TRUE);
+      EXIT(TempDocumentLine.GET(DocumentNo,LineNo));
     END;
 
     PROCEDURE GetValueAsText@1000000008(FieldCode@1000000000 : Code[20]) : Text[250];

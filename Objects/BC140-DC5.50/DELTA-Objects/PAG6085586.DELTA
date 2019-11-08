@@ -2,9 +2,10 @@ OBJECT Modification "CDC Template Field Card"(Page 6085586)
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
-    Version List=DCW16.00.00.5.50,ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW16.00.00.5.50,ALR;
   }
   PROPERTIES
   {
@@ -52,12 +53,24 @@ OBJECT Modification "CDC Template Field Card"(Page 6085586)
                            { 1000000007;2;Field  ;
                                        SourceExpr="Offset Right" }
 
+                           { 1000000028;2;Field  ;
+                                       SourceExpr="ALR Value Caption Offset X";
+                                       Importance=Additional }
+
+                           { 1000000029;2;Field  ;
+                                       SourceExpr="ALR Value Caption Offset Y";
+                                       Importance=Additional }
+
+                           { 1000000030;2;Field  ;
+                                       SourceExpr="ALR Typical Value Field Width";
+                                       Importance=Additional }
+
                          }
                           }
     { PropertyModification;
                          Property=Version List;
                          OriginalValue=DCW16.00.00.5.50;
-                         ModifiedValue=DCW16.00.00.5.50,ALR007 }
+                         ModifiedValue=DCW16.00.00.5.50,ALR }
   }
   CODE
   {

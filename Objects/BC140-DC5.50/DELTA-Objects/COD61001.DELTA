@@ -2,9 +2,10 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
 {
   OBJECT-PROPERTIES
   {
-    Date=13.06.19;
-    Time=00:00:00;
-    Version List=ALR007;
+    Date=08.11.19;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
   }
   PROPERTIES
   {
@@ -23,6 +24,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       CaptureMgt@1160040001 : Codeunit 6085576;
       DocumentComment@1000000000 : Record 6085594;
       Text002@1000000001 : TextConst 'DEU=Zeilenidentifikationsfeld %1 - %2 verwendet!';
+      MandatoryFieldBuffer@1000000002 : TEMPORARY Record 6085595;
 
     PROCEDURE Code@1000000000();
     VAR
@@ -37,7 +39,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       Document.BuildTempLinesTable(TempDocLine);
 
       IF TempDocLine.FINDSET THEN BEGIN
-        FillSortedFieldBuffer(TempSortedDocumentField,TempDocLine);
+        FillSortedFieldBuffer(TempSortedDocumentField, MandatoryFieldBuffer, TempDocLine);
         REPEAT
           TempSortedDocumentField.SETCURRENTKEY("Document No.","Sort Order");
           IF TempSortedDocumentField.FINDFIRST THEN
@@ -132,15 +134,22 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
               CaptureEngine.SetLineRegion(i,lFromTopPos,i,lToBottomPos);
 
 
-        Word := CaptureEngine.CaptureField(Document,TempDocLine."Page No.",CurrField,FALSE);
+        CurrField."Caption Offset X" := CurrField."ALR Value Caption Offset X";
+        CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
+        CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
+
+        Word := CaptureEngine.CaptureField(Document,lCurrPage."Page No.",CurrField,FALSE);
+
         IF Word <> '' THEN BEGIN
           IF (DocumentValue.GET(Document."No.",TRUE,CurrField.Code,0)) THEN BEGIN
             DocumentValueCopy := DocumentValue;
             DocumentValueCopy."Line No." := TempDocLine."Line No.";
+            DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
             DocumentValueCopy.INSERT;
             DocumentValue.DELETE;
           END;
           CaptureMgt.UpdateFieldValue(Document."No.",TempDocLine."Page No.",TempDocLine."Line No.",CurrField,Word,FALSE,FALSE);
+
           EXIT(TRUE);
         END;
       END;
@@ -272,6 +281,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
     VAR
       TemplateField@1000000000 : Record 6085580;
       DocumentValue@1113400002 : Record 6085593;
+      SubstitutionDocumentValue@1000000002 : Record 6085593;
       SubstitutionField@1113400003 : Record 6085580;
     BEGIN
       // Function goes through all field, setted up with substitution fields.
@@ -282,8 +292,16 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         REPEAT
           IF NOT DocumentValue.GET(TempDocLine."Document No.",TRUE,TemplateField.Code,TempDocLine."Line No.") THEN
             IF SubstitutionField.GET(TempDocLine."Template No.",SubstitutionField.Type::Line,TemplateField."Substitution Field") THEN
-              IF DocumentValue.GET(TempDocLine."Document No.",TRUE,SubstitutionField.Code,TempDocLine."Line No.") THEN
-                CaptureMgt.UpdateFieldValue(TempDocLine."Document No.",TempDocLine."Page No.",TempDocLine."Line No.",TemplateField,DocumentValue."Value (Text)",FALSE,FALSE);
+              IF SubstitutionDocumentValue.GET(TempDocLine."Document No.",TRUE,SubstitutionField.Code,TempDocLine."Line No.") THEN BEGIN
+                CaptureMgt.UpdateFieldValue(TempDocLine."Document No.",TempDocLine."Page No.",TempDocLine."Line No.",TemplateField,SubstitutionDocumentValue."Value (Text)",FALSE,FALSE);
+                IF DocumentValue.GET(TempDocLine."Document No.",TRUE,TemplateField.Code,TempDocLine."Line No.") THEN BEGIN
+                  DocumentValue.Top := SubstitutionDocumentValue.Top;
+                  DocumentValue.Bottom := SubstitutionDocumentValue.Bottom;
+                  DocumentValue.Left := SubstitutionDocumentValue.Left;
+                  DocumentValue.Right := SubstitutionDocumentValue.Right;
+                  DocumentValue.MODIFY;
+                END;
+              END;
         UNTIL TemplateField.NEXT = 0;
     END;
 
@@ -321,6 +339,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Document No.",TempDocLine."Document No.");
         SETRANGE("Is Value",TRUE);
         SETRANGE(Type,Type::Line);
+        SETFILTER("Page No.", '>%1',0);
 
         GetCurrLinePosition(DocumentValue,TempDocLine."Line No.",NextLineTopPage, NextLineTopPos, NextLineBottomPage, NextLineBottomPos);
 
@@ -345,9 +364,15 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
           SETRANGE("Is Value",FALSE);
           SETRANGE(Type,Type::Header);
           SETFILTER(Top,'>%1',NextLineBottomPos);
-          IF FINDSET(FALSE,FALSE) THEN
+          SETRANGE("Line No.", 0);
+          IF FINDSET(FALSE,FALSE) THEN BEGIN
+            IF "Page No." > NextLineBottomPage THEN BEGIN
+              NextLineBottomPage := "Page No.";
+              //??? NextLineTopPos := 0;
+              NextLineTopPage := "Page No.";
+            END;
             NextLineBottomPos := Top
-          ELSE BEGIN
+          END ELSE BEGIN
             CurrPage.GET(TempDocLine."Document No.",NextLineBottomPage);
             NextLineBottomPos := CurrPage."Bottom Word Pos.";
           END;
@@ -383,6 +408,7 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Document No.",TempDocLine."Document No.");
         SETRANGE("Is Value",TRUE);
         SETRANGE(Type,Type::Line);
+        SETFILTER("Page No.", '>%1',0);
 
         GetCurrLinePosition(DocumentValue,TempDocLine."Line No.",CurrLineTopPage,CurrLineTopPos,CurrLineBottomPage,CurrLineBottomPos);
 
@@ -440,23 +466,25 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
         SETRANGE("Line No.",LineNo);
         IF FINDSET THEN
         REPEAT
-          IF ("Page No." < CurrLineTopPage) OR (CurrLineTopPage = 0) THEN BEGIN
-            CurrLineTopPage := "Page No.";
-            CLEAR(CurrLineTopPos);
+          IF MandatoryFieldBuffer.GET(DocumentValue.GETFILTER("Document No."),Code) THEN BEGIN
+            IF ("Page No." < CurrLineTopPage) OR (CurrLineTopPage = 0) THEN BEGIN
+              CurrLineTopPage := "Page No.";
+              CLEAR(CurrLineTopPos);
+            END;
+
+            IF ("Page No." > CurrLineBottomPage) OR (CurrLineBottomPage = 0)  THEN BEGIN
+              CurrLineBottomPage := "Page No.";
+              CLEAR(CurrLineBottomPos);
+            END;
+
+            IF CurrLineTopPage = "Page No." THEN
+              IF (Top < CurrLineTopPos) OR (CurrLineTopPos = 0) THEN
+                CurrLineTopPos := Top;
+
+            IF CurrLineBottomPage = "Page No." THEN
+              IF (Bottom > CurrLineBottomPos) OR (CurrLineBottomPos = 0) THEN
+                CurrLineBottomPos := Bottom ;
           END;
-
-          IF ("Page No." > CurrLineBottomPage) OR (CurrLineBottomPage = 0)  THEN BEGIN
-            CurrLineBottomPage := "Page No.";
-            CLEAR(CurrLineBottomPos);
-          END;
-
-          IF CurrLineTopPage = "Page No." THEN
-            IF (Top < CurrLineTopPos) OR (CurrLineTopPos = 0) THEN
-              CurrLineTopPos := Top;
-
-          IF CurrLineBottomPage = "Page No." THEN
-            IF (Bottom > CurrLineBottomPos) OR (CurrLineBottomPos = 0) THEN
-              CurrLineBottomPos := Bottom ;
         UNTIL NEXT = 0;
       END;
     END;
@@ -601,20 +629,29 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       EXIT(TRUE);
     END;
 
-    LOCAL PROCEDURE FillSortedFieldBuffer@1113400004(VAR TempSortedDocumentField@1113400000 : Record 6085595;TempDocLine@1113400003 : TEMPORARY Record 6085596);
+    LOCAL PROCEDURE FillSortedFieldBuffer@1113400004(VAR TempSortedDocumentField@1113400000 : Record 6085595;VAR MandatoryField@1000000000 : Record 6085595;TempDocLine@1113400003 : TEMPORARY Record 6085596);
     VAR
       TemplateField@1113400001 : Record 6085580;
     BEGIN
       WITH TemplateField DO BEGIN
         SETRANGE("Template No.",TempDocLine."Template No.");
         SETRANGE(Type,Type::Line);
-        SETFILTER("Advanced Line Recognition Type", '<>%1',"Advanced Line Recognition Type"::Default);
+        //SETFILTER("Advanced Line Recognition Type", '<>%1',"Advanced Line Recognition Type"::Default);
         IF FINDSET THEN
           REPEAT
-            TempSortedDocumentField."Document No." := TempDocLine."Document No.";
-            TempSortedDocumentField."Sort Order" := Sorting;
-            TempSortedDocumentField."Field Code" := Code;
-            TempSortedDocumentField.INSERT;
+            IF "Advanced Line Recognition Type" <> "Advanced Line Recognition Type"::Default THEN BEGIN
+              TempSortedDocumentField."Document No." := TempDocLine."Document No.";
+              TempSortedDocumentField."Sort Order" := Sorting;
+              TempSortedDocumentField."Field Code" := Code;
+              TempSortedDocumentField.INSERT;
+            END ELSE BEGIN
+              IF Required THEN BEGIN
+                MandatoryField."Document No." := TempDocLine."Document No.";
+                MandatoryField."Sort Order" := Sorting;
+                MandatoryField."Field Code" := Code;
+                MandatoryField.INSERT;
+              END;
+            END;
           UNTIL NEXT = 0;
       END;
     END;
@@ -666,6 +703,8 @@ OBJECT Codeunit 61001 Adv. Purch/Sales Line Capture
       001 20180326 SRA Initial Commit
       002 20180325 SRA New functions
       007 20190613 SRA New Object number due to conflicts with the default training objects
+      008 20191106 SRA Bug with Page 0 error message fixed
+                       Bug fixed that resulted in wrong data when a page break was inside lines of a position
       -----------------------------------------------------
     }
     END.
