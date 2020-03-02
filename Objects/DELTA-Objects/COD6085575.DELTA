@@ -1,0 +1,144 @@
+OBJECT Modification "CDC Capture Engine"(Codeunit 6085575)
+{
+  OBJECT-PROPERTIES
+  {
+    Date=02/06/20;
+    Time=12:00:00 PM;
+    Modified=Yes;
+    Version List=DCW13.70.00.6.00.01,ALR010;
+  }
+  PROPERTIES
+  {
+    Target="CDC Capture Engine"(Codeunit 6085575);
+  }
+  CHANGES
+  {
+    { Insertion         ;Target=BufferWords(PROCEDURE 1000000014);
+                         InsertAfter=Words(Variable 1000000002);
+                         ChangedElements=VariableCollection
+                         {
+                           ALRDocumentPage@1000000003 : Record 6085591;
+                         }
+                          }
+    { CodeModification  ;OriginalCode=BEGIN
+                                        IF (BuffWordDocNo = DocumentNo) AND ((BuffWordPageNo = PageNo) OR (BuffWordPageNo = 0)) THEN
+                                          EXIT;
+
+                                        GlobalWords.RESET;
+                                        GlobalWords.DELETEALL;
+
+                                        Words.SETRANGE("Document No.",DocumentNo);
+                                        IF PageNo <> 0 THEN
+                                          Words.SETRANGE("Page No.",PageNo);
+                                        IF Words.FINDSET(FALSE,FALSE) THEN
+                                          REPEAT
+                                            GlobalWords := Words;
+                                            GlobalWords.INSERT;
+                                          UNTIL Words.NEXT = 0;
+
+                                        BuffWordDocNo := DocumentNo;
+                                        BuffWordPageNo := PageNo;
+                                      END;
+
+                         ModifiedCode=BEGIN
+                                        #1..7
+                                        //<ALR>
+                                        IF (LineRegionFromPage > 0) OR (LineRegionToPage > 0) THEN BEGIN
+                                          ALRDocumentPage.SETRANGE("Document No.",DocumentNo);
+                                          ALRDocumentPage.SETRANGE("Page No.",LineRegionFromPage,LineRegionToPage);
+                                          IF ALRDocumentPage.FINDSET THEN
+                                            REPEAT
+                                              IF LineRegionToPos = 0 THEN
+                                                Words.SETFILTER(Top,STRSUBSTNO('%1..%2',LineRegionFromPos,ALRDocumentPage."Bottom Word Pos."))
+                                              ELSE
+                                                Words.SETFILTER(Top,DELCHR(STRSUBSTNO('%1..%2',LineRegionFromPos,LineRegionToPos),'=',' '));
+
+                                              IF Words.FINDSET(FALSE,FALSE) THEN
+                                                REPEAT
+                                                  GlobalWords := Words;
+                                                  GlobalWords.INSERT;
+                                                UNTIL Words.NEXT = 0;
+                                            UNTIL ALRDocumentPage.NEXT = 0;
+                                        END ELSE BEGIN
+                                        //</ALR>
+                                        #8..14
+                                        //<ALR>
+                                        END;
+                                        //</ALR>
+                                        BuffWordDocNo := DocumentNo;
+                                        BuffWordPageNo := PageNo;
+                                      END;
+
+                         Target=BufferWords(PROCEDURE 1000000014) }
+    { Insertion         ;InsertAfter=GetDPIFactor(PROCEDURE 1160040003);
+                         ChangedElements=PROCEDURECollection
+                         {
+                           LOCAL PROCEDURE "<ALR Function>"@1000000003();
+                           BEGIN
+                           END;
+
+                           PROCEDURE SetLineRegion@1000000005(FromPage@1000000003 : Integer;FromPos@1000000002 : Integer;ToPage@1000000001 : Integer;ToPos@1000000000 : Integer);
+                           BEGIN
+                             LineRegionFromPage := FromPage;
+                             LineRegionFromPos := FromPos;
+                             LineRegionToPage := ToPage;
+                             LineRegionToPos := ToPos;
+                             CLEAR(BuffWordDocNo);
+                             CLEAR(BuffWordPageNo);
+                           END;
+
+                           LOCAL PROCEDURE "</ALR Function>"@1000000007();
+                           BEGIN
+                           END;
+
+                         }
+                          }
+    { PropertyModification;
+                         Target=Text001(Variable 1000000005);
+                         Property=TextConstString;
+                         OriginalValue=ENU=Processing Document\#1######################;
+                         ModifiedValue=[DEU=Verarbeite Dokument\#1######################;ENU=Processing Document\#1######################] }
+    { PropertyModification;
+                         Target=Text002(Variable 1000000006);
+                         Property=TextConstString;
+                         OriginalValue=ENU=Performing Identfication;
+                         ModifiedValue=[DEU=Identifikation durchfÅhren;ENU=Performing Identfication] }
+    { PropertyModification;
+                         Target=Text003(Variable 1000000007);
+                         Property=TextConstString;
+                         OriginalValue=ENU=Processing Header;
+                         ModifiedValue=[DEU=Verarbeite Kopf;ENU=Processing Header] }
+    { PropertyModification;
+                         Target=Text004(Variable 1000000008);
+                         Property=TextConstString;
+                         OriginalValue=ENU=Processing Lines;
+                         ModifiedValue=[DEU=Verarbeite Zeilen;ENU=Processing Lines] }
+    { PropertyModification;
+                         Target=IdentificationFieldsTxt(Variable 6085573);
+                         Property=TextConstString;
+                         OriginalValue=ENU=Identification Fields: %1;
+                         ModifiedValue=[DEU=Identifikationsfelder: %1;ENU=Identification Fields: %1] }
+    { Insertion         ;InsertAfter=ErrorNoXMLModule(Variable 1002);
+                         ChangedElements=VariableCollection
+                         {
+                           "<ALR Var>"@1000000014 : Integer;
+                           LineRegionFromPage@1000000013 : Integer;
+                           LineRegionFromPos@1000000012 : Integer;
+                           LineRegionToPage@1000000011 : Integer;
+                           LineRegionToPos@1000000010 : Integer;
+                           "</ALR Var>"@1000000009 : Integer;
+                         }
+                          }
+    { PropertyModification;
+                         Property=Version List;
+                         OriginalValue=DCW13.70.00.6.00.01;
+                         ModifiedValue=DCW13.70.00.6.00.01,ALR010 }
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
