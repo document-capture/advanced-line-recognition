@@ -1,13 +1,14 @@
 # CKL Advanced Line Recognition #
 
 ## Introduction ##
-This repository contains an extension for [Continia Document Capture](http://continia.com/documentcapture-for-dynamics-nav.aspx) module, which is a solution for scanning of invoices and other documents directly from Microsoft Dynamics NAV! 
+This repository contains an extension for [Continia Document Capture](http://continia.com/documentcapture-for-dynamics-nav.aspx) module, which is a solution for scanning of invoices and other documents directly from inside Microsoft Dynamics Business Central/NAV! 
 
-The initial development was done by [CKL Software GmbH (CKL)](https://www.ckl-kore.de "Jump to CKL Website") and the code will be maintained by CKL unregularly based on experiences made in projects. 
+The code will be unregularly maintained or updated. 
 
-**Please note!** 
-This is not an official module / add-on and therefor CKL Software does not offer support for implementation, training or is responsible for errors in this module. 
-You can use the CKL Advance Line Recognition on your own risk. 
+## Remark ##
+You can use this code as it is, without any warranty or support by me, [Continia Software A/S](https://www.continia.com "Continia Software") or [CKL Software GmbH](https://www.ckl-kore.de "CKL Software - Add-ons for Microsoft Dynamics Business Central and NAV").
+
+You can use the Advanced Line Recognition on your own risk. 
 
 **If you find issues in the code, please report these in the issues list here on Github.**
 
@@ -47,3 +48,4 @@ Based on the position of this field the user will define the "offset" of other f
 
 Still not sure what to do? Watch this click guide:
 ![](https://github.com/sradloff/Document-Capture-Advanced-Line-Recognition/raw/master/Documentation/UsageOfAdvancedLineRecognition.gif)
+
