@@ -1,4 +1,4 @@
-# CKL Advanced Line Recognition #
+# Advanced Line Recognition #
 
 ## Introduction ##
 This repository contains an extension for [Continia Document Capture](http://continia.com/documentcapture-for-dynamics-nav.aspx) module, which is a solution for scanning of invoices and other documents directly from inside Microsoft Dynamics Business Central/NAV! 
@@ -6,7 +6,7 @@ This repository contains an extension for [Continia Document Capture](http://con
 The code will be unregularly maintained or updated. 
 
 ## Remark ##
-You can use this code as it is, without any warranty or support by me, [Continia Software A/S](https://www.continia.com "Continia Software") or [CKL Software GmbH](https://www.ckl-kore.de "CKL Software - Add-ons for Microsoft Dynamics Business Central and NAV").
+You can use this code as it is, without any warranty or support by me, [Continia Software A/S](https://www.continia.com "Continia Software"). 
 
 You can use the Advanced Line Recognition on your own risk. 
 
