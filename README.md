@@ -1,3 +1,4 @@
+[![Crowdin](https://badges.crowdin.net/cdc-advanced-line-recognition/localized.svg)](https://crowdin.com)
 # Advanced Line Recognition #
 
 ## Introduction ##
