@@ -1,5 +1,5 @@
 ﻿#This script exports the original CDC objects from a fob based database 
-param([string]$ServerName, [string]$DatabaseName, [string]$WorkDirectory)
+param([string]$ServerName, [string]$DatabaseName, [string]$WorkDirectory, [parameter(Mandatory=$true)][string][ValidateSet("txt","fob")]$FileExtension)
 
 #Create directory for temporary files
 $OriginalPath = $(Join-Path $WorkDirectory "ORIGINAL")
@@ -24,7 +24,7 @@ function exportObject
     
     $objectPrefix = getObjectPrefix -ObjectType $ObjectType
 
-    Export-NAVApplicationObject -DatabaseName $DatabaseName -DatabaseServer $ServerName -Path $(Join-Path $OriginalPath "$objectPrefix$ObjectId.txt") -Filter "Type=$ObjectType;Id=$ObjectId" -Force -ExportToNewSyntax
+    Export-NAVApplicationObject -DatabaseName $DatabaseName -DatabaseServer $ServerName -Path $(Join-Path $OriginalPath "$objectPrefix$ObjectId.$FileExtension") -Filter "Type=$ObjectType;Id=$ObjectId" -Force -ExportToNewSyntax
 }
 
 exportObject -ObjectId 6085580 -ObjectType Table

@@ -1,5 +1,5 @@
 ﻿#This script exports all ALR objects from a fob based database
-param([string]$ServerName, [string]$DatabaseName, [string]$WorkDirectory)
+param([string]$ServerName, [string]$DatabaseName, [string]$WorkDirectory, [parameter(Mandatory=$true)][string][ValidateSet("txt","fob")]$FileExtension)
 
 #Create directory for temporary files
 $ModifiedPath = $(Join-Path $WorkDirectory "MODIFIED")
@@ -24,7 +24,7 @@ function exportObject
     
     $objectPrefix = getObjectPrefix -ObjectType $ObjectType
 
-    Export-NAVApplicationObject -DatabaseName $DatabaseName -DatabaseServer $ServerName -Path $(Join-Path $ModifiedPath "$objectPrefix$ObjectId.txt") -Filter "Type=$ObjectType;Id=$ObjectId" -Force -ExportToNewSyntax
+    Export-NAVApplicationObject -DatabaseName $DatabaseName -DatabaseServer $ServerName -Path $(Join-Path $ModifiedPath "$objectPrefix$ObjectId.$FileExtension") -Filter "Type=$ObjectType;Id=$ObjectId" -Force -ExportToNewSyntax
 }
 
 exportObject -ObjectId 61000 -ObjectType Codeunit
