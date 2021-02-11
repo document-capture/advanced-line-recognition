@@ -1,0 +1,52 @@
+{
+  "id": "c3e5c32c-513a-47ed-a749-9f9e5ee20342",
+  "name": "Advanced Line Recognition",
+  "publisher": "github.com/sradloff",
+  "version": "1.13.0.0",
+  "brief": "Extension for Continia Document Capture to do advanced line recognition.",
+  "description": "Advanced Line Recognition extension for Continia Document Capture",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "https://github.com/sradloff/Document-Capture/issues",
+  "url": "https://github.com/sradloff",
+  "logo": "./res/images/logo.png",
+  "dependencies": [
+    {
+      "id": "63ca2fa4-4f03-4f2b-a480-172fef340d3f",
+      "publisher": "Microsoft",
+      "name": "System Application",
+      "version": "17.0.0.0"
+    },
+    {
+      "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "publisher": "Microsoft",
+      "name": "Base Application",
+      "version": "17.0.0.0"
+    },
+    {
+      "id": "4b915d7e-c02a-435f-85ab-649086c1e002",
+      "name": "Continia Core",
+      "publisher": "Continia Software",
+      "version": "3.0.0.0"
+    },
+    {
+      "id": "6da8dd2f-e698-461f-9147-8e404244dd85",
+      "name": "Continia Document Capture 365",
+      "publisher": "Continia Software",
+      "version": "6.5.0.0"
+    }
+  ],
+  "screenshots": [],
+  "platform": "17.0.0.0",
+  "application": "17.0.0.0",
+  "idRanges": [
+    {
+      "from": 61000,
+      "to": 61010
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://github.com/sradloff/",
+  "showMyCode": true,
+  "runtime": "6.0",
+  "features": [ "TranslationFile"]
+}
