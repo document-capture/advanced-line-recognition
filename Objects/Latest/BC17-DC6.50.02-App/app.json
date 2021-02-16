@@ -48,6 +48,7 @@
   "contextSensitiveHelpUrl": "https://github.com/sradloff/",
   "showMyCode": true,
   "runtime": "6.0",
+  "target": "Cloud",
   "features": [ "TranslationFile"],
   "supportedLocales": ["en-GB","en-US","da-DK","nl-NL","nl-BE","de-DE","de-AT","de-CH"]
 }
