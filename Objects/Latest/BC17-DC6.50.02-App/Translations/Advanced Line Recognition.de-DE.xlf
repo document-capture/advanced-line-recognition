@@ -233,10 +233,11 @@
           <target>Zeigt die aktuell verwendete Version der erweiterten Zeilenerkennung an.</target>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ShowVersionNo - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 483047780 - Action 266822292 - Method 1377591017 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
+        <trans-unit id="Codeunit 3316338016 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve">
           <source>You are using version %1 of the advanced line recognition.</source>
+          <note from="Developer" annotates="general" priority="2">Displays the current version of the Advanced line recognition to the user including the build</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType YouAreUsingALRVersion</note>                
           <target>Sie nutzen die Version %1 der erweiterten Zeilenerkennung.</target>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ShowVersionNo - Method OnAction - NamedType YouAreUsingALRVersion</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 2744589791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Substitution Field</source>

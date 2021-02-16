@@ -1,0 +1,42 @@
+file|error code|error message|start line|start char|end line|end char
+src\codeunit\Cod61000.AdvLineRecognitionMgt.al|AL0161|'GetDPIFactor(Integer, Integer)' is inaccessible due to its protection level|160|83|160|95
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'BuildTempLinesTable(var Record "CDC Temp. Document Line")' is inaccessible due to its protection level|35|17|35|36
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'CaptureFromPos(Record "CDC Document Page", var Record "CDC Template Field", Integer, Boolean, var Integer, var Integer, var Integer, var Integer, var Record "CDC Document Value")' is inaccessible due to its protection level|92|19|92|33
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'CaptureField(var Record "CDC Document", Integer, var Record "CDC Template Field", Boolean)' is inaccessible due to its protection level|149|34|149|46
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'UpdateFieldValue(Code[20], Integer, Integer, var Record "CDC Template Field", Text, Boolean, Boolean)' is inaccessible due to its protection level|159|27|159|43
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'UpdateFieldValue(Code[20], Integer, Integer, var Record "CDC Template Field", Text, Boolean, Boolean)' is inaccessible due to its protection level|289|23|289|39
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'UpdateFieldValue(Code[20], Integer, Integer, var Record "CDC Template Field", Text, Boolean, Boolean)' is inaccessible due to its protection level|309|39|309|55
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'UpdateFieldValue(Code[20], Integer, Integer, var Record "CDC Template Field", Text, Boolean, Boolean)' is inaccessible due to its protection level|334|35|334|51
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'FindCaption(Code[20], Integer, var Record "CDC Template Field", Record "CDC Template Field Caption", var array[100] of Record "CDC Document Word", var array[100] of Record "CDC Document Word")' is inaccessible due to its protection level|562|33|562|44
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'CaptureFromPos(Record "CDC Document Page", var Record "CDC Template Field", Integer, Boolean, var Integer, var Integer, var Integer, var Integer, var Record "CDC Document Value")' is inaccessible due to its protection level|575|40|575|54
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'GetDPIFactor(Integer, Integer)' is inaccessible due to its protection level|580|74|580|86
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'CaptureFromPos(Record "CDC Document Page", var Record "CDC Template Field", Integer, Boolean, var Integer, var Integer, var Integer, var Integer, var Record "CDC Document Value")' is inaccessible due to its protection level|602|19|602|33
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'IsBlank()' is inaccessible due to its protection level|605|18|605|25
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'IntersectsWith(var Record "CDC Document Value", var Record "CDC Document Value")' is inaccessible due to its protection level|629|37|629|51
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'ParseNumber(var Record "CDC Template Field", Text[1024], var Decimal)' is inaccessible due to its protection level|647|48|647|59
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'GetFixedValue()' is inaccessible due to its protection level|675|81|675|94
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'FilterRule(var Record "CDC Template Field", var Record "CDC Template Field Rule")' is inaccessible due to its protection level|767|19|767|29
+src\codeunit\Cod61001.AdvPurchSalesLineCapture.al|AL0161|'FilterRule(var Record "CDC Template Field", var Record "CDC Template Field Rule")' is inaccessible due to its protection level|821|19|821|29
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineAccountNo(var Record "CDC Document", Integer)' is inaccessible due to its protection level|35|37|35|53
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineDescription(var Record "CDC Document", Integer)' is inaccessible due to its protection level|36|39|36|57
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineQuantity(var Record "CDC Document", Integer)' is inaccessible due to its protection level|37|32|37|47
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineUnitCost(var Record "CDC Document", Integer)' is inaccessible due to its protection level|38|32|38|47
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineDiscPct(var Record "CDC Document", Integer)' is inaccessible due to its protection level|39|31|39|45
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineDiscAmount(var Record "CDC Document", Integer)' is inaccessible due to its protection level|40|34|40|51
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineAmount(var Record "CDC Document", Integer)' is inaccessible due to its protection level|41|34|41|47
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineOtherCharges(var Record "CDC Document", Integer)' is inaccessible due to its protection level|42|36|42|55
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetLineUnitCharge(var Record "CDC Document", Integer)' is inaccessible due to its protection level|43|34|43|51
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetCurrencyCode(var Record "CDC Document")' is inaccessible due to its protection level|44|36|44|51
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'IsValidValue(var Record "CDC Template Field", Code[20], Integer)' is inaccessible due to its protection level|69|34|69|46
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'GetAmountRoundingPrecision(Code[10], var Decimal)' is inaccessible due to its protection level|76|24|76|50
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'Add(Record "CDC Document", Record "CDC Template Field", Integer, Integer, Integer, Text[250])' is inaccessible due to its protection level|110|36|110|39
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmountNoRounding(Decimal, Code[10])' is inaccessible due to its protection level|111|101|111|123
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmount(Decimal, Code[10])' is inaccessible due to its protection level|112|33|112|45
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'Add(Record "CDC Document", Record "CDC Template Field", Integer, Integer, Integer, Text[250])' is inaccessible due to its protection level|115|40|115|43
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmountNoRounding(Decimal, Code[10])' is inaccessible due to its protection level|117|37|117|59
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmount(Decimal, Code[10])' is inaccessible due to its protection level|118|37|118|49
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmount(Decimal, Code[10])' is inaccessible due to its protection level|118|96|118|108
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'Add(Record "CDC Document", Record "CDC Template Field", Integer, Integer, Integer, Text[250])' is inaccessible due to its protection level|120|40|120|43
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmountNoRounding(Decimal, Code[10])' is inaccessible due to its protection level|122|37|122|59
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmount(Decimal, Code[10])' is inaccessible due to its protection level|123|37|123|49
+src\codeunit\Cod61002.AdvPurchLineValidation.al|AL0161|'FormatAmount(Decimal, Code[10])' is inaccessible due to its protection level|123|87|123|99

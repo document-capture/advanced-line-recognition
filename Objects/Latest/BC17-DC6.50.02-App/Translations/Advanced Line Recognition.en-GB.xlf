@@ -1,317 +1,316 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en-US" target-language="de-AT" original="Advanced Line Recognition">
+  <file datatype="xml" source-language="en-US" target-language="en-GB" original="Advanced Line Recognition">
     <body>
       <group id="body">
         <trans-unit id="Codeunit 3316338016 - NamedType 2155055126" size-unit="char" translate="yes" xml:space="preserve">
           <source>Field setup aborted because no field was selected!</source>
-          <target>Feldeinrichtung abgebrochen, da kein Feld ausgewählt wurde!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldSetupCanceled</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 325433647" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" is now linked to field "%2"!</source>
-          <target>Das Feld "%1" ist nun mit dem Feld "%2" verknüpft!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsLinkedToSourceField</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 105322588" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for source field %1 in line %2 is missing! Please train this value first!</source>
-          <target>Der Wert für Herkunftsfeld %1 in Zeile %2 fehlt! Bitte trainieren Sie zuerst diesen Wert an!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType MissingSourceFieldValue</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3965207159" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for for %1 (%2) in row %3 is missing! Please train this value first!</source>
-          <target>Der Wert für für %1 (%2) in Zeile %3 fehlt! Bitte trainieren Sie zuerst diesen Wert an!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType MissingFieldExampleValue</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 1660936068" size-unit="char" translate="yes" xml:space="preserve">
           <source>Please select first the source field on the basis of which position the value should be found. </source>
-          <target>Bitte wählen Sie zuerst das Herkunftsfeld aus, an Hand dessen Position der Wert ermittelt werden soll. </target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType SelectOffsetSourceFieldFirst</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 1979109356" size-unit="char" translate="yes" xml:space="preserve">
           <source>Codeunit %1 does not exist! Has the object been renamed?</source>
-          <target>Die Standard Codeunit %1 existiert nicht! Wurde das Object ggf. umbenannt?</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType CodeunitDoesNotExist</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3935478471" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error! For the field %1 hasn|t been trained a caption! Please train the caption first.</source>
-          <target>Fehler! Für Feld %1 wurde noch keine Caption hinterlegt! Bitte pflegen Sie die Caption zuerst.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType TrainCaptionFirstForField</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3750022258" size-unit="char" translate="yes" xml:space="preserve">
           <source>Please choose the field, which should be linked with the source field "%1".</source>
-          <target>Wählen Sie nun das Feld aus, welches Sie mit dem Herkunftsfeld "%1" verknüpfen möchten.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType SelectTheOffsetField</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error during field setup.</source>
-          <target>Fehler bei Feldeinrichtung.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType ErrorDuringFieldSetup</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 1880864858" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select the field that should be found by the column heading.</source>
-          <target>Bitte wählen Sie das Feld aus, welches über die Überschrift gefunden werden soll.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType SelectFieldForColumnHeaderSearch</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3995791139" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choose the field whose value should be found by the caption in the current line.</source>
-          <target>Bitte wählen Sie das Feld aus, welches innerhalb der Position mit Hilfe des Suchbegriffs gefunden werden soll. </target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType SelectFieldForCaptionSearch</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3812887959" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" will now be searched via the column heading "%2".</source>
-          <target>Das Feld "%1" wird nun innerhalb der Position über die Spaltenüberschrift "%2" gesucht. </target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsCapturedByColumnHeading</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3356558191" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value of field "%1" will now been searched via the caption in the current line.</source>
-          <target>Das Feld "%1" wird nun innerhalb der Position über die Caption gesucht. </target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsCapturedByCaption</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3368211824" size-unit="char" translate="yes" xml:space="preserve">
           <source>No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.</source>
-          <target>In Zeile %1 wurde kein Pflichfeld mit der Option "Erfoderlich" gefunden! Konfigurieren Sie zuerst ein Pflichtfeld.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType NoRequiredFieldFound</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
           <source>ALR%1 (%2 Build %3)</source>
-          <target>ALR%1 (%2 Build %3)</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType ALRVersionNoText</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 153526915" size-unit="char" translate="yes" xml:space="preserve">
           <source>There are not fields configured for advanced line recognition, that can be reset.</source>
-          <target>Es gibt keine Felder mit aktivierter erweiterter Zeilenerkennung, die zurückgesetzt werden können.'</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType NoALRFieldsForReset</note>
         </trans-unit>
         <trans-unit id="Codeunit 1295039625 - NamedType 1490299369" size-unit="char" translate="yes" xml:space="preserve">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.</source>
-          <target>Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 vom berechneten Zeilenbetrag (%3), der mit dem erfassten Rabatt % (%4) berechnet wurde, um den Rabattbetrag (%5) zu berechnen.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Purch. - Line Validation - NamedType LineAmountDiffCalcDiscAmtTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1295039625 - NamedType 1496561452" size-unit="char" translate="yes" xml:space="preserve">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.</source>
-          <target>Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 von dem berechneten Zeilenbetrag (%3), der mit dem erfassten Rabattbetrag (%4) berechnet wurde.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Purch. - Line Validation - NamedType LineAmountDiffCapDiscAmtTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1295039625 - NamedType 4175384441" size-unit="char" translate="yes" xml:space="preserve">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.</source>
-          <target>Der erfasste Zeilenbetrag (%2) unterscheidet sich vom in Zeile %1 berechneten Zeilenbetrag (%3).</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Purch. - Line Validation - NamedType LineAmountDiffTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1295039625 - NamedType 3492639454" size-unit="char" translate="yes" xml:space="preserve">
           <source>WARNING: %1</source>
-          <target>WARNUNG: %1</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Purch. - Line Validation - NamedType WarningTxt</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Advanced Line Recognition</source>
-          <target>Erweiterte Zeilenerkennung</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control ALR - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3024729169 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.</source>
-          <target>Gibt an, wie der Feldwert gefunden werden soll. Bei Standard wird das Feld über die Standard Zeilenerkennung gesucht.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Advanced Line Recognition Type - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3299771246 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the position of the sequence in which the field is processed.</source>
-          <target>Gibt die Stelle der Reihenfolge an, in der das Feld verarbeitet wird.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Sorting - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1914719493 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the source field used to calculate the field value via distances/offsets.</source>
-          <target>Gibt das Herkunftsfeld an, welches zur Berechnung des Feldwerts über Abstände/Offsets genutzt wird.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Anchor Field - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1025235501 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.</source>
-          <target>Gibt an, ob das gesuchte Feld ober- oder unterhalb der Zeile gesucht wird, in welcher die Werte der Standard Zeilenerkennung gefunden wurden.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Field Position - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 2744589791 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the line field whose content will be used as value if the value of the current field cannot be found.</source>
-          <target>Gibt das Zeilenfeld an, dessen Inhalt als Wert verwendet wird, wenn der Wert des aktuellen Feldes nicht gefunden werden kann.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Substitution Field - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3387624123 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.</source>
-          <target>Wenn der Wert des aktuellen Feldes nicht gefunden wird, wird vom gleichen Feld aus der vorherigen Zeile dessen Wert in die aktuelle Zeile kopiert.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Get Value from Previous Value - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1188470490 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Offsets</source>
-          <target>Abstände</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Offsets - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3315964426 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the top.</source>
-          <target>Gibt den Abstand nach oben an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Offset Top - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3134861838 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the bottom.</source>
-          <target>Gibt den Abstand nach unten an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Offset Bottom - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 170820834 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the left.</source>
-          <target>Gibt den Abstand nach links an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Offset Left - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 2719260903 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the right.</source>
-          <target>Gibt den Abstand nach rechts an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Offset Right - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 911104209 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the search text/caption on the X axis.</source>
-          <target>Gibt den Abstand zum Suchtext an auf der X-Achse an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control ALR Value Caption Offset X - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1548800826 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the distance to the search text/caption on the Y axis.</source>
-          <target>Gibt den Abstand zum Suchtext an auf der Y-Achse an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control ALR Value Caption Offset Y - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 3500245166 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the expected field width of the field.</source>
-          <target>Gibt die erwartete Feldbreite des Feldes an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control ALR Typical Value Field Width - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Adv. line recognition</source>
-          <target>Erw. Zeilenerkennung</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action AdvancedLineRecognition - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 786213122 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Find value by linked field</source>
-          <target>Suche über verknüpftes Feld</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByLinkedField - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 786213122 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>The desired field is found via a fixed offset (distance) from another field.</source>
-          <target>Das gewünschte Feld wird über einen fest definiertes Offset (Abstand) von einem anderen Feld gefunden.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByLinkedField - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 1993352181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Find value by column heading</source>
-          <target>Feld mit Spaltenüberschrift</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByColumnHeading - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 1993352181 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>The desired field is searched for using a previously trained column heading in the range of the current position.</source>
-          <target>Das gewünschte Feld wird über eine vorher trainierte Spaltenüberschrift im Bereich der aktuellen Position gesucht.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByColumnHeading - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 122988749 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Find value by caption</source>
-          <target>Feld mit Suchtext</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByCaption - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 122988749 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>The desired field is searched for using a previously trained search text/caption in the area of the current position.</source>
-          <target>Das gewünschte Feld wird über einen vorher trainierten Suchtext/Caption im Bereich der aktuellen Position gesucht.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action SearchByCaption - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 1687192353 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Reset field</source>
-          <target>Feld zurücksetzen</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ResetFieldToDefault - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 1687192353 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>The advanced line recognition settings are reset for the desired field.</source>
-          <target>Die Einstellungen der erweiterten Zeilenerkennung werden für das gewünschte Feld zurückgesetzt.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ResetFieldToDefault - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 266822292 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Version</source>
-          <target>Version</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ShowVersionNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 266822292 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Displays the currently used version of the advanced line detection.</source>
-          <target>Zeigt die aktuell verwendete Version der erweiterten Zeilenerkennung an.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Doc Lines ListPart Ext. - Action ShowVersionNo - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve">
           <source>You are using version %1 of the advanced line recognition.</source>
           <note from="Developer" annotates="general" priority="2">Displays the current version of the Advanced line recognition to the user including the build</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType YouAreUsingALRVersion</note>                
-          <target>Sie nutzen die Version %1 der erweiterten Zeilenerkennung.</target>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType YouAreUsingALRVersion</note>             
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 2744589791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Substitution Field</source>
-          <target>Ersatzfeld</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Substitution Field - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 1914719493 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Anchor Field</source>
-          <target>Anker Feld</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Anchor Field - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3299771246 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Sorting</source>
-          <target>Sortierung</target>
+          <note from="Developer" annotates="general" priority="2">Position in the sort order in which the field will be processed</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Sorting - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 1025235501 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Field position</source>
-          <target>Feldposition</target>
+          <note from="Developer" annotates="general" priority="2">Defines if the field is above or below the standard line fields</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field Position - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 1025235501 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source> ,Above standard line,Below standard line</source>
-          <target> ,Oberhalb Standardzeile,Unterhalb Standardzeile</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field Position - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3387624123 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Copy value from previous value</source>
-          <target>Wert vom vorherigen Wert kopieren</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Get Value from Previous Value - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3024729169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Advanced Line Recognition Type</source>
-          <target>Erw. Zeilenerkennung Art</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Advanced Line Recognition Type - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3024729169 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption</source>
-          <target>Standard,Mit Anker verknüpftes Feld,Feldsuche mit Caption,Feldsuche mit Spaltenüberschrift,Gruppierungsfeld mit Caption</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Advanced Line Recognition Type - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3315964426 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Top</source>
-          <target>Offset Oben</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Offset Top - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3134861838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Height</source>
-          <target>Offset Unten</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Offset Bottom - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 170820834 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Left</source>
-          <target>Offset Links</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Offset Left - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 2719260903 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Width</source>
-          <target>Offset Rechts</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Offset Right - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 911104209 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Caption Offset X</source>
-          <target>Wert Suchtext Offset X</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field ALR Value Caption Offset X - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 1548800826 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Caption Offset Y</source>
-          <target>Wert Suchtext Offset Y</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field ALR Value Caption Offset Y - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3500245166 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Field Width</source>
-          <target>Typische Wert Feldbreite</target>
+          <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field ALR Typical Value Field Width - Property Caption</note>
         </trans-unit>
       </group>
