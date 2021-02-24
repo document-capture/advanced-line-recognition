@@ -596,6 +596,7 @@ codeunit 61001 "Adv. Purch/Sales Line Capture"
     local procedure CaptureTableCell(var Template: Record "CDC Template"; var Document: Record "CDC Document"; var "Page": Record "CDC Document Page"; var "Field": Record "CDC Template Field"; LineNo: Integer; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer): Integer
     var
         Value: Record "CDC Document Value";
+        PurchSalesLineCapt: Codeunit "CDC Purch./Sales - Line Capt.";
     begin
         if (Right - Left <= 0) or (Bottom - Top <= 0) then
             exit;
@@ -603,33 +604,10 @@ codeunit 61001 "Adv. Purch/Sales Line Capture"
         CaptureMgt.CaptureFromPos(Page, Field, LineNo, true, Top, Left, Bottom, Right, Value);
         Value.Find('=');
 
-        if (Value.IsBlank) or TableCellAlreadyCaptured(Template, Page, Value) then
+        if (Value.IsBlank) or PurchSalesLineCapt.TableCellAlreadyCaptured(Template, Page, Value) then
             Value.Delete
         else
             exit(Value.Bottom);
-    end;
-
-    local procedure TableCellAlreadyCaptured(var Template: Record "CDC Template"; var "Page": Record "CDC Document Page"; var Value: Record "CDC Document Value"): Boolean
-    var
-        Value2: Record "CDC Document Value";
-        CaptureEngine: Codeunit "CDC Capture Engine";
-    begin
-        Value2.SetCurrentKey("Document No.", "Is Value", Type, "Page No.");
-        if not Template."First Table Line Has Captions" then
-            Value2.SetRange("Is Value", true);
-        Value2.SetRange("Document No.", Page."Document No.");
-        Value2.SetRange(Type, Value2.Type::Line);
-        Value2.SetRange("Page No.", Value."Page No.");
-
-        Value.Top := Value.Top + Round((Value.Bottom - Value.Top) / 2, 1);
-        Value.Left := Value.Left + 3;
-
-        if Value2.FindSet(false, false) then
-            repeat
-                if (not ((Value2.Code = Value.Code) and (Value2."Line No." = Value."Line No."))) then
-                    if CaptureEngine.IntersectsWith(Value, Value2) then
-                        exit(true);
-            until Value2.Next = 0;
     end;
 
     local procedure IsFieldValid(var CaptionField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean
@@ -866,7 +844,7 @@ codeunit 61001 "Adv. Purch/Sales Line Capture"
         exit(IsValidText(Field, Value, DocumentNo));
     end;
 
-    procedure IsValidValue(var "Field": Record "CDC Template Field"; DocumentNo: Code[20]; LineNo: Integer): Boolean
+    procedure ObsoleteIsValidValue(var "Field": Record "CDC Template Field"; DocumentNo: Code[20]; LineNo: Integer): Boolean
     var
         Value: Record "CDC Document Value";
         DocComment: Record "CDC Document Comment";

@@ -1,26 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="de-DE" original="Advanced Line Recognition">
     <body>
       <group id="body">
         <trans-unit id="Codeunit 3316338016 - NamedType 2155055126" size-unit="char" translate="yes" xml:space="preserve">
           <source>Field setup aborted because no field was selected!</source>
-          <target>Feldeinrichtung abgebrochen, da kein Feld ausgewählt wurde!</target>
+          <target state="translated">Feldeinrichtung abgebrochen, da kein Feld ausgewählt wurde.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldSetupCanceled</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 325433647" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" is now linked to field "%2"!</source>
-          <target>Das Feld "%1" ist nun mit dem Feld "%2" verknüpft!</target>
+          <target state="translated">Das Feld "%1" ist nun mit dem Feld "%2" verknüpft.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsLinkedToSourceField</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 105322588" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for source field %1 in line %2 is missing! Please train this value first!</source>
-          <target>Der Wert für Herkunftsfeld %1 in Zeile %2 fehlt! Bitte trainieren Sie zuerst diesen Wert an!</target>
+          <target state="translated">Der Wert für Herkunftsfeld %1 in Zeile %2 fehlt. Bitte trainieren Sie zuerst diesen Wert an.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType MissingSourceFieldValue</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3965207159" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for for %1 (%2) in row %3 is missing! Please train this value first!</source>
-          <target>Der Wert für für %1 (%2) in Zeile %3 fehlt! Bitte trainieren Sie zuerst diesen Wert an!</target>
+          <target state="translated">Der Wert für für %1 (%2) in Zeile %3 fehlt! Bitte trainieren Sie zuerst diesen Wert an.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType MissingFieldExampleValue</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 1660936068" size-unit="char" translate="yes" xml:space="preserve">
@@ -55,17 +55,17 @@
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3995791139" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choose the field whose value should be found by the caption in the current line.</source>
-          <target>Bitte wählen Sie das Feld aus, welches innerhalb der Position mit Hilfe des Suchbegriffs gefunden werden soll. </target>
+          <target state="translated">Bitte wählen Sie das Feld aus, welches innerhalb der Position mit Hilfe des Suchbegriffs gefunden werden soll.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType SelectFieldForCaptionSearch</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3812887959" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" will now be searched via the column heading "%2".</source>
-          <target>Das Feld "%1" wird nun innerhalb der Position über die Spaltenüberschrift "%2" gesucht. </target>
+          <target state="translated">Das Feld "%1" wird nun innerhalb der Position über die Spaltenüberschrift "%2" gesucht.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsCapturedByColumnHeading</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3356558191" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value of field "%1" will now been searched via the caption in the current line.</source>
-          <target>Das Feld "%1" wird nun innerhalb der Position über die Caption gesucht. </target>
+          <target state="translated">Das Feld "%1" wird nun innerhalb der Position über die Caption gesucht.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType FieldIsCapturedByCaption</note>
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 3368211824" size-unit="char" translate="yes" xml:space="preserve">
@@ -80,7 +80,7 @@
         </trans-unit>
         <trans-unit id="Codeunit 3316338016 - NamedType 153526915" size-unit="char" translate="yes" xml:space="preserve">
           <source>There are not fields configured for advanced line recognition, that can be reset.</source>
-          <target>Es gibt keine Felder mit aktivierter erweiterter Zeilenerkennung, die zurückgesetzt werden können.'</target>
+          <target state="translated">Es gibt keine Felder mit aktivierter erweiterter Zeilenerkennung, die zurückgesetzt werden können.</target>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Line Recognition Mgt. - NamedType NoALRFieldsForReset</note>
         </trans-unit>
         <trans-unit id="Codeunit 1295039625 - NamedType 1490299369" size-unit="char" translate="yes" xml:space="preserve">
@@ -311,7 +311,7 @@
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3500245166 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Field Width</source>
-          <target>Typische Wert Feldbreite</target>
+          <target state="translated">Feldbreite vom Wert</target>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field ALR Typical Value Field Width - Property Caption</note>
         </trans-unit>
       </group>

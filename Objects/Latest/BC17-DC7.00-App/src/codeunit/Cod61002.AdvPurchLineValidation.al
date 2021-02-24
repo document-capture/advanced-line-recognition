@@ -14,7 +14,7 @@ codeunit 61002 "Adv. Purch. - Line Validation"
         PurchDocMgt: Codeunit "CDC Purch. Doc. - Management";
         CaptureMgt: Codeunit "CDC Capture Management";
         DCAppMgt: Codeunit "CDC Approval Management";
-        AdvPurchSalesLineCapture: Codeunit "Adv. Purch/Sales Line Capture";
+        //Obsolete AdvPurchSalesLineCapture: Codeunit "Adv. Purch/Sales Line Capture";
         Quantity: Decimal;
         UnitCost: Decimal;
         LineAmount: Decimal;
@@ -68,7 +68,7 @@ codeunit 61002 "Adv. Purch. - Line Validation"
         Field.SetRange(Type, Field.Type::Line);
         if Field.FindSet then
             repeat
-                if not AdvPurchSalesLineCapture.IsValidValue(Field, Rec."Document No.", Rec."Line No.") then begin
+                if not CaptureMgt.IsValidValue(Field, Rec."Document No.", Rec."Line No.") then begin
                     // No need to write an error here as an error written in C6085580 - CDC Doc. - Field Validation
                     Rec.OK := false;
                     exit;
