@@ -1,0 +1,148 @@
+OBJECT Codeunit 61002 Adv. Purch. - Line Validation
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.03.21;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW13.70.00.6.00,ALR;
+  }
+  PROPERTIES
+  {
+    TableNo=6085596;
+    OnRun=VAR
+            Document@6085588 : Record 6085590;
+            Field@6085587 : Record 6085580;
+            DocumentComment@6085673 : Record 6085594;
+            EmptyField@6085674 : Record 6085580;
+            PurchDocMgt@6085585 : Codeunit 6085709;
+            CaptureMgt@6085584 : Codeunit 6085576;
+            DCAppMgt@6085591 : Codeunit 6085722;
+            Quantity@6085583 : Decimal;
+            UnitCost@6085582 : Decimal;
+            LineAmount@6085581 : Decimal;
+            DiscAmount@6085580 : Decimal;
+            DiscPct@6085579 : Decimal;
+            LineAmount2@6085578 : Decimal;
+            AmountRoundingPrecision@6085577 : Decimal;
+            OtherCharges@6085574 : Decimal;
+            UnitCharge@6085573 : Decimal;
+            LineDescription@6085590 : Text[250];
+            CommentText@6085586 : Text[1024];
+            LineAccountNo@6085589 : Code[250];
+            CurrencyCode@6085576 : Code[10];
+            CommentType@6085575 : 'Information,Warning,Error';
+            ALRTemplateField@100000000 : Record 6085580;
+          BEGIN
+            IF NOT Document.GET("Document No.") THEN
+              EXIT;
+
+            LineAccountNo := PurchDocMgt.GetLineAccountNo(Document,"Line No.");
+            LineDescription := PurchDocMgt.GetLineDescription(Document,"Line No.");
+            Quantity := PurchDocMgt.GetLineQuantity(Document,"Line No.");
+            UnitCost := PurchDocMgt.GetLineUnitCost(Document,"Line No.");
+            DiscPct := PurchDocMgt.GetLineDiscPct(Document,"Line No.");
+            DiscAmount := PurchDocMgt.GetLineDiscAmount(Document,"Line No.");
+            LineAmount := PurchDocMgt.GetLineAmount(Document,"Line No.");
+            OtherCharges := PurchDocMgt.GetLineOtherCharges(Document,"Line No.");
+            UnitCharge := PurchDocMgt.GetLineUnitCharge(Document,"Line No.");
+            CurrencyCode := PurchDocMgt.GetCurrencyCode(Document);
+
+            //ALR >>>
+            //IF (LineAccountNo = '') AND (Quantity = 0) AND (UnitCost = 0) AND (LineAmount = 0) AND (DiscPct = 0) AND
+            //  (DiscAmount = 0) AND (LineDescription = '')
+            //THEN BEGIN
+            //  Skip := TRUE;
+            //  EXIT;
+            //END;
+            ALRTemplateField.SETRANGE("Template No.",Rec."Template No.");
+            ALRTemplateField.SETRANGE(Type,ALRTemplateField.Type::Line);
+            ALRTemplateField.SETRANGE(Required,TRUE);
+            IF ALRTemplateField.FINDSET THEN
+            REPEAT
+              IF STRLEN(CaptureMgt.GetValueAsText("Document No.","Line No.",ALRTemplateField)) = 0 THEN
+                Skip := TRUE;
+            UNTIL ALRTemplateField.NEXT = 0;
+            IF Skip THEN
+              EXIT;
+            //ALR <<<
+
+            Field.SETRANGE("Template No.","Template No.");
+            Field.SETRANGE(Type,Field.Type::Line);
+            IF Field.FINDSET THEN
+              REPEAT
+                IF NOT CaptureMgt.IsValidValue(Field,"Document No.","Line No.") THEN BEGIN
+                  // No need to write an error here as an error written in C6085580 - CDC Doc. - Field Validation
+                  OK := FALSE;
+                  EXIT;
+                END;
+              UNTIL Field.NEXT = 0;
+
+            IF NOT DCAppMgt.GetAmountRoundingPrecision(CurrencyCode,AmountRoundingPrecision) THEN BEGIN
+              OK := FALSE;
+              EXIT;
+            END;
+
+            LineAmount2 := ROUND(Quantity * (UnitCost + UnitCharge),AmountRoundingPrecision);
+            LineAmount2 += ROUND(OtherCharges,AmountRoundingPrecision);
+
+            IF DiscAmount <> 0 THEN
+              LineAmount2 := LineAmount2 - ROUND(DiscAmount,AmountRoundingPrecision)
+            ELSE
+              IF DiscPct <> 0 THEN BEGIN
+                // We are rounding the discount amount before we subtract it from LineAmount as this is how standard NAV behaves on an Invoice
+                DiscAmount :=  ROUND(LineAmount2 * DiscPct / 100,AmountRoundingPrecision);
+                LineAmount2 := LineAmount2 - DiscAmount;
+              END;
+
+            // We use AmountRoundingPrecision as any roundings should be equal to AmountRoundingPrecision. In this situation,
+            // we want the used to be able to register the document.
+            // When a document is registered with a rounding difference, the
+            OK := (ABS(LineAmount - LineAmount2) <= AmountRoundingPrecision);
+
+            IF "Create Comment" THEN
+              IF LineAmount <> LineAmount2 THEN BEGIN
+                IF OK THEN BEGIN
+                  CommentType := CommentType::Warning;
+                  CommentText := WarningTxt;
+                END ELSE BEGIN
+                  CommentType := CommentType::Error;
+                  CommentText := '%1';
+                END;
+
+                // LineAmount is Line Amount as captured/keyed in on the document line. We therefore want to show all decimals.
+                IF (DiscPct = 0) AND (DiscAmount = 0) THEN
+                  DocumentComment.Add(Document,EmptyField,"Line No.",DocumentComment.Area::Validation,CommentType,
+                    STRSUBSTNO(CommentText,STRSUBSTNO(LineAmountDiffTxt,"Line No.",DCAppMgt.FormatAmountNoRounding(LineAmount,CurrencyCode),
+                      DCAppMgt.FormatAmount(LineAmount2,CurrencyCode))))
+                ELSE
+                  IF DiscPct <> 0 THEN
+                    DocumentComment.Add(Document,EmptyField,"Line No.",DocumentComment.Area::Validation,CommentType,
+                      STRSUBSTNO(CommentText,STRSUBSTNO(LineAmountDiffCalcDiscAmtTxt,"Line No.",
+                        DCAppMgt.FormatAmountNoRounding(LineAmount,CurrencyCode),
+                        DCAppMgt.FormatAmount(LineAmount2,CurrencyCode),DiscPct,DCAppMgt.FormatAmount(DiscAmount,CurrencyCode))))
+                  ELSE
+                    DocumentComment.Add(Document,EmptyField,"Line No.",DocumentComment.Area::Validation,CommentType,
+                      STRSUBSTNO(CommentText,STRSUBSTNO(LineAmountDiffCapDiscAmtTxt,"Line No.",
+                        DCAppMgt.FormatAmountNoRounding(LineAmount,CurrencyCode),
+                        DCAppMgt.FormatAmount(LineAmount2,CurrencyCode),DCAppMgt.FormatAmount(DiscAmount,CurrencyCode))));
+              END;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      LineAmountDiffCalcDiscAmtTxt@6085576 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3) n†r den genkendte rabat-% (%4) benyttes til beregning af rabatbel›b (%5).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 vom berechneten Zeilenbetrag (%3), der mit dem erfassten Rabatt % (%4) berechnet wurde, um den Rabattbetrag (%5) zu berechnen.;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.;NLD=Herkend lijnbedrag (%2) is verschillend van berekend lijnbedrag (%3) met behulp van herkende korting % (%4) om korting (%5) op regel %1 te berekenen.';
+      LineAmountDiffCapDiscAmtTxt@6085577 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3) n†r det genkendte rabatbel›b (%4) benyttes.;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 von dem berechneten Zeilenbetrag (%3), der mit dem erfassten Rabattbetrag (%4) berechnet wurde.;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.;NLD=Herkend lijnbedrag (%2) is verschillend van berekend lijnbedrag (%3) met behulp van herkende korting % (%4) op regel %1.';
+      LineAmountDiffTxt@6085573 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich vom in Zeile %1 berechneten Zeilenbetrag (%3).;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.;NLD=Herkend lijnbedrag (%2) is anders dan berekend lijnbedrag (%3) op regel %1.';
+      WarningTxt@6085574 : TextConst 'DAN=ADVARSEL: %1;DEU=WARNUNG: %1;ENU=ATTENTION : %1;FRA=ATTENTION : %1;NLD=WAARSCHUWING: %1';
+
+    BEGIN
+    {
+      This codeunit validates lines on purchase documents
+    }
+    END.
+  }
+}
+

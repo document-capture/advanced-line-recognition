@@ -1,0 +1,1053 @@
+OBJECT Page 6085586 CDC Template Field Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.03.21;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=DCW16.00.00.6.50,ALR;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Vorlage Feld Karte;
+               ENU=Template Field Card];
+    SourceTable=Table6085580;
+    DataCaptionExpr=STRSUBSTNO('%1 - %2 - %3 - %4',"Template No.",Type,Code,"Field Name");
+    PageType=Card;
+    OnOpenPage=BEGIN
+                 UpdateControls;
+               END;
+
+    OnAfterGetRecord=VAR
+                       Template@6085574 : Record 6085579;
+                       DocCat@6085573 : Record 6085575;
+                     BEGIN
+                       UpdateControls;
+
+                       Template.GET("Template No.");
+                       DocCat.GET(Template."Category Code");
+
+                       CodeunitLookup := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Codeunit,"Codeunit ID: Lookup");
+                       CodeunitCaptureVal := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Codeunit,"Codeunit ID: Capture Value");
+                       CodeunitIsValid := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Codeunit,"Codeunit ID: Is OK");
+                       CodeunitValidate := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Codeunit,"Codeunit ID: Validate");
+
+                       SourceTable := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table,"Source Table No.");
+                       SourceField := RecIDMgt.GetFieldCaption("Source Table No.","Source Field No.");
+
+                       DestHeaderField := RecIDMgt.GetFieldCaption(DocCat."Destination Header Table No.","Destination Header Field No.");
+                       DestLineField := RecIDMgt.GetFieldCaption(DocCat."Destination Line Table No.","Destination Line Field No.");
+
+                       FormulaTxt := '';
+                       IF Formula <> '' THEN
+                         FormulaTxt := Formula
+                       ELSE BEGIN
+                         FormulaTxt := GetFixedValue;
+                         IF FormulaTxt <> '' THEN
+                           FormulaTxt := '''' + FormulaTxt + '''';
+                       END;
+                     END;
+
+    OnNewRecord=BEGIN
+                  FILTERGROUP(4);
+                  SETRANGE(Type);
+                  SETRANGE(Code);
+
+                  CLEAR(Type);
+                  Code := '';
+                  FILTERGROUP(0);
+
+                  UpdateControls;
+
+                  CodeunitLookup := '';
+                  CodeunitCaptureVal := '';
+                  CodeunitIsValid := '';
+                  CodeunitValidate := '';
+
+                  SourceTable := '';
+                  SourceField := '';
+
+                  DestHeaderField := '';
+                  DestLineField := '';
+                END;
+
+    OnQueryClosePage=BEGIN
+                       EXIT(IsFormulaValid(FormulaTxt,TRUE));
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 6085575 ;    ;ActionContainer;
+                      Name=RelatedInformation;
+                      ActionContainerType=RelatedInformation }
+      { 6085574 ;1   ;ActionGroup;
+                      Name=Functions;
+                      CaptionML=[DEU=F&unktionen;
+                                 ENU=F&unctions] }
+      { 6085576 ;2   ;Action    ;
+                      Name=Captions;
+                      CaptionML=[DEU=Suchtexte;
+                                 ENU=Captions];
+                      ToolTipML=[DEU=Anzeigen oder Bearbeiten der Suchtexte, die in Dokumenten verwendet werden, um einen entsprechenden Wert zu finden.;
+                                 ENU=View or edit captions searched for in documents to find a corresponding value.];
+                      Promoted=Yes;
+                      Visible=NOT ShowXmlPath;
+                      Image=Comment;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 ShowCaptions;
+                               END;
+                                }
+      { 6085573 ;2   ;Action    ;
+                      Name=Rules;
+                      CaptionML=[DEU=Regeln;
+                                 ENU=Rules];
+                      ToolTipML=[DEU=Zeigen Sie die Regeln an oder bearbeiten Sie sie, um zu ÅberprÅfen, ob ein Feld einen gÅltigen Wert enthÑlt.;
+                                 ENU=View or edit the rules used to check if a field contains a valid value.];
+                      Promoted=Yes;
+                      Image=ViewCheck;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 ShowRules;
+                               END;
+                                }
+      { 6085577 ;2   ;Action    ;
+                      Name=Codeunits;
+                      CaptionML=[DEU=Codeunits;
+                                 ENU=Codeunits];
+                      ToolTipML=[DEU=Anzeigen oder Bearbeiten von Codeunits, die zum AusfÅhren erweiterter Feldaktionen verwendet werden.;
+                                 ENU=View or edit codeunits used to perform advanced field actions.];
+                      Promoted=Yes;
+                      Image=CodesList;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 ShowCodeunits;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;;Container;
+                Name=ContentArea;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=General;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General];
+                GroupType=Group }
+
+    { 1160040016;2;Field  ;
+                Name=Type;
+                ToolTipML=[DEU=Gibt an, ob es sich um ein Kopf- oder Zeilenfeld handelt.;
+                           ENU=Specifies whether this is a header or line field.];
+                SourceExpr=Type;
+                Visible=ShowCodeAndType }
+
+    { 1160040017;2;Field  ;
+                Name=Code;
+                ToolTipML=[DEU=Gibt einen Vorlagenfeldcode an.;
+                           ENU=Specifies a template field code.];
+                SourceExpr=Code;
+                Visible=ShowCodeAndType;
+                OnValidate=BEGIN
+                             CurrPage.UPDATE(TRUE);
+                           END;
+                            }
+
+    { 1000000026;2;Field  ;
+                Name=Field Name;
+                ToolTipML=[DEU=Gibt den Namen des Felds an, das bei der Verarbeitung von Dokumenten angezeigt wird.;
+                           ENU=Specifies the name of the field shown when processing documents.];
+                SourceExpr="Field Name";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE(TRUE);
+                           END;
+                            }
+
+    { 6085585;2;Group     ;
+                Name=XmlPathGroup;
+                CaptionML=[DEU="";
+                           ENU=""];
+                Visible=ShowXmlPath;
+                GroupType=Group }
+
+    { 6085584;3;Field     ;
+                Name=XMLPath;
+                ToolTipML=[DEU=Gibt den XML-Pfad an, unter dem sich der Wert fÅr dieses Feld im XML-Dokument befindet.;
+                           ENU=Specifies the XML Path where the value for this field is to be found in the XML Document.];
+                SourceExpr="XML Path";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnAssistEdit=VAR
+                               CaptureMgt@6085573 : Codeunit 6085576;
+                             BEGIN
+                               IF CaptureMgt.XmlPathAssistEdit(CurrentDocumentNo,"Template No.",Type,Code,"XML Path") THEN
+                                 VALIDATE("XML Path");
+                             END;
+                              }
+
+    { 6085601;2;Group     ;
+                Name=ShowFieldGroup;
+                CaptionML=[DEU="";
+                           ENU=""];
+                Visible=ShowXmlPath AND ShowXMLShowField;
+                GroupType=Group }
+
+    { 1   ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob das Zeilenfeld in der Dokumentenkarte angezeigt werden soll.;
+                           ENU=Specifies wheather to show the Line Template Field in the Document Card.];
+                SourceExpr="Show Field" }
+
+    { 1000000008;2;Field  ;
+                Name=Caption;
+                CaptionML=[DEU=Suchtext;
+                           ENU=Caption];
+                ToolTipML=[DEU=Gibt den Suchtext an, nach dem in Dokumenten gesucht wird, um das Feld und den Wert zu identifizieren. Verwenden Sie den Drilldown, um weitere Suchtexte anzugeben.;
+                           ENU=Specifies the caption that is searched for in documents to identify the field and value. Use drill down to specify alternative captions.];
+                SourceExpr=CaptionText;
+                Visible=NOT ShowXmlPath;
+                Editable=EditCaption;
+                OnValidate=VAR
+                             TemplateFieldCaption@6085573 : Record 6085581;
+                           BEGIN
+                             TemplateFieldCaption.SETRANGE("Template No.","Template No.");
+                             TemplateFieldCaption.SETRANGE(Type,Type);
+                             TemplateFieldCaption.SETRANGE(Code,Code);
+                             IF TemplateFieldCaption.FINDFIRST THEN BEGIN
+                               IF CaptionText = '' THEN
+                                 TemplateFieldCaption.DELETE
+                               ELSE BEGIN
+                                 TemplateFieldCaption.Caption := CaptionText;
+                                 TemplateFieldCaption."Caption Length" := STRLEN(TemplateFieldCaption.Caption);
+                                 TemplateFieldCaption.MODIFY;
+                               END;
+                             END ELSE BEGIN
+                               TemplateFieldCaption.INIT;
+                               TemplateFieldCaption."Template No." := "Template No.";
+                               TemplateFieldCaption.Type := Type;
+                               TemplateFieldCaption.Code := Code;
+                               TemplateFieldCaption."Line No." := 10000;
+                               TemplateFieldCaption.Caption := CaptionText;
+                               TemplateFieldCaption."Caption Length" := STRLEN(TemplateFieldCaption.Caption);
+                               TemplateFieldCaption.INSERT;
+                             END;
+                           END;
+
+                OnDrillDown=BEGIN
+                              ShowCaptions;
+                            END;
+                             }
+
+    { 1000000025;2;Field  ;
+                Name=Rule;
+                CaptionML=[DEU=Regel;
+                           ENU=Rule];
+                ToolTipML=[DEU=Gibt die Regel an, mit der geprÅft wird, ob der Wert des Felds ein korrektes Format hat. Verwenden Sie den Drilldown, um mehrere Regeln anzugeben.;
+                           ENU=Specifies the rule used to check if the value of the field has a correct format. Use drill down to specify multiple rules.];
+                SourceExpr=RuleText;
+                Editable=EditRule;
+                OnValidate=VAR
+                             TemplateFieldRule@6085573 : Record 6085583;
+                           BEGIN
+                             TemplateFieldRule.SETRANGE("Template No.","Template No.");
+                             TemplateFieldRule.SETRANGE(Type,Type);
+                             TemplateFieldRule.SETRANGE(Code,Code);
+                             IF TemplateFieldRule.FINDFIRST THEN BEGIN
+                               IF RuleText = '' THEN
+                                 TemplateFieldRule.DELETE
+                               ELSE BEGIN
+                                 TemplateFieldRule.Rule := RuleText;
+                                 TemplateFieldRule.MODIFY;
+                               END;
+                             END ELSE BEGIN
+                               TemplateFieldRule.INIT;
+                               TemplateFieldRule."Template No." := "Template No.";
+                               TemplateFieldRule.Type := Type;
+                               TemplateFieldRule.Code := Code;
+                               TemplateFieldRule."Entry No." := 10000;
+                               TemplateFieldRule.Rule := RuleText;
+                               TemplateFieldRule.INSERT;
+                             END;
+                           END;
+
+                OnDrillDown=BEGIN
+                              ShowRules;
+                            END;
+                             }
+
+    { 1000000003;2;Field  ;
+                Name=Required;
+                ToolTipML=[DEU=Gibt an, ob das Feld ein Pflichtfeld ist. Wenn im Dokument kein Wert erkannt werden kann, muss der Wert manuell angegeben werden, um das Dokument registrieren zu kînnen.;
+                           ENU=Specifies whether a value is required for the field before a document can be registered. If a value cannot be recognized in the document, then the value must be specified manually to register the document.];
+                SourceExpr=Required;
+                Importance=Additional }
+
+    { 1000000004;2;Field  ;
+                Name=Search for Value;
+                ToolTipML=[DEU=Gibt an, ob wÑhrend der Erkennung nach dem Feld gesucht werden soll.;
+                           ENU=Specifies whether to search for the field during recognition.];
+                SourceExpr="Search for Value";
+                Importance=Additional;
+                Editable=SearchForValueEditable }
+
+    { 6085583;2;Field     ;
+                Name=Formula Text;
+                CaptionML=[DEU=Formel;
+                           ENU=Formula];
+                ToolTipML=[DEU=Gibt eine Formel an, die zur Berechnung des Feldwerts verwendet wird. Wenn es sich um ein Zahlenfeld handelt, kînnen Sie die Formel mit anderen Zahlenfeldern aus der Vorlage oder mit konstanten Zahlenwerten erstellen und Operatoren wie * / + - verwenden. Wenn es sich um ein Textfeld handelt, kînnen Sie alle Felder aus der Vorlage verwenden und die Werte mithilfe des Pluszeichens verketten.;
+                           ENU=Specifies a formula used to calculate the field value. If it is a number-field, you can construct the formula with other number-fields from the template, or with constant number values, and use operators such as * / + -. If it is a text field, you can use all fields from the template, and concatenate the values using the + sign.];
+                SourceExpr=FormulaTxt;
+                OnValidate=BEGIN
+                             FormulaTxt := RemoveQuotationMarks(FormulaTxt);
+                             SetFormula(FormulaTxt);
+                             SearchForValueEditable := (Formula = '') AND (FixedValue = '');
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnLookup=VAR
+                           PrevText@6085573 : Text[1024];
+                         BEGIN
+                           PrevText := Text;
+                           IF FormulaOnLookup(Text) THEN BEGIN
+                             Text := PrevText + Text;
+                             EXIT(TRUE);
+                           END;
+                         END;
+                          }
+
+    { 161024016;2;Field   ;
+                Name=Insert on new Templates;
+                ToolTipML=[DEU=Gibt an, ob das Feld in alle neuen Vorlagen eingefÅgt werden soll. Wenn dies nicht aktiviert ist, kann das Feld bei Bedarf manuell zu einzelnen Dokumenten und Vorlagen hinzugefÅgt werden.;
+                           ENU=Specifies whether to insert the field on all new templates. If this is not enabled, then the field can be manually added to individual documents and templates when needed.];
+                SourceExpr="Insert on new Templates";
+                Importance=Additional;
+                Visible=IsMasterTemplate }
+
+    { 1000000022;2;Field  ;
+                Name=Default Page Source;
+                ToolTipML=[DEU=Gibt an, ob bei der Suche nach dem Wert des Felds mit der ersten oder letzten Seite begonnen werden soll. Wenn auf der ersten oder letzten Seite kein Wert erkannt wird, wird der Rest des Dokuments durchsucht.;
+                           ENU=Specifies whether to start on the first or last page when searching for the value of the field. If a value is not recognized on either the first or last page, then the rest of the document is searched.];
+                SourceExpr="Default Page Source";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1000000002;2;Field  ;
+                Name=Data Type;
+                ToolTipML=[DEU=Gibt den Datentyp der in diesem Feld gespeicherten Werte an.;
+                           ENU=Specifies the data type of the values saved in this field.];
+                SourceExpr="Data Type";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             CurrPage.UPDATE(TRUE);
+                           END;
+                            }
+
+    { 6085581;2;Group     ;
+                Name=StopLineRecognition;
+                CaptionML=[DEU="";
+                           ENU=""];
+                Visible=ShowStopLineRecognition AND NOT ShowXmlPath;
+                GroupType=Group }
+
+    { 1000000015;3;Field  ;
+                Name=Stop Lines Recognition;
+                ToolTipML=[DEU=Gibt an, wann die Zeilenerkennung in Dokumenten gestoppt werden soll.;
+                           ENU=Specifies when to stop recognizing lines in documents.];
+                SourceExpr="Stop Lines Recognition";
+                Importance=Additional;
+                Visible=LineRecognitionEnabled }
+
+    { 1160040015;2;Field  ;
+                Name=Use as Doc. Separator;
+                ToolTipML=[DEU=Gibt an, ob das Feld ein Belegtrennzeichen ist und ob Dokumente automatisch aufgeteilt werden sollen, wenn sich der Wert des Felds in einer PDF-Datei zwischen einer Seite und der nÑchsten Ñndert. Wird in Kombination mit der Konfiguration der Belegtrennung auf der Belegkategorie verwendet.;
+                           ENU=Specifies whether the field is a document separator and if documents should be split automatically if the value of the field changes between one page and the next in a PDF file. Used in combination with the configuration of document splitting on the document category.];
+                SourceExpr="Use as Doc. Separator";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1160040011;2;Group  ;
+                Name=Date Settings;
+                CaptionML=[DEU=Datumseinstellungen;
+                           ENU=Date Settings];
+                Visible=IsDate;
+                GroupType=Group }
+
+    { 1000000011;3;Field  ;
+                Name=Language Code;
+                ToolTipML=[DEU=Gibt die Sprache an, in der Datumsangaben erkannt werden, wenn Monate in Worten und nicht in Zahlen geschrieben werden. Um beispielsweise "October" zu erkennen, muss die Sprache Englisch sein. Bei allen Vorlagenfeldern wird die Sprache von der Vorlage Åbernommen.;
+                           ENU=Specifies the language used to recognize dates when months are written in words and not numerical. For example, to recognize "Oktober" the language must be Danish. All template fields will have the language inherited from the template.];
+                SourceExpr="Language Code";
+                Editable=IsDate }
+
+    { 161024025;3;Field   ;
+                Name=Date Format;
+                ToolTipML=[DEU=Gibt das Datumsformat an, das zum Erkennen von Datumsangaben in Dokumenten verwendet wird. Alle Vorlagenfelder nutzen das von der Vorlage Åbernommene Datumsformat.;
+                           ENU=Specifies the date format used to recognize dates in documents. All template fields have the date format inherited from the template.];
+                SourceExpr="Date Format";
+                Editable=IsDate }
+
+    { 1160040005;3;Field  ;
+                Name=Validation Dateformula From;
+                ToolTipML=[DEU=Gibt eine Datumsformel an, um das frÅheste zulÑssige Datum fÅr ein Feld zu definieren. Die Berechnung erfolgt in Bezug auf das heutige Datum.;
+                           ENU=Specifies a date formula to define the earliest allowed date for a field. The calculation will be made in relation to today's date.];
+                SourceExpr="Validation Dateformula From";
+                Importance=Additional;
+                Editable=IsDate }
+
+    { 1160040004;3;Field  ;
+                Name=Validation Dateformula To;
+                ToolTipML=[DEU=Gibt eine Datumsformel zum Definieren des letzten zulÑssigen Datums fÅr ein Feld an. Die Berechnung der Formel erfolgt nach heutigem Datum.;
+                           ENU=Specifies a date formula for defining the latest allowed date for a field. Calculating the formula will be done according to today's date.];
+                SourceExpr="Validation Dateformula To";
+                Importance=Additional;
+                Editable=IsDate }
+
+    { 1160040014;2;Group  ;
+                Name=Number Settings;
+                CaptionML=[DEU=Nummerierung Einstellungen;
+                           ENU=Number Settings];
+                Visible=IsNumber;
+                GroupType=Group }
+
+    { 1160040013;3;Field  ;
+                Name=Make Absolute Number;
+                ToolTipML=[DEU=Gibt an, ob negative Zahlen in positive Zahlen umgewandelt werden sollen.;
+                           ENU=Specifies whether to convert negative numbers into positive numbers.];
+                SourceExpr="Make Absolute Number";
+                Editable=IsNumber }
+
+    { 6085582;3;Field     ;
+                Name=DecimalPlacesDescription;
+                CaptionML=[DEU=Dezimalstellen;
+                           ENU=Decimal Places];
+                ToolTipML=[DEU=Gibt die Anzahl der Dezimalstellen fÅr Werte an. Zum Beispiel bedeutet 2: 5, dass das Feld immer 2 Dezimalstellen und maximal 5 Dezimalstellen enthÑlt.;
+                           ENU=Specifies the number of decimal places for values. E.g. 2:5 means that the field will always show 2 decimals and a maximum of 5 decimals.];
+                SourceExpr=DecimalPlacesDescription;
+                Editable=IsNumber;
+                OnValidate=BEGIN
+                             DecimalPlacesDescription := ParseDecimalPlacesDescription(DecimalPlacesDescription);
+                             DecimalPlacesDescription := ValidateDecimalPlaces(DecimalPlacesDescription);
+                             MODIFY;
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnAssistEdit=BEGIN
+                               PAGE.RUNMODAL(PAGE::"CDC Decimal Places Lookup",Rec);
+                               CurrPage.UPDATE(TRUE);
+                             END;
+                              }
+
+    { 1160040001;3;Field  ;
+                Name=Blank Zero;
+                ToolTipML=[DEU=Gibt an, ob das Feld leer bleiben soll, anstatt "0" anzuzeigen, wenn der Wert Null ist.;
+                           ENU=Specifies whether the field should be left empty, instead of showing "0", if the value is zero.];
+                SourceExpr="Blank Zero";
+                Importance=Additional;
+                Editable=IsNumber }
+
+    { 1160040010;2;Group  ;
+                Name=Lookup Values;
+                CaptionML=[DEU=Lookup Werte;
+                           ENU=Lookup Values];
+                Visible=IsLookup;
+                GroupType=Group }
+
+    { 161024015;3;Field   ;
+                Name=SourceTable;
+                CaptionML=[DEU=Herkunftstabellen;
+                           ENU=Source Table];
+                ToolTipML=[DEU=Gibt die Tabelle an, die alle gÅltigen Werte fÅr das Feld enthÑlt.;
+                           ENU=Specifies the table that contains all valid values for the field.];
+                SourceExpr=SourceTable;
+                Editable=IsLookup;
+                OnValidate=BEGIN
+                             VALIDATE("Source Table No.",RecIDMgt.GetObjectID(AllObjWithCaption."Object Type"::Table,SourceTable));
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnLookup=BEGIN
+                           EXIT(RecIDMgt.LookupObject(AllObjWithCaption."Object Type"::Table,Text));
+                         END;
+                          }
+
+    { 161024028;3;Field   ;
+                Name=SourceField;
+                CaptionML=[DEU=Herkunftsfeld;
+                           ENU=Source Field];
+                ToolTipML=[DEU=Gibt das Feld der Herkunftstabelle an, das die Werte enthÑlt, die im Feld gespeichert werden sollen.;
+                           ENU=Specifies the field of the source table which contains the values to be saved in the field.];
+                SourceExpr=SourceField;
+                Editable=IsLookup;
+                LookupPageID=Field List;
+                OnValidate=BEGIN
+                             VALIDATE("Source Field No.",RecIDMgt.GetFieldID("Source Table No.",SourceField));
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnLookup=BEGIN
+                           EXIT(RecIDMgt.LookupField(Text,"Source Table No.",TRUE));
+                         END;
+                          }
+
+    { 161024029;3;Field   ;
+                Name=No. of Source Table Filters;
+                ToolTipML=[DEU="Gibt die Anzahl der auf die Herkunftstabelle angewendeten Filter an, wenn einige DatensÑtze aus der Herkunftstabelle herausgefiltert werden sollen. ";
+                           ENU="Specifies the number of filters applied to the source table if some records from the source table should be filtered out. "];
+                SourceExpr="No. of Source Table Filters";
+                OnDrillDown=BEGIN
+                              RecIDMgt.ShowTableFields("Source Table No.","Template No.",Type,TRUE,"Source Table Filter GUID");
+                              CurrPage.UPDATE(TRUE);
+                            END;
+                             }
+
+    { 1160040009;2;Group  ;
+                Name=Transfer Value to...;
+                CaptionML=[DEU=Wert Åbertragen nach...;
+                           ENU=Transfer Value to...];
+                Visible=ShowTransferValue;
+                GroupType=Group }
+
+    { 161024030;3;Field   ;
+                Name=DestHeaderField;
+                ToolTipML=[DEU=Gibt das Feld in der Kopftabelle an, in das der Wert beim Registrieren von Dokumenten Åbertragen werden soll.;
+                           ENU=Specifies the field in the header table where to transfer the value when registering documents.];
+                SourceExpr=DestHeaderField;
+                CaptionClass=GetDestFieldCaption(0);
+                Editable=IsDestHeader;
+                OnValidate=VAR
+                             Template@1160040001 : Record 6085579;
+                             DocCat@1160040002 : Record 6085575;
+                           BEGIN
+                             Template.GET("Template No.");
+                             DocCat.GET(Template."Category Code");
+                             VALIDATE("Destination Header Field No.",RecIDMgt.GetFieldID(DocCat."Destination Header Table No.",DestHeaderField));
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnLookup=VAR
+                           DocCat@161024014 : Record 6085575;
+                           Template@161024013 : Record 6085579;
+                         BEGIN
+                           IF Type = Type::Line THEN
+                             EXIT;
+
+                           Template.GET("Template No.");
+                           DocCat.GET(Template."Category Code");
+                           EXIT(RecIDMgt.LookupField(Text,DocCat."Destination Header Table No.",FALSE));
+                         END;
+                          }
+
+    { 1160040000;3;Field  ;
+                Name=DestLineField;
+                ToolTipML=[DEU=Gibt das Feld in der Zeilentabelle an, in das der Wert beim Registrieren von Dokumenten Åbertragen werden soll.;
+                           ENU=Specifies the field in the line table where to transfer the value when registering documents.];
+                SourceExpr=DestLineField;
+                CaptionClass=GetDestFieldCaption(1);
+                Editable=IsDestLine;
+                OnValidate=VAR
+                             Template@1160040001 : Record 6085579;
+                             DocCat@1160040002 : Record 6085575;
+                           BEGIN
+                             Template.GET("Template No.");
+                             DocCat.GET(Template."Category Code");
+                             VALIDATE("Destination Line Field No.",RecIDMgt.GetFieldID(DocCat."Destination Line Table No.",DestLineField));
+                             CurrPage.UPDATE(TRUE);
+                           END;
+
+                OnLookup=VAR
+                           DocCat@1160040003 : Record 6085575;
+                           Template@1160040002 : Record 6085579;
+                         BEGIN
+                           Template.GET("Template No.");
+                           DocCat.GET(Template."Category Code");
+                           EXIT(RecIDMgt.LookupField(Text,DocCat."Destination Line Table No.",FALSE));
+                         END;
+                          }
+
+    { 1160040003;3;Field  ;
+                Name=Transfer Blank Values;
+                ToolTipML=[DEU=Gibt an, ob Felder ohne Wert in einem Dokument wÑhrend der Registrierung in die Kopf- oder Zeilentabelle Åbertragen werden mÅssen, wodurch der Wert des Felds im neu erstellten Dokument ausgeblendet wird. Wenn dies nicht aktiviert ist, werden Feldwerte wÑhrend der Registrierung nur in die Kopf- oder Zeilentabelle Åbertragen, wenn das Dokument einen Wert enthÑlt.;
+                           ENU=Specifies whether fields without a value in a document must be transferred to the header or line table during registration, thereby blanking the value of the field in the newly created document. If this is not enabled, field values will only be transferred to the header or line table during registration, if there is a value in the field in the document.];
+                SourceExpr="Transfer Blank Values";
+                Importance=Additional }
+
+    { 1160040007;2;Group  ;
+                Name=Advanced Recognition Settings;
+                CaptionML=[DEU=Erweiterte Erkennungseinstellungen;
+                           ENU=Advanced Recognition Settings];
+                GroupType=Group }
+
+    { 1160040012;3;Field  ;
+                Name=Delete Blanks;
+                ToolTipML=[DEU=Gibt an, ob alle Leerzeichen aus dem erkannten Wert gelîscht werden sollen.;
+                           ENU=Specifies whether to delete all spaces from the recognized value.];
+                SourceExpr="Delete Blanks";
+                Importance=Additional }
+
+    { 6085578;3;Group     ;
+                Name=MultiLineGroup;
+                CaptionML=[DEU="";
+                           ENU=""];
+                Visible=ShowMultiline AND NOT ShowXmlPath;
+                GroupType=Group }
+
+    { 161024027;4;Field   ;
+                Name=Multiline;
+                ToolTipML=[DEU=Gibt an, ob es sich um ein mehrzeiliges Feld handelt und der Wert sich Åber mehrere Zeilen erstreckt.;
+                           ENU=Specifies whether this is a multiline field and the value is on multiple lines.];
+                SourceExpr=Multiline;
+                Importance=Additional }
+
+    { 1000000019;3;Field  ;
+                Name=Typical Field Width;
+                ToolTipML=[DEU=Gibt die typische Breite der erkannten Feldwerte an.;
+                           ENU=Specifies the typical width of recognized field values.];
+                SourceExpr="Typical Field Width";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1000000021;3;Field  ;
+                Name=Typical Field Height;
+                ToolTipML=[DEU=Gibt die typische Hîhe der erkannten Feldwerte an.;
+                           ENU=Specifies the typical height of recognized field values.];
+                SourceExpr="Typical Field Height";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1160040006;2;Group  ;
+                Name=Rules and Captions;
+                CaptionML=[DEU=Regeln und Suchbegriffe;
+                           ENU=Rules and Captions];
+                GroupType=Group }
+
+    { 6085579;3;Group     ;
+                Name=EnableRuleGroup;
+                CaptionML=[DEU="";
+                           ENU=""];
+                Visible=ShowEnableGenRule;
+                GroupType=Group }
+
+    { 1000000009;4;Field  ;
+                Name=Enable Rule Generation;
+                ToolTipML=[DEU=Gibt an, ob die Liste der Regeln automatisch verwaltet werden soll. Wenn aktiviert, wird beim Erfassen eines Werts automatisch eine neue Regel mit regulÑren AusdrÅcken generiert, die dem erfassten Wert entsprechen.;
+                           ENU=Specifies whether to maintain the list of rules automatically. When enabled, a new rule will automatically be generated, when capturing a value (by manually updating the field caption and value), with a regular expressions that matches the captured value.];
+                SourceExpr="Enable Rule Generation";
+                Importance=Additional }
+
+    { 1000000016;3;Field  ;
+                Name=Auto Update Caption;
+                ToolTipML=[DEU=Gibt an, ob der Suchtext automatisch aktualisiert werden soll, wenn Sie einen neuen Suchtext in einem Dokument auswÑhlen.;
+                           ENU=Specifies whether to automatically update the captions when you select a new caption in a document.];
+                SourceExpr="Auto Update Caption";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1000000017;3;Field  ;
+                Name=Caption Is Part Of Value;
+                ToolTipML=[DEU=Gibt an, ob der Suchtext Teil des Werts ist. Ein Suchtext fÅr die dÑnische Zahlungs-ID lautet beispielsweise +71. Da der Feldwert +71 enthÑlt, ist der Suchtext jedoch Teil des Feldwerts.;
+                           ENU=Specifies whether the caption is part of the value. E.g., a caption for the Danish payment ID is +71, but since the field value contains +71 the caption is part of the field value.];
+                SourceExpr="Caption Is Part Of Value";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 1160040002;3;Field  ;
+                Name=Caption Mandatory;
+                ToolTipML=[DEU=Gibt an, ob ein Feldwert nur aus dem Dokument erkannt werden kann, wenn eine entsprechender Suchtext vorhanden ist. Wenn die Option deaktiviert ist und im Dokument kein Suchtext erkannt wird, wird der Wert aus dem gleichen Bereich im Dokument wie das zuletzt mit derselben Vorlage erkannte Dokument Åbernommen. Dabei wird davon ausgegangen, dass der Wert in diesem Bereich den richtigen Datentyp hat und den Feldregeln entspricht.;
+                           ENU=Specifies whether a field value can only be recognized from the document if there is a corresponding caption. If disabled and no caption is recognized in the document, then the value will be taken from the same area in the document as on the last document recognized with the same template, under the condition that the value in that area is of the correct data type and complies to the field rules.];
+                SourceExpr="Caption Mandatory";
+                Importance=Additional;
+                Visible=NOT ShowXmlPath }
+
+    { 161024026;1;Group   ;
+                Name=Purchase;
+                CaptionML=[DEU=Einkauf;
+                           ENU=Purchase];
+                Visible=ShowPurchaseTab;
+                GroupType=Group }
+
+    { 161024024;2;Field   ;
+                Name=Transfer Amount to Document;
+                ToolTipML=[DEU=Gibt an, ob der Wert des Felds bei der Registrierung in eine Einkaufszeile Åbertragen werden soll.;
+                           ENU=Specifies whether to transfer the value of the field to a purchase line when registering.];
+                SourceExpr="Transfer Amount to Document";
+                Editable=IsNumberAndHeader }
+
+    { 161024023;2;Field   ;
+                Name=G/L Account Field Code;
+                ToolTipML=[DEU=Gibt ein optionales Vorlagenfeld an, das die Sachkontonummer enthÑlt, die beim Erstellen einer Einkaufszeile fÅr den Wert dieses Felds verwendet wird.;
+                           ENU=Specifies an optional template field which contains the G/L account number used when creating a purchase line for the value of this field.];
+                SourceExpr="G/L Account Field Code";
+                Editable=IsNumberAndHeader }
+
+    { 161024019;2;Field   ;
+                Name=Subtract from Amount Field;
+                ToolTipML=[DEU=Gibt ein anderes Feld an, dessen Wert vom Wert dieses Felds abgezogen werden muss. Wenn der Gesamtbetrag inkl. Fracht in einem Feld dargestellt wird, aber der Frachtbetrag auch in einem anderen Feld separat angezeigt. In diesem Fall kînnen Sie den Frachtbetrag in einem Feld angeben und den Wert vom Gesamtbetrag abziehen, sodass die Versandkosten nicht doppelt Åbertragen werden.;
+                           ENU=Specifies another field which must have its value subtracted by the value of this field. Eg. if total amount, incl. freight is in a field, but the freight amount is also shown separately in another field. In this case, you can choose to recognize freight amount in a field, then deduct the value from the total amount, so shipping costs are not transferred twice.];
+                SourceExpr="Subtract from Amount Field";
+                Editable=IsNumberAndHeader;
+                OnLookup=VAR
+                           TemplateField@6085573 : Record 6085580;
+                         BEGIN
+                           TemplateField.FILTERGROUP(4);
+                           TemplateField.SETRANGE("Template No.","Template No.");
+                           TemplateField.SETRANGE(Type,Type);
+                           TemplateField.SETFILTER("Transfer Amount to Document",'<>%1',"Transfer Amount to Document"::" ");
+                           TemplateField.SETFILTER(Code,'<>%1',Code);
+                           TemplateField.FILTERGROUP(0);
+                           IF PAGE.RUNMODAL(0,TemplateField) = ACTION::LookupOK THEN BEGIN
+                             Text := TemplateField.Code;
+                             EXIT(TRUE);
+                           END;
+                         END;
+                          }
+
+    { 161024018;2;Field   ;
+                Name=Purch. Alloc. G/L Account No.;
+                ToolTipML=[DEU=Gibt das Sachkonto an, das fÅr automatisch erstellte Einkaufszuordnungen verwendet werden soll.;
+                           ENU=Specifies the G/L cost account number to use when automatically creating purchase allocations.];
+                SourceExpr="Purch. Alloc. G/L Account No.";
+                Visible=ShowAllocations;
+                Editable=IsNumberAndHeader }
+
+    { 1160040031;1;Group  ;
+                Name=ALR;
+                CaptionML=[DAN=Avanceret Linjegenkendelse;
+                           DEU=Erweiterte Zeilenerkennung;
+                           ENU=Advanced Line Recognition;
+                           FRA=Reconnaissance avancÇe de ligne;
+                           NLD=Geavanceerde lijnherkenning];
+                GroupType=Group }
+
+    { 1160040030;2;Field  ;
+                ToolTipML=[DAN=Angiver hvordan feltvërdien genkendes. Med Standard fremsõges vërdien ved hjëlp af standardlinjegenkendelse.;
+                           DEU=Gibt an, wie der Feldwert gefunden werden soll. Bei Standard wird das Feld Åber die Standard Zeilenerkennung gesucht.;
+                           ENU=Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.;
+                           FRA=Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.;
+                           NLD=Hiermee geeft u aan hoe de waarde van het veld wordt gevonden. Met standaardwaarde wordt het veld gezocht naar het gebruik van de standaard lijnherkenning.];
+                SourceExpr="Advanced Line Recognition Type" }
+
+    { 1160040029;2;Field  ;
+                ToolTipML=[DAN=Angiver positionen for rëkkefõlgen, i hvilken feltet behandles.
+                           ;
+                           DEU=Gibt die Stelle der Reihenfolge an, in der das Feld verarbeitet wird.;
+                           ENU=Specifies the position of the sequence in which the field is processed.;
+                           FRA=Bepaalt de positie van de volgorde waarin het veld wordt verwerkt.
+                           ;
+                           NLD=Bepaalt de positie van de volgorde waarin het veld wordt verwerkt.];
+                SourceExpr=Sorting;
+                Importance=Additional }
+
+    { 1160040028;2;Field  ;
+                ToolTipML=[DAN=Angiver kildefeltet der bruges til at beregne feltvërdien ved hjëlp af afstande/forskydninger.
+                           ;
+                           DEU=Gibt das Herkunftsfeld an, welches zur Berechnung des Feldwerts Åber AbstÑnde/Offsets genutzt wird.;
+                           ENU=Specifies the source field used to calculate the field value via distances/offsets.;
+                           FRA=Specifies the source field used to calculate the field value via distances/offsets.;
+                           NLD=Geeft het bronveld in dat gebruikt wordt om de waarde van het veld te bepalen via afstanden/offsets.];
+                SourceExpr="Anchor Field" }
+
+    { 1160040027;2;Field  ;
+                ToolTipML=[DAN=Angiver om det genkendte felt sõges over eller under den linje hvor vërdierne for standardlinjegenkendelsen blev fundet.
+                           ;
+                           DEU=Gibt an, ob das gesuchte Feld ober- oder unterhalb der Zeile gesucht wird, in welcher die Werte der Standard Zeilenerkennung gefunden wurden.;
+                           ENU=Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.;
+                           FRA=Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.;
+                           NLD=Geeft aan of het zoekveld boven of onder de regel wordt gezocht waarin de waarden van de standaardregelherkenning werden gevonden.];
+                SourceExpr="Field Position" }
+
+    { 1160040026;2;Field  ;
+                ToolTipML=[DAN=Angiver linjefeltet hvor indholdet benyttes som vërdi, hvis vërdien af det aktuelle felt ikke kan genkendes.
+                           ;
+                           DEU=Gibt das Zeilenfeld an, dessen Inhalt als Wert verwendet wird, wenn der Wert des aktuellen Feldes nicht gefunden werden kann.;
+                           ENU=Specifies the line field whose content will be used as value if the value of the current field cannot be found.;
+                           FRA=Specifies the line field whose content will be used as value if the value of the current field cannot be found.;
+                           NLD=Geeft het regelveld aan waarvan de inhoud als waarde wordt gebruikt indien de waarde van het huidige veld niet kan worden gevonden.];
+                SourceExpr="Substitution Field" }
+
+    { 1160040025;2;Field  ;
+                ToolTipML=[DAN=Hvis vërdien af det aktuelle felt ikke findes, kopieres vërdien til den aktuelle linje fra det samme felt i den forrige linje.
+                           ;
+                           DEU=Wenn der Wert des aktuellen Feldes nicht gefunden wird, wird vom gleichen Feld aus der vorherigen Zeile dessen Wert in die aktuelle Zeile kopiert.;
+                           ENU=If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.;
+                           FRA=If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.;
+                           NLD=Als de waarde van dit veld niet wordt gevonden op de huidige regel, wordt de waarde overgenomen van de vorige regel.];
+                SourceExpr="Get Value from Previous Value" }
+
+    { 1160040024;2;Group  ;
+                CaptionML=[DAN=Forskydninger;
+                           DEU=Offsets;
+                           ENU=Offsets;
+                           FRA=Offsets;
+                           NLD=Verschuivingen];
+                GroupType=Group }
+
+    { 1160040023;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til top.;
+                           DEU=Gibt den Abstand nach oben an.;
+                           ENU=Specifies the distance to the top.;
+                           FRA=Specifies the distance to the top.;
+                           NLD=Bepaalt de afstand naar de bovenkant.];
+                SourceExpr="Offset Top";
+                Importance=Additional }
+
+    { 1160040022;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til bund.;
+                           DEU=Gibt den Abstand nach unten an.;
+                           ENU=Specifies the distance to the bottom.;
+                           FRA=Specifies the distance to the bottom.;
+                           NLD=Bepaalt de afstand naar de onderkant.];
+                SourceExpr="Offset Bottom";
+                Importance=Additional }
+
+    { 1160040021;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til venstre.;
+                           DEU=Gibt den Abstand nach links an.;
+                           ENU=Specifies the distance to the left.;
+                           FRA=Specifies the distance to the left.;
+                           NLD=Bepaalt de afstand naar de linkerkant.];
+                SourceExpr="Offset Left";
+                Importance=Additional }
+
+    { 1160040020;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til hõjre.;
+                           DEU=Gibt den Abstand nach rechts an.;
+                           ENU=Specifies the distance to the right.;
+                           FRA=Specifies the distance to the right.;
+                           NLD=Bepaalt de afstand naar de rechterkant.];
+                SourceExpr="Offset Right";
+                Importance=Additional }
+
+    { 1160040019;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til sõgetekst/overskrift pÜ X- aksen.
+                           ;
+                           DEU=Gibt den Abstand zum Suchtext an auf der X-Achse an.;
+                           ENU=Specifies the distance to the search text/caption on the X axis.;
+                           FRA=Specifies the distance to the search text/caption on the X axis.;
+                           NLD=Specificeert de afstand naar de zoektekst/bijschrift op de X-as.];
+                SourceExpr="ALR Value Caption Offset X";
+                Importance=Additional }
+
+    { 1160040018;3;Field  ;
+                ToolTipML=[DAN=Angiver afstanden til sõgetekst/oerskrift pÜ Y-aksen.
+                           ;
+                           DEU=Gibt den Abstand zum Suchtext an auf der Y-Achse an.;
+                           ENU=Specifies the distance to the search text/caption on the Y axis.;
+                           FRA=Specifies the distance to the search text/caption on the Y axis.;
+                           NLD=Bepaalt de afstand naar de zoektekst/bijschrift op de X-as.];
+                SourceExpr="ALR Value Caption Offset Y";
+                Importance=Additional }
+
+    { 1160040008;3;Field  ;
+                ToolTipML=[DAN=Angiver den forventede feltbredde for feltet.;
+                           DEU=Gibt die erwartete Feldbreite des Feldes an.;
+                           ENU=Specifies the expected field width of the field.;
+                           FRA=Specifies the expected field width of the field.;
+                           NLD=Specificeert de verwachte veldbreedte.];
+                SourceExpr="ALR Typical Value Field Width";
+                Importance=Additional }
+
+    { 6085580;1;Part      ;
+                Name=Template Field Translations;
+                SubPageLink=Template No.=FIELD(Template No.),
+                            Type=FIELD(Type),
+                            Code=FIELD(Code);
+                PagePartID=Page6085588;
+                PartType=Page }
+
+  }
+  CODE
+  {
+    VAR
+      AllObjWithCaption@1160040000 : Record 2000000058;
+      RecIDMgt@1001 : Codeunit 6085604;
+      IsMasterTemplate@1160040010 : Boolean INDATASET;
+      IsDate@161024012 : Boolean INDATASET;
+      IsNumber@161024013 : Boolean INDATASET;
+      IsNumberAndHeader@161024014 : Boolean INDATASET;
+      IsLookup@1161054000 : Boolean INDATASET;
+      SearchForValueEditable@161024015 : Boolean INDATASET;
+      IsDestHeader@161024016 : Boolean INDATASET;
+      IsDestLine@1004 : Boolean INDATASET;
+      IsNewField@1160040011 : Boolean INDATASET;
+      ShowCodeAndType@6085583 : Boolean INDATASET;
+      LineRecognitionEnabled@1160040005 : Boolean INDATASET;
+      CodeunitLookup@1160040001 : Text[250];
+      CodeunitCaptureVal@1160040004 : Text[250];
+      CodeunitIsValid@1160040003 : Text[250];
+      CodeunitValidate@1160040002 : Text[250];
+      SourceTable@1160040006 : Text[250];
+      SourceField@1160040009 : Text[250];
+      DestHeaderField@1160040007 : Text[250];
+      DestLineField@1160040008 : Text[250];
+      FixedValue@1000 : Text[250];
+      ShowTransferValue@6085573 : Boolean INDATASET;
+      ShowPurchaseTab@6085574 : Boolean INDATASET;
+      CaptionText@6085575 : Text[300];
+      RuleText@6085576 : Text[300];
+      TotalCaptions@6085577 : TextConst 'DEU=(%1 Suchtexte gesamt);ENU=(%1 captions in total)';
+      TotalRules@6085578 : TextConst 'DEU=(%1 Regeln gesamt);ENU=(%1 rules in total)';
+      EditCaption@6085579 : Boolean INDATASET;
+      EditRule@6085580 : Boolean INDATASET;
+      ShowMultiline@6085581 : Boolean INDATASET;
+      ShowEnableGenRule@6085582 : Boolean INDATASET;
+      IsPageEditable@1002 : Boolean INDATASET;
+      ShowStopLineRecognition@6085584 : Boolean INDATASET;
+      ShowAllocations@6085585 : Boolean INDATASET;
+      DecimalPlacesDescription@6085586 : Text[50];
+      FormulaTxt@6085587 : Text[1024];
+      ShowXmlPath@6085588 : Boolean INDATASET;
+      CurrentDocumentNo@6085589 : Code[20];
+      ShowXMLShowField@6085600 : Boolean INDATASET;
+
+    LOCAL PROCEDURE UpdateControls@6085573();
+    VAR
+      Template@6085574 : Record 6085579;
+      DocCat@6085573 : Record 6085575;
+      TemplateFieldCaption@6085577 : Record 6085581;
+      TemplateFieldRule@6085576 : Record 6085583;
+      ContiniaVersionMgt@6085578 : Codeunit 6192775;
+      i@6085575 : Integer;
+      CDCModuleLicense@6085579 : Codeunit 6086008;
+      DCSetup@6085581 : Record 6085573;
+      TemplateCode@6085600 : Code[20];
+    BEGIN
+      IsPageEditable := CurrPage.EDITABLE;
+
+      DCSetup.GET;
+
+      TemplateCode := "Template No.";
+      IF TemplateCode = '' THEN
+        TemplateCode := GETFILTER("Template No.");
+
+      IF Template.GET(TemplateCode) THEN
+        DocCat.GET(Template."Category Code");
+
+      FixedValue := GetFixedValue;
+
+      SearchForValueEditable := (Formula = '') AND (FixedValue = '');
+
+      IsMasterTemplate := Template.Type = Template.Type::Master;
+      IsDate := "Data Type" = "Data Type"::Date;
+      IsNumber := "Data Type" = "Data Type"::Number;
+      IsNumberAndHeader := ("Data Type" = "Data Type"::Number) AND (Type = Type::Header);
+      IsLookup := ("Data Type" = "Data Type"::Lookup) AND IsPageEditable;
+      IsDestHeader := (Type = Type::Header) AND (DocCat."Destination Header Table No." <> 0) AND IsPageEditable;
+      IsDestLine := (DocCat."Destination Line Table No." <> 0) AND IsPageEditable;
+      LineRecognitionEnabled := Template."Recognize Lines" = Template."Recognize Lines"::Yes;
+      IsNewField := Code = '';
+      ShowCodeAndType := IsNewField OR (ContiniaVersionMgt.NavVersion < 100000);
+      ShowPurchaseTab := DocCat.IsPurchInvCrMemoCategory AND ("Data Type" = "Data Type"::Number) AND (Type = Type::Header);
+      ShowTransferValue := NOT ((DocCat."Destination Header Table No." = 0) AND (DocCat."Destination Line Table No." = 0));
+      ShowMultiline := Type = Type::Header;
+      ShowEnableGenRule := ("Data Type" = "Data Type"::Text) OR ("Data Type" = "Data Type"::Date);
+      ShowStopLineRecognition := CDCModuleLicense.IsAdvCaptureActivated(FALSE);
+      ShowAllocations := DCSetup."Enable Purchase Allocation" AND CDCModuleLicense.IsApprovalActivated(FALSE);
+
+      EditCaption := IsPageEditable AND NOT IsNewField;
+      IF NOT IsNewField THEN BEGIN
+        TemplateFieldCaption.SETRANGE("Template No.","Template No.");
+        TemplateFieldCaption.SETRANGE(Type,Type);
+        TemplateFieldCaption.SETRANGE(Code,Code);
+        IF TemplateFieldCaption.FIND('-') THEN BEGIN
+          i := TemplateFieldCaption.COUNT;
+          IF i = 1 THEN
+            CaptionText := TemplateFieldCaption.Caption
+          ELSE BEGIN
+            CaptionText := TemplateFieldCaption.Caption + ' ' + STRSUBSTNO(TotalCaptions,i);
+            EditCaption := FALSE;
+          END;
+        END ELSE
+          CaptionText := '';
+      END ELSE
+        CaptionText := '';
+
+      EditRule := IsPageEditable AND NOT IsNewField;
+      IF NOT IsNewField THEN BEGIN
+        TemplateFieldRule.SETRANGE("Template No.","Template No.");
+        TemplateFieldRule.SETRANGE(Type,Type);
+        TemplateFieldRule.SETRANGE(Code,Code);
+        IF TemplateFieldRule.FIND('-') THEN BEGIN
+          i := TemplateFieldRule.COUNT;
+          IF i = 1 THEN
+            RuleText := TemplateFieldRule.Rule
+          ELSE BEGIN
+            RuleText := TemplateFieldRule.Rule + ' ' + STRSUBSTNO(TotalRules,i);
+            EditRule := FALSE;
+          END;
+        END ELSE
+          RuleText := '';
+      END ELSE
+        RuleText := '';
+
+      DecimalPlacesDescription := ValidateDecimalPlaces("Decimal Places");
+      ShowXmlPath := Template."Data Type" = Template."Data Type"::XML;
+      ShowXMLShowField := Type = Type::Line;
+    END;
+
+    LOCAL PROCEDURE ShowCaptions@6085575();
+    VAR
+      TemplateFieldCaption@6085573 : Record 6085581;
+    BEGIN
+      TemplateFieldCaption.FILTERGROUP(2);
+      TemplateFieldCaption.SETRANGE("Template No.","Template No.");
+      TemplateFieldCaption.SETRANGE(Type,Type);
+      TemplateFieldCaption.SETRANGE(Code,Code);
+      TemplateFieldCaption.FILTERGROUP(0);
+      PAGE.RUNMODAL(PAGE::"CDC Template Field Captions",TemplateFieldCaption);
+      UpdateControls;
+    END;
+
+    LOCAL PROCEDURE ShowRules@6085579();
+    VAR
+      TemplateFieldRule@6085573 : Record 6085583;
+    BEGIN
+      TemplateFieldRule.FILTERGROUP(2);
+      TemplateFieldRule.SETRANGE("Template No.","Template No.");
+      TemplateFieldRule.SETRANGE(Type,Type);
+      TemplateFieldRule.SETRANGE(Code,Code);
+      TemplateFieldRule.FILTERGROUP(0);
+      PAGE.RUNMODAL(PAGE::"CDC Template Field Rules",TemplateFieldRule);
+      UpdateControls;
+    END;
+
+    LOCAL PROCEDURE ShowCodeunits@6085580();
+    VAR
+      TemplateField@6085574 : Record 6085580;
+    BEGIN
+      TemplateField.FILTERGROUP(2);
+      TemplateField.SETRANGE("Template No.","Template No.");
+      TemplateField.SETRANGE(Type,Type);
+      TemplateField.SETRANGE(Code,Code);
+      TemplateField.FILTERGROUP(0);
+      PAGE.RUNMODAL(PAGE::"CDC Template Field Codeunits",TemplateField);
+    END;
+
+    LOCAL PROCEDURE RemoveQuotationMarks@6085574(FormulaString@6085573 : Text[1024]) : Text[1024];
+    VAR
+      FormulaLength@6085575 : Integer;
+    BEGIN
+      IF FormulaString = '' THEN
+        EXIT;
+
+      FormulaLength := STRLEN(FormulaString);
+      IF (FormulaString[1] = '''') AND (FormulaString[FormulaLength] = '''') THEN BEGIN
+        FormulaString := COPYSTR(FormulaString,2,FormulaLength);
+        FormulaString := COPYSTR(FormulaString,1,FormulaLength-2);
+      END;
+      EXIT(FormulaString);
+    END;
+
+    PROCEDURE SetDocumentNo@6085576(DocumentNo@6085573 : Code[20]);
+    BEGIN
+      CurrentDocumentNo := DocumentNo;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

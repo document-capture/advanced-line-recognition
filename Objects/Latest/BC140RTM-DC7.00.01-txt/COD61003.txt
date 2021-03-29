@@ -1,0 +1,69 @@
+OBJECT Codeunit 61003 ALR Line Management SI
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.03.21;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
+  }
+  PROPERTIES
+  {
+    SingleInstance=Yes;
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      CurrDocumentNo@1160040000 : Code[20];
+      LineRegionFromPage@100000003 : Integer;
+      LineRegionFromPos@100000002 : Integer;
+      LineRegionToPage@100000001 : Integer;
+      LineRegionToPos@100000000 : Integer;
+
+    PROCEDURE SetLineRegion@100000005(DocumentNo@1160040000 : Code[20];FromPage@1000000003 : Integer;FromPos@1000000002 : Integer;ToPage@1000000001 : Integer;ToPos@1000000000 : Integer);
+    BEGIN
+      CurrDocumentNo := DocumentNo;
+      LineRegionFromPage := FromPage;
+      LineRegionFromPos := FromPos;
+      LineRegionToPage  := ToPage;
+      LineRegionToPos := ToPos;
+    END;
+
+    [EventSubscriber(Codeunit,6085575,OnBeforeBufferWords)]
+    LOCAL PROCEDURE OnBeforeBufferWordsSubscriber@100000001(DocumentNo@100000000 : Code[20];PageNo@100000001 : Integer;VAR Words@100000002 : Record 6085592;VAR GlobalWords@100000003 : Record 6085592;VAR Handled@100000004 : Boolean);
+    VAR
+      DocumentPage@100000009 : Record 6085591;
+    BEGIN
+      IF (CurrDocumentNo = DocumentNo) AND ((LineRegionFromPage > 0) OR (LineRegionToPage > 0)) THEN BEGIN
+        Words.SETRANGE("Document No.",DocumentNo);
+        DocumentPage.SETRANGE("Document No.",DocumentNo);
+        DocumentPage.SETRANGE("Page No.",LineRegionFromPage,LineRegionToPage);
+        IF DocumentPage.FINDSET THEN BEGIN
+          Handled := TRUE;
+          REPEAT
+            IF LineRegionToPos = 0 THEN BEGIN
+              Words.SETFILTER(Top,STRSUBSTNO('%1..%2',LineRegionFromPos,DocumentPage."Bottom Word Pos."))
+            END ELSE BEGIN
+              Words.SETFILTER(Top,DELCHR(STRSUBSTNO('%1..%2',LineRegionFromPos,LineRegionToPos),'=',' '));
+            END;
+
+            IF Words.FINDSET(FALSE,FALSE) THEN BEGIN
+              REPEAT
+                GlobalWords := Words;
+                GlobalWords.INSERT;
+              UNTIL Words.NEXT = 0;
+            END;
+          UNTIL DocumentPage.NEXT = 0;
+        END;
+        SetLineRegion('',0,0,0,0);
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

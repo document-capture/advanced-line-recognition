@@ -1,0 +1,366 @@
+OBJECT Codeunit 61000 Adv. Line Recognition Mgt.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.03.21;
+    Time=12:00:00;
+    Modified=Yes;
+    Version List=ALR;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      FieldSetupCanceled@1000000000 : TextConst 'DAN=Feltops‘tning afbrudt fordi intet felt blev valgt!;DEU=Feldeinrichtung abgebrochen, da kein Feld ausgew„hlt wurde!;ENU=Field setup aborted because no field was selected!;FRA=La configuration du champ a ‚t‚ interrompue car aucun champ n''a ‚t‚ s‚lectionn‚!
+    ;NLD=Veld instellen afgebroken, omdat er geen veld is geselecteerd!';
+      FieldIsLinkedToSourceField@1000000001 : TextConst 'DAN=Feltet "%1" er nu forbundet med feltet "%2".;DEU=Das Feld "%1" ist nun mit dem Feld "%2" verknpft.;ENU=The field "%1" is now linked to field "%2".;FRA=Le champ "%1" est maintenant li‚ au champ "%2 ".;NLD=Het veld "%1" is nu gekoppeld aan het veld "%2".';
+      MissingSourceFieldValue@1000000002 : TextConst 'DAN=V‘rdien for kildefeltet %1 i linje %2 mangler! Tr‘n venligst denne v‘rdi f›rst!;DEU=Der Wert fr Herkunftsfeld %1 in Zeile %2 fehlt! Bitte trainieren Sie zuerst diesen Wert an!;ENU=The value for source field %1 in line %2 is missing! Please train this value first!;FRA=La valeur du champ source %1 … la ligne %2 est manquante! Veuillez d''abord entraŒner cette valeur!;NLD=De waarde voor het bronveld %1 in lijn %2 ontbreekt! train eerst deze waarde!';
+      MissingFieldExampleValue@1000000003 : TextConst 'DAN=V‘rdien for %1 (%2) i r‘kke %3 mangler! Tr‘n venligst denne v‘rdi f›rst!;DEU=Der Wert fr fr %1 (%2) Zeile %3 fehlt! Bitte trainieren Sie zuerst diesen Wert an!;ENU=The value for for %1 (%2) row %3 is missing! Please train this value first!;FRA=La valeur de %1 (%2) … la ligne %3 est manquante! Veuillez d''abord entraŒner cette valeur!;NLD=De waarde voor %1 (%2) in rij %3 ontbreekt! train eerst deze waarde!';
+      SelectOffsetSourceFieldFirst@1000000004 : TextConst 'DAN=V‘lg f›rst kildefeltet der skal v‘re grundlag for positionen hvor v‘rdien skal findes.;DEU="Bitte w„hlen Sie zuerst das Herkunftsfeld aus, an Hand dessen Position der Wert ermittelt werden soll. ";ENU="Please select first the source field on the basis of which position the value should be found. ";FRA=Veuillez d''abord s‚lectionner le champ source sur base duquel la position de la valeur doit ˆtre trouv‚e.;NLD=Selecteer eerst het bronveld op basis van welke positie de waarde moet worden gevonden.';
+      CodeunitDoesNotExist@1000000005 : TextConst 'DAN=Codeunit %1 findes ikke! Er objektet omd›bt?;DEU=Die Standard Codeunit %1 existiert nicht! Wurde das Object ggf. umbenannt?;ENU=Codeunit %1 does not exist! Has the object been renamed?;FRA=Le Codeunit %1 n''existe pas ! L''objet a-t-il ‚t‚ renomm‚?;NLD=Codeunit %1 bestaat niet! Is het object hernoemd?';
+      TrainCaptionFirstForField@1113400001 : TextConst 'DAN=Fejl! Feltet %1 er ikke forbundet med en overskrift! Mark‚r venligst overskriften f›rst.;DEU=Fehler! Fr Feld %1 wurde noch keine Caption hinterlegt! Bitte pflegen Sie die Caption zuerst.;ENU=Error! For the field %1 hasn|t been trained a caption! Please train the caption first.;FRA=Erreur! Pour le champ %1 une l‚gende n''a pas ‚t‚ entraŒn‚e ! Veuillez d''abord entraŒner la l‚gende.;NLD=Fout! Voor het veld %1 is het onderschrift getraind! Train het bijschrift eerst.';
+      SelectTheOffsetField@1113400006 : TextConst 'DAN=V‘lg feltet som skal sammenk‘des med kildefeltet "%1".;DEU=W„hlen Sie nun das Feld aus, welches Sie mit dem Herkunftsfeld "%1" verknpfen m”chten.;ENU=Please choose the field, which should be linked with the source field "%1".;FRA=Veuillez choisir le champ qui doit ˆtre li‚ au champ source "%1".;NLD=Kies het veld, welke gekoppeld moet zijn met het bronveld "%1".';
+      ErrorDuringFieldSetup@1113400007 : TextConst 'DAN=Fejl under indstilling af felt.;DEU=Fehler bei Feldeinrichtung.;ENU=Error during field setup.;FRA=Erreur lors de la configuration du champ.;NLD=Fout tijdens het instellen van het veld.';
+      SelectFieldForColumnHeaderSearch@1113400008 : TextConst 'DAN=V‘lg det felt der skal findes af kolonneoverskriften.;DEU=Bitte w„hlen Sie das Feld aus, welches ber die šberschrift gefunden werden soll.;ENU=Select the field that should be found by the column heading.;FRA=S‚lectionnez le champ qui doit ˆtre trouv‚ par l''en-tˆte de colonne.;NLD=Selecteer het veld dat gevonden moet worden bij de koptekst van de kolom.';
+      SelectFieldForCaptionSearch@1113400009 : TextConst 'DAN=V‘lg feltet hvis v‘rdi skal findes ved hj‘lp af overskriften i den aktuelle linje.;DEU="Bitte w„hlen Sie das Feld aus, welches innerhalb der Position mit Hilfe des Suchbegriffs gefunden werden soll. ";ENU=Choose the field whose value should be found by the caption in the current line.;FRA=Choisir le champ dont la valeur doit ˆtre trouv‚e par la l‚gende de la ligne actuelle.;NLD=Kies het veld waarvan de waarde in de huidige regel moet gevonden worden op basis van de koptekst.';
+      FieldIsCapturedByColumnHeading@1160040001 : TextConst 'DAN=Feltet "%1" bliver nu fundet ved hj‘lp af kolonneoverskriften "%2".;DEU="Das Feld ""%1"" wird nun innerhalb der Position ber die Spaltenberschrift ""%2"" gesucht. ";ENU=The field "%1" will now be searched via the column heading "%2".;FRA=The field "%1" will now be searched via the column heading "%2".;NLD=Het veld "%1" zal nu worden doorzocht via de kolom koptekst "%2".';
+      FieldIsCapturedByCaption@1113400010 : TextConst 'DAN=V‘rdien i feltet "%1" bliver nu fundet ved hj‘lp af kolonneoverskriften i den aktuelle linje.;DEU="Das Feld ""%1"" wird nun innerhalb der Position ber die Caption gesucht. ";ENU=The value of field "%1" will now been searched via the caption in the current line.;FRA=The value of field "%1" will now been searched via the caption in the current line.;NLD=De waarde van veld "%1" zal nu gezocht worden via het bijschrift in de huidige regel.';
+      NoRequiredFieldFound@1000000006 : TextConst 'DAN=Intet obligatorisk felt med indstillingen "P†kr‘vet" blev fundet i linje %1! Konfigurer et obligatorisk felt f›rst.;DEU=In Zeile %1 wurde kein Pflichfeld mit der Option "Erfoderlich" gefunden! Konfigurieren Sie zuerst ein Pflichtfeld.;ENU=No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.;FRA=No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.;NLD=Er is geen verplicht veld met de optie "Vereist" gevonden in regel %1! Configureer eerst een verplicht veld.';
+      ALRVersionNoText@1160040000 : TextConst 'DAN=ALR%1 (%2 Build %3);DEU=ALR%1 (%2 Build %3);ENU=ALR%1 (%2 Build %3);FRA=ALR%1 (%2 Build %3);NLD=ALR%1 (%2 Build %3)';
+      NoALRFieldsForReset@1160040002 : TextConst 'DAN=Der er ikke konfigureret felter til avanceret linjegenkendelse, der kan nulstilles.;DEU=Es gibt keine Felder mit aktivierter erweiterter Zeilenerkennung, die zurckgesetzt werden k”nnen.'';ENU=There are not fields configured for advanced line recognition, that can be reset.;FRA=There are not fields configured for advanced line recognition, that can be reset.;NLD=Er zijn geen velden, geconfigureerd voor geavanceerde lijnherkenning, gevonden die kunnen worden gereset.';
+
+    PROCEDURE SetToAnchorLinkedField@1000000010(VAR TempDocumentLine@1000000008 : Record 6085596);
+    VAR
+      AnchorField@1000000007 : Record 6085580;
+      LinkedField@1000000005 : Record 6085580;
+      AnchorFieldDocumentValue@1113400000 : Record 6085593;
+      LinkedFieldDocumentValue@1000000001 : Record 6085593;
+      FieldsLinked@1000000000 : Integer;
+    BEGIN
+      // Get the anchor field that defines the position
+      MESSAGE(SelectOffsetSourceFieldFirst);
+      SelectField(AnchorField,TempDocumentLine."Template No.",'',FALSE);
+
+      // Get document value of the anchor field => is mandatory
+      AnchorFieldDocumentValue.SETRANGE("Document No.",TempDocumentLine."Document No.");
+      AnchorFieldDocumentValue.SETRANGE("Is Value",TRUE);
+      AnchorFieldDocumentValue.SETRANGE(Code,AnchorField.Code);
+      //AnchorFieldDocumentValue.SETRANGE("Line No.",1);
+      AnchorFieldDocumentValue.SETRANGE("Line No.",TempDocumentLine."Line No.");
+      AnchorFieldDocumentValue.SETRANGE(Type,AnchorFieldDocumentValue.Type::Line);
+      AnchorFieldDocumentValue.SETRANGE("Is Valid",TRUE);
+      AnchorFieldDocumentValue.SETRANGE("Template No.",TempDocumentLine."Template No.");
+      IF NOT AnchorFieldDocumentValue.FINDFIRST THEN
+        ERROR(MissingSourceFieldValue,AnchorField.Code,TempDocumentLine."Line No.");
+
+      // Select the field that should be linked with anchor field
+      MESSAGE(SelectTheOffsetField, AnchorField."Field Name");
+      IF NOT SelectField(LinkedField,TempDocumentLine."Template No.",AnchorField.Code,FALSE) THEN
+        ERROR(FieldSetupCanceled);
+
+      // Link the selected field to anchor field
+      // Find the value of the selected field
+      LinkedFieldDocumentValue.SETRANGE("Document No.",TempDocumentLine."Document No.");
+      LinkedFieldDocumentValue.SETRANGE("Is Value",TRUE);
+      LinkedFieldDocumentValue.SETRANGE(Code,LinkedField.Code);
+      //LinkedFieldDocumentValue.SETRANGE("Line No.",1);
+      LinkedFieldDocumentValue.SETRANGE("Line No.",TempDocumentLine."Line No.");
+      LinkedFieldDocumentValue.SETRANGE(Type,LinkedFieldDocumentValue.Type::Line);
+      LinkedFieldDocumentValue.SETRANGE("Is Valid",TRUE);
+      LinkedFieldDocumentValue.SETRANGE("Template No.",TempDocumentLine."Template No.");
+      IF NOT LinkedFieldDocumentValue.FINDFIRST THEN
+        ERROR(MissingFieldExampleValue,LinkedField."Field Name",LinkedField.Code);  //value is mandatory
+
+      ResetField(LinkedField);
+
+      // Calculate and save the offset values at the linked field
+      LinkedField."Offset Top" := LinkedFieldDocumentValue.Top - AnchorFieldDocumentValue.Top;
+      LinkedField."Offset Left" := LinkedFieldDocumentValue.Left - AnchorFieldDocumentValue.Left;
+      LinkedField."Offset Bottom" := LinkedFieldDocumentValue.Bottom - LinkedFieldDocumentValue.Top;
+      LinkedField."Offset Right" := LinkedFieldDocumentValue.Right - LinkedFieldDocumentValue.Left;
+      LinkedField."Advanced Line Recognition Type" := LinkedField."Advanced Line Recognition Type"::LinkedToAnchorField;
+      LinkedField."Anchor Field" := AnchorFieldDocumentValue.Code;
+
+      UpdateExecutionSequence(LinkedField,LinkedField."Anchor Field");
+
+      IF LinkedField.MODIFY(TRUE) THEN BEGIN
+        SetTemplateToALRProcessing(TempDocumentLine."Template No.");
+        MESSAGE(FieldIsLinkedToSourceField,LinkedField."Field Name",AnchorField."Field Name");
+      END ELSE
+        MESSAGE(ErrorDuringFieldSetup);
+    END;
+
+    PROCEDURE SetToFieldSearchWithColumnHeding@1113400003(VAR TempDocumentLine@1113400002 : Record 6085596);
+    VAR
+      LineIdentFieldDocumentValue@1000000001 : Record 6085593;
+      SelectedField@1113400001 : Record 6085580;
+      SelectedFieldDocumentValue@1000000004 : Record 6085593;
+      TemplateFieldCaption@1000000000 : Record 6085581;
+    BEGIN
+      // Find field value of a normal position field
+      GetLineIdentifierValue(TempDocumentLine,LineIdentFieldDocumentValue);
+
+      // Select field
+      MESSAGE(SelectFieldForColumnHeaderSearch);
+      IF NOT SelectField(SelectedField,TempDocumentLine."Template No.",'',FALSE) THEN
+        ERROR(FieldSetupCanceled);
+
+      // Check that the selected field has at least one caption
+      TemplateFieldCaption.SETRANGE("Template No.",SelectedField."Template No.");
+      TemplateFieldCaption.SETRANGE(Code,SelectedField.Code);
+      TemplateFieldCaption.SETRANGE(Type,TemplateFieldCaption.Type::Line);
+      IF NOT TemplateFieldCaption.FINDFIRST THEN
+        ERROR(TrainCaptionFirstForField, SelectedField.Code);
+
+      // Find the value of the selected field
+      GetSelectedFieldValue(TempDocumentLine, SelectedFieldDocumentValue,SelectedField);
+
+      ResetField(SelectedField);
+
+      // Setup field for column heading search
+      SelectedField."Advanced Line Recognition Type" := SelectedField."Advanced Line Recognition Type"::FindFieldByColumnHeading;
+
+      IF SelectedFieldDocumentValue.Top < LineIdentFieldDocumentValue.Top THEN
+        SelectedField."Field Position" := SelectedField."Field Position"::StandardLine
+      ELSE
+        SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
+
+      IF SelectedField.MODIFY(TRUE) THEN BEGIN
+        SetTemplateToALRProcessing(TempDocumentLine."Template No.");
+        MESSAGE(FieldIsCapturedByColumnHeading, SelectedField."Field Name",TemplateFieldCaption.Caption);
+      END ELSE
+        MESSAGE(ErrorDuringFieldSetup);
+    END;
+
+    PROCEDURE SetToFieldSearchWithCaption@1113400000(VAR TempDocumentLine@1113400000 : Record 6085596);
+    VAR
+      LineIdentFieldDocumentValue@1000000001 : Record 6085593;
+      SelectedField@1113400001 : Record 6085580;
+      SelectedFieldDocumentValue@1000000002 : Record 6085593;
+      TemplateFieldCaption@1000000000 : Record 6085581;
+      DocumentPage@1000000004 : Record 6085591;
+      CaptureEngine@1000000003 : Codeunit 6085575;
+    BEGIN
+      // Find field value of a normal position field
+      GetLineIdentifierValue(TempDocumentLine,LineIdentFieldDocumentValue);
+
+      // Select field
+      MESSAGE(SelectFieldForCaptionSearch);
+      IF NOT SelectField(SelectedField,TempDocumentLine."Template No.",'',FALSE) THEN
+        ERROR(FieldSetupCanceled);
+
+      // Check that the selected field has at least one caption
+      TemplateFieldCaption.SETRANGE("Template No.",SelectedField."Template No.");
+      TemplateFieldCaption.SETRANGE(Code,SelectedField.Code);
+      TemplateFieldCaption.SETRANGE(Type,TemplateFieldCaption.Type::Line);
+      IF NOT TemplateFieldCaption.FINDFIRST THEN
+        ERROR(TrainCaptionFirstForField,SelectedField.Code);
+
+      // Find the value of the selected field
+      GetSelectedFieldValue(TempDocumentLine, SelectedFieldDocumentValue,SelectedField);
+
+      ResetField(SelectedField);
+
+      IF (SelectedFieldDocumentValue.Right - SelectedFieldDocumentValue.Left) > 0 THEN BEGIN
+        DocumentPage.GET(TempDocumentLine."Document No.",TempDocumentLine."Page No.");
+        SelectedField."ALR Typical Value Field Width" := ROUND((SelectedFieldDocumentValue.Right - SelectedFieldDocumentValue.Left)
+                                                               / CaptureEngine.GetDPIFactor(150,DocumentPage."TIFF Image Resolution"),1);
+      END;
+
+      IF (SelectedFieldDocumentValue.Top <> 0) AND (TemplateFieldCaption.Top <> 0) AND (SelectedFieldDocumentValue.Left <> 0) AND (TemplateFieldCaption.Left <> 0) THEN BEGIN
+          SelectedField."ALR Value Caption Offset X" := SelectedFieldDocumentValue.Left - TemplateFieldCaption.Left;
+          SelectedField."ALR Value Caption Offset Y" := SelectedFieldDocumentValue.Top - TemplateFieldCaption.Top;
+      END;
+
+      SelectedField."Caption Mandatory" := TRUE;
+
+      // Setup field for field search by caption
+      SelectedField."Advanced Line Recognition Type" := SelectedField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition;
+
+      IF SelectedFieldDocumentValue.Top < LineIdentFieldDocumentValue.Top THEN
+        SelectedField."Field Position" := SelectedField."Field Position"::StandardLine
+      ELSE
+        SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
+
+      IF SelectedField.MODIFY(TRUE) THEN BEGIN;
+        SetTemplateToALRProcessing(TempDocumentLine."Template No.");
+        MESSAGE(FieldIsCapturedByCaption,SelectedField."Field Name");
+      END ELSE
+        MESSAGE(ErrorDuringFieldSetup);
+    END;
+
+    PROCEDURE ResetFieldFromMenu@1(VAR TempDocumentLine@1001 : Record 6085596);
+    VAR
+      FieldToReset@1000 : Record 6085580;
+    BEGIN
+      IF SelectField(FieldToReset,TempDocumentLine."Template No.",'',TRUE) THEN BEGIN
+        ResetField(FieldToReset);
+        FieldToReset.MODIFY(TRUE);
+      END;
+    END;
+
+    LOCAL PROCEDURE ResetField@1000000004(VAR TemplateField@1000000000 : Record 6085580);
+    BEGIN
+      // Reset the current field to default values
+      TemplateField."Search for Value" := FALSE;
+      TemplateField.Required := FALSE;
+      CLEAR(TemplateField."Advanced Line Recognition Type");
+      CLEAR(TemplateField."Anchor Field");
+      CLEAR(TemplateField."Offset Top");
+      CLEAR(TemplateField."Offset Bottom");
+      CLEAR(TemplateField."Offset Left");
+      CLEAR(TemplateField."Offset Right");
+      CLEAR(TemplateField."Field Position");
+      CLEAR(TemplateField.Sorting);
+      CLEAR(TemplateField."Substitution Field");
+      CLEAR(TemplateField."Get Value from Previous Value");
+      CLEAR(TemplateField."ALR Typical Value Field Width");
+      CLEAR(TemplateField."Typical Field Height");
+      CLEAR(TemplateField."Caption Mandatory");
+      CLEAR(TemplateField."ALR Value Caption Offset X");
+      CLEAR(TemplateField."ALR Value Caption Offset Y");
+    END;
+
+    LOCAL PROCEDURE SelectField@1113400002(VAR TemplateField@1000000000 : Record 6085580;TemplateNo@1113400001 : Code[20];ExcludedFieldsFilter@1113400000 : Text[250];ALROnlyFields@1160040000 : Boolean) : Boolean;
+    VAR
+      lTemplateFieldList@1000000003 : Page 6085602;
+    BEGIN
+      TemplateField.SETRANGE("Template No.",TemplateNo);
+      TemplateField.SETRANGE(Type,TemplateField.Type::Line);
+
+      IF ExcludedFieldsFilter <> '' THEN
+        TemplateField.SETFILTER(Code,'<>%1',ExcludedFieldsFilter);
+
+      IF ALROnlyFields THEN BEGIN
+        TemplateField.SETFILTER("Advanced Line Recognition Type",'<>%1',TemplateField."Advanced Line Recognition Type"::Default);
+        IF TemplateField.ISEMPTY THEN
+          ERROR(NoALRFieldsForReset);
+      END;
+
+      lTemplateFieldList.SETTABLEVIEW(TemplateField);
+      lTemplateFieldList.LOOKUPMODE(TRUE);
+      IF lTemplateFieldList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+        lTemplateFieldList.GETRECORD(TemplateField);
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE SetTemplateToALRProcessing@1113400005(TemplateNo@1113400000 : Code[20]);
+    VAR
+      lTemplate@1113400001 : Record 6085579;
+    BEGIN
+      // Change Codeunit ID to the advanced line recognition codeunit on template
+      IF lTemplate.GET(TemplateNo) THEN BEGIN
+        lTemplate.VALIDATE("Codeunit ID: Line Capture",GetAdvLineRecCodeunit());
+        lTemplate.MODIFY(TRUE);
+      END;
+    END;
+
+    LOCAL PROCEDURE GetAdvLineRecCodeunit@1000000000() : Integer;
+    VAR
+      Object@1000000000 : Record 2000000001;
+      AllObjWithCaption@1160040001 : Record 2000000058;
+      ObjectList@1160040000 : Page 6086055;
+    BEGIN
+      Object.SETRANGE(Type,Object.Type::Codeunit);
+      Object.SETRANGE(Name,'Adv. Purch/Sales Line Capture');
+      IF NOT Object.ISEMPTY THEN BEGIN
+        IF Object.FINDSET THEN BEGIN
+          EXIT(Object.ID);
+        END;
+      END ELSE BEGIN
+        ObjectList.LOOKUPMODE(TRUE);
+        IF ObjectList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+          ObjectList.GETRECORD(AllObjWithCaption);
+          EXIT(AllObjWithCaption."Object ID");
+        END;
+
+        ERROR(CodeunitDoesNotExist,'Adv. Purch/Sales Line Capture');
+      END;
+    END;
+
+    LOCAL PROCEDURE GetLineIdentifierValue@1000000002(VAR TempDocumentLine@1160040000 : Record 6085596;VAR LineIdentFieldDocumentValue@1000000000 : Record 6085593);
+    VAR
+      LineIdentField@1000000003 : Record 6085580;
+      LineIdentFieldFound@1000000004 : Boolean;
+    BEGIN
+      WITH LineIdentField DO BEGIN
+        SETRANGE("Template No.",TempDocumentLine."Template No.");
+        SETRANGE(Type,Type::Line);
+        SETRANGE(Required,TRUE);
+        SETRANGE("Advanced Line Recognition Type","Advanced Line Recognition Type"::Default);
+        IF FINDSET THEN
+          REPEAT
+            //IF LineIdentFieldDocumentValue.GET(TempDocumentLine."Document No.",TRUE,LineIdentField.Code,1) THEN
+            IF LineIdentFieldDocumentValue.GET(TempDocumentLine."Document No.",TRUE,LineIdentField.Code,TempDocumentLine."Line No.") THEN
+              IF (LineIdentFieldDocumentValue."Template No." = TempDocumentLine."Template No.") AND
+                 (LineIdentFieldDocumentValue.Type = LineIdentFieldDocumentValue.Type::Line)
+              THEN
+                LineIdentFieldFound := TRUE;
+          UNTIL (NEXT = 0) OR LineIdentFieldFound;
+      END;
+
+      IF NOT LineIdentFieldFound THEN
+        ERROR(NoRequiredFieldFound);
+    END;
+
+    LOCAL PROCEDURE GetSelectedFieldValue@1000000007(VAR TempDocumentLine@1160040000 : Record 6085596;VAR SelectedFieldDocumentValue@1000000000 : Record 6085593;SelectedField@1000000001 : Record 6085580);
+    BEGIN
+      SelectedFieldDocumentValue.SETRANGE("Document No.",TempDocumentLine."Document No.");
+      SelectedFieldDocumentValue.SETRANGE("Is Value",TRUE);
+      SelectedFieldDocumentValue.SETRANGE(Code,SelectedField.Code);
+      //SelectedFieldDocumentValue.SETRANGE("Line No.",0,1);
+      SelectedFieldDocumentValue.SETRANGE("Line No.",TempDocumentLine."Line No.");
+      SelectedFieldDocumentValue.SETRANGE(Type,SelectedFieldDocumentValue.Type::Line);
+      SelectedFieldDocumentValue.SETRANGE("Is Valid",TRUE);
+      SelectedFieldDocumentValue.SETRANGE("Template No.",TempDocumentLine."Template No.");
+      IF NOT SelectedFieldDocumentValue.FINDFIRST THEN
+        ERROR(MissingFieldExampleValue,SelectedField."Field Name",SelectedField.Code);  //value is mandatory
+    END;
+
+    LOCAL PROCEDURE UpdateExecutionSequence@1000000001(VAR LinkedField@1000000000 : Record 6085580;PreviousFieldCode@1000000001 : Code[20]);
+    VAR
+      CurrField@1000000002 : Record 6085580;
+      PrevField@1000000003 : Record 6085580;
+      SortField@1000000004 : Record 6085580;
+    BEGIN
+      IF NOT PrevField.GET(LinkedField."Template No.",PrevField.Type::Line,PreviousFieldCode) THEN
+        EXIT;
+
+      IF LinkedField.Sorting <= PrevField.Sorting  THEN BEGIN
+        SortField.SETRANGE("Template No.",LinkedField."Template No.");
+        SortField.SETRANGE(Type,SortField.Type::Line);
+        SortField.SETFILTER(Code,'<>%1',LinkedField.Code);
+        SortField.SETFILTER(Sorting, '>=%1',LinkedField.Sorting  + 1);
+        IF SortField.FINDSET THEN
+          REPEAT
+            SortField.Sorting := SortField.Sorting  + 1;
+            SortField.MODIFY;
+          UNTIL SortField.NEXT = 0;
+        LinkedField.Sorting := LinkedField.Sorting + 1;
+      END;
+    END;
+
+    PROCEDURE ShowVersionNo@1160040000() : Text;
+    VAR
+      VersionTriggers@1160040000 : Codeunit 2000000001;
+      ApplicationVersion@1160040001 : Text;
+      ApplicationBuild@1160040002 : Text;
+    BEGIN
+      //EXIT(12) //=> for older NAV/BC Versions without the version triggers
+      VersionTriggers.GetApplicationVersion(ApplicationVersion);
+      VersionTriggers.GetApplicationBuild(ApplicationBuild);
+
+      EXIT(STRSUBSTNO(ALRVersionNoText,'13',ApplicationVersion,ApplicationBuild));
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
