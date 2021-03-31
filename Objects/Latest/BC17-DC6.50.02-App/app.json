@@ -2,7 +2,7 @@
   "id": "c3e5c32c-513a-47ed-a749-9f9e5ee20342",
   "name": "Advanced Line Recognition",
   "publisher": "github.com/sradloff",
-  "version": "1.13.0.3",
+  "version": "1.13.0.4",
   "brief": "Extension for Continia Document Capture to do advanced line recognition.",
   "description": "Advanced Line Recognition extension for Continia Document Capture",
   "privacyStatement": "",
@@ -50,5 +50,5 @@
   "runtime": "6.0",
   "target": "Cloud",
   "features": [ "TranslationFile"],
-  "supportedLocales": ["en-GB","en-US","da-DK","nl-NL","nl-BE","de-DE","de-AT","de-CH"]
+  "supportedLocales": ["en-GB","en-US","da-DK","nl-NL","nl-BE","de-DE","de-AT","de-CH","fr-FR","fr-CH","fr-BE"]
 }
