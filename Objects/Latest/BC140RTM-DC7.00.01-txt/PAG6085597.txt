@@ -2,7 +2,7 @@ OBJECT Page 6085597 CDC Document Lines ListPart
 {
   OBJECT-PROPERTIES
   {
-    Date=30.03.21;
+    Date=31.03.21;
     Time=12:00:00;
     Modified=Yes;
     Version List=DCW17.00.00.7.00,ALR;
@@ -162,12 +162,12 @@ OBJECT Page 6085597 CDC Document Lines ListPart
                       CaptionML=[DAN=Find vërdi ved hjëlp af forbundet felt;
                                  DEU=Suche Åber verknÅpftes Feld;
                                  ENU=Find value by linked field;
-                                 FRA=Find value by linked field;
+                                 FRA=Trouver valeur par champ liÇ;
                                  NLD=Vind waarde via gekoppeld veld];
                       ToolTipML=[DAN=Det õnskede felt bliver fundet via en fast forskydning (afstand) fra et andet felt.;
                                  DEU=Das gewÅnschte Feld wird Åber einen fest definiertes Offset (Abstand) von einem anderen Feld gefunden.;
                                  ENU=The desired field is found via a fixed offset (distance) from another field.;
-                                 FRA=The desired field is found via a fixed offset (distance) from another field.;
+                                 FRA=Le champ dÇsirÇ est trouvÇ via un dÇcalage fixe (distance) Ö partir d'un autre champ.;
                                  NLD=Het gewenste veld wordt gevonden via een vaste offset (afstand) uit een ander veld.
                                  ];
                       Promoted=Yes;
@@ -184,12 +184,12 @@ OBJECT Page 6085597 CDC Document Lines ListPart
                       CaptionML=[DAN=Find vërdi ved hjëlp af kolonneoverskrift;
                                  DEU=Feld mit SpaltenÅberschrift;
                                  ENU=Find value by column heading;
-                                 FRA=Find value by column heading;
+                                 FRA=Rechercher valeur par en-tàte de colonne;
                                  NLD=Vind waarde via kolomkoptekst];
                       ToolTipML=[DAN=Der sõges efter det õnskede felt ved hjëlp af en tidligere anvendt kolonneoverskrift i omrÜdet for den aktuelle position.;
                                  DEU=Das gewÅnschte Feld wird Åber eine vorher trainierte SpaltenÅberschrift im Bereich der aktuellen Position gesucht.;
                                  ENU=The desired field is searched for using a previously trained column heading in the range of the current position.;
-                                 FRA=The desired field is searched for using a previously trained column heading in the range of the current position.;
+                                 FRA=Le champ dÇsirÇ est recherchÇ en utilisant un texte/lÇgende de recherche prÇalablement entraånÇ dans la zone de la position courante.;
                                  NLD=Het gewenste veld wordt gezocht via een eerder getrainde kolomkop binnen het bereik van de huidige positie.];
                       Promoted=Yes;
                       Image=Table;
@@ -204,12 +204,12 @@ OBJECT Page 6085597 CDC Document Lines ListPart
                       CaptionML=[DAN=Find vërdi ved hjëlp af overskrift;
                                  DEU=Feld mit Suchtext;
                                  ENU=Find value by caption;
-                                 FRA=Find value by caption;
+                                 FRA=Trouver valeur par lÇgende;
                                  NLD=Vind waarde via bijschrift];
                       ToolTipML=[DAN=Der sõges efter det õnskede felt ved hjëlp af en tidligere anvendt sõgetekst/overskrift i omrÜdet for den aktuelle position.;
                                  DEU=Das gewÅnschte Feld wird Åber einen vorher trainierten Suchtext/Caption im Bereich der aktuellen Position gesucht.;
                                  ENU=The desired field is searched for using a previously trained search text/caption in the area of the current position.;
-                                 FRA=The desired field is searched for using a previously trained search text/caption in the area of the current position.;
+                                 FRA=Le champ dÇsirÇ est recherchÇ en utilisant un texte/lÇgende de recherche prÇalablement entraånÇ dans la zone de la position courante.;
                                  NLD=Het gewenste veld wordt gezocht via een eerder getrainde zoektekst/bijschrift in het gebied van de huidige positie.];
                       Promoted=Yes;
                       Image=Find;
@@ -225,13 +225,13 @@ OBJECT Page 6085597 CDC Document Lines ListPart
                       CaptionML=[DAN=Nulstil felt;
                                  DEU=Feld zurÅcksetzen;
                                  ENU=Reset field;
-                                 FRA=Reset field;
+                                 FRA=RÇinitialiser le champ;
                                  NLD=Veld opnieuw instellen];
                       ToolTipML=[DAN=De avancerede linjegenkendelsesindstillinger nulstilles til det õnskede felt.
                                  ;
                                  DEU=Die Einstellungen der erweiterten Zeilenerkennung werden fÅr das gewÅnschte Feld zurÅckgesetzt.;
                                  ENU=The advanced line recognition settings are reset for the desired field.;
-                                 FRA=The advanced line recognition settings are reset for the desired field.;
+                                 FRA=Les paramätres de reconnaissance avancÇs de ligne sont rÇinitialisÇs pour le champ dÇsirÇ.;
                                  NLD=De geavanceerde lijnherkenning instellingen voor het gewenste veld zijn gereset.];
                       Image=ResetStatus;
                       OnAction=VAR
@@ -250,7 +250,7 @@ OBJECT Page 6085597 CDC Document Lines ListPart
                       ToolTipML=[DAN=Viser den aktuelt benyttede version af avancerede linjegenkendelse.;
                                  DEU=Zeigt die aktuell verwendete Version der erweiterten Zeilenerkennung an.;
                                  ENU=Displays the currently used version of the advanced line detection.;
-                                 FRA=Displays the currently used version of the advanced line detection.;
+                                 FRA=Affiche la version actuellement utilisÇe de la dÇtection avancÇe de ligne.;
                                  NLD=Toont de momenteel gebruikte versie van de geavanceerde lijnherkenning.];
                       Image=Info;
                       OnAction=VAR

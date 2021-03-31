@@ -2,7 +2,7 @@ OBJECT Codeunit 61002 Adv. Purch. - Line Validation
 {
   OBJECT-PROPERTIES
   {
-    Date=30.03.21;
+    Date=31.03.21;
     Time=12:00:00;
     Modified=Yes;
     Version List=DCW13.70.00.6.00,ALR;
@@ -133,9 +133,9 @@ OBJECT Codeunit 61002 Adv. Purch. - Line Validation
   CODE
   {
     VAR
-      LineAmountDiffCalcDiscAmtTxt@6085576 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3) n†r den genkendte rabat-% (%4) benyttes til beregning af rabatbel›b (%5).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 vom berechneten Zeilenbetrag (%3), der mit dem erfassten Rabatt % (%4) berechnet wurde, um den Rabattbetrag (%5) zu berechnen.;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.;NLD=Herkend lijnbedrag (%2) is verschillend van berekend lijnbedrag (%3) met behulp van herkende korting % (%4) om korting (%5) op regel %1 te berekenen.';
+      LineAmountDiffCalcDiscAmtTxt@6085576 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3) n†r den genkendte rabat-% (%4) benyttes til beregning af rabatbel›b (%5).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 vom berechneten Zeilenbetrag (%3), der mit dem erfassten Rabatt % (%4) berechnet wurde, um den Rabattbetrag (%5) zu berechnen.;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.;FRA=Le montant de la ligne captur‚e (%2) est diff‚rent du montant de la ligne calcul‚ (%3) … l''aide du % remise (%4) captur‚ pour calculer le montant de la remise (%5) … la ligne %1.;NLD=Herkend lijnbedrag (%2) is verschillend van berekend lijnbedrag (%3) met behulp van herkende korting % (%4) om korting (%5) op regel %1 te berekenen.';
       LineAmountDiffCapDiscAmtTxt@6085577 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3) n†r det genkendte rabatbel›b (%4) benyttes.;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich in Zeile %1 von dem berechneten Zeilenbetrag (%3), der mit dem erfassten Rabattbetrag (%4) berechnet wurde.;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.;NLD=Herkend lijnbedrag (%2) is verschillend van berekend lijnbedrag (%3) met behulp van herkende korting % (%4) op regel %1.';
-      LineAmountDiffTxt@6085573 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich vom in Zeile %1 berechneten Zeilenbetrag (%3).;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.;FRA=Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.;NLD=Herkend lijnbedrag (%2) is anders dan berekend lijnbedrag (%3) op regel %1.';
+      LineAmountDiffTxt@6085573 : TextConst 'DAN=I linje %1 er linjebel›b genkendt (%2) forskellig fra linjebel›b beregnet (%3).;DEU=Der erfasste Zeilenbetrag (%2) unterscheidet sich vom in Zeile %1 berechneten Zeilenbetrag (%3).;ENU=Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.;FRA=Le montant de la ligne captur‚e (%2) est diff‚rent du montant de ligne calcul‚ (%3) … la ligne %1.;NLD=Herkend lijnbedrag (%2) is anders dan berekend lijnbedrag (%3) op regel %1.';
       WarningTxt@6085574 : TextConst 'DAN=ADVARSEL: %1;DEU=WARNUNG: %1;ENU=ATTENTION : %1;FRA=ATTENTION : %1;NLD=WAARSCHUWING: %1';
 
     BEGIN

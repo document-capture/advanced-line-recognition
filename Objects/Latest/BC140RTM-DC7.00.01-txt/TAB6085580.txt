@@ -2,7 +2,7 @@ OBJECT Table 6085580 CDC Template Field
 {
   OBJECT-PROPERTIES
   {
-    Date=30.03.21;
+    Date=31.03.21;
     Time=12:00:00;
     Modified=Yes;
     Version List=DCW13.70.00.7.00,ALR;
@@ -424,7 +424,7 @@ OBJECT Table 6085580 CDC Template Field
                                                    CaptionML=[DAN=Erstatningsfelt;
                                                               DEU=Ersatzfeld;
                                                               ENU=Substitution Field;
-                                                              FRA=Substitution Field;
+                                                              FRA=Champ de substitution;
                                                               NLD=Vervangingsveld] }
     { 50002;  ;Anchor Field        ;Code20        ;TableRelation="CDC Template Field".Code WHERE (Template No.=FIELD(Template No.),
                                                                                                   Type=CONST(Line));
@@ -432,7 +432,7 @@ OBJECT Table 6085580 CDC Template Field
                                                    CaptionML=[DAN=Ankerfelt;
                                                               DEU=Anker Feld;
                                                               ENU=Anchor Field;
-                                                              FRA=Anchor Field;
+                                                              FRA=Champ d'ancrage;
                                                               NLD=Ankerveld] }
     { 50003;  ;Sorting             ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Sortering;
@@ -444,13 +444,13 @@ OBJECT Table 6085580 CDC Template Field
                                                    CaptionML=[DAN=Feltposition;
                                                               DEU=Feldposition;
                                                               ENU=Field position;
-                                                              FRA=Field position;
+                                                              FRA=Position du champ;
                                                               NLD=Veld positie];
-                                                   OptionCaptionML=[DAN=,Over standardlinje,Under standardlinje;
+                                                   OptionCaptionML=[DAN=" ,Over standardlinje,Under standardlinje";
                                                                     DEU=" ,Oberhalb Standardzeile,Unterhalb Standardzeile";
                                                                     ENU=" ,Above standard line,Below standard line";
-                                                                    FRA=" ,Above standard line,Below standard line";
-                                                                    NLD=,boven de standaard lijn, onder de standaard lijn];
+                                                                    FRA=" ,Au-dessus de la ligne standard, en-dessous de la ligne standard";
+                                                                    NLD=" ,boven de standaard lijn, onder de standaard lijn"];
                                                    OptionString=[ ,StandardLine,BelowStandardLine] }
     { 50007;  ;Get Value from Previous Value;Boolean;
                                                    OnValidate=BEGIN
@@ -461,64 +461,63 @@ OBJECT Table 6085580 CDC Template Field
                                                    CaptionML=[DAN=KopiÇr vërdi fra tidligere vërdi;
                                                               DEU=Wert vom vorherigen Wert kopieren;
                                                               ENU=Copy value from previous value;
-                                                              FRA=Copy value from previous value
-                                                              ;
+                                                              FRA=Copier la valeur depuis la valeur prÇcÇdente;
                                                               NLD=Kopieer waarde van de vorige lijn] }
     { 50011;  ;Advanced Line Recognition Type;Option;
                                                    DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Avanceret linjegenkendelsestype;
                                                               DEU=Erw. Zeilenerkennung Art;
                                                               ENU=Advanced Line Recognition Type;
-                                                              FRA=Advanced Line Recognition Type;
+                                                              FRA=Type de reconnaissance avancÇe de ligne;
                                                               NLD=Geavanceerde lijnherkenningstype];
                                                    OptionCaptionML=[DAN=Standard,Anker-forbundet felt, Feltsõgning med overskrift,Feltsõgning med kolonneoverskrift,Gruppevërdi med overskrift;
                                                                     DEU=Standard,Mit Anker verknÅpftes Feld,Feldsuche mit Caption,Feldsuche mit SpaltenÅberschrift,Gruppierungsfeld mit Caption;
                                                                     ENU=Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption;
-                                                                    FRA=Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption;
+                                                                    FRA=Standard,Champ liÇ aux ancrages,Recherche de champ avec lÇgende,Recherche de champ avec en-tàte de colonne,Valeur de groupe avec lÇgende;
                                                                     NLD=standaard,anker gekoppeld veld,veld zoeken met bijschrift,veld zoeken met kolomhoofding, groepwaarde met bijschrift];
                                                    OptionString=Default,LinkedToAnchorField,FindFieldByCaptionInPosition,FindFieldByColumnHeading,GroupValue }
     { 50012;  ;Offset Top          ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Forskydning top;
                                                               DEU=Offset Oben;
                                                               ENU=Offset Top;
-                                                              FRA=Offset Top;
+                                                              FRA=Hauteur de dÇcalage;
                                                               NLD=Offset bovenkant] }
     { 50013;  ;Offset Bottom       ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Forskydning bund;
                                                               DEU=Offset Unten;
                                                               ENU=Offset Height;
-                                                              FRA=Offset Height;
+                                                              FRA=Hauteur de dÇcalage;
                                                               NLD=Offset hoogte] }
     { 50014;  ;Offset Left         ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Forskydning venstre;
                                                               DEU=Offset Links;
                                                               ENU=Offset Left;
-                                                              FRA=Offset Left;
+                                                              FRA=DÇcalage gauche;
                                                               NLD=Offset linkerkant] }
     { 50015;  ;Offset Right        ;Integer       ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Forskydning hõjre;
                                                               DEU=Offset Rechts;
                                                               ENU=Offset Width;
-                                                              FRA=Offset Width;
+                                                              FRA=Largeur de dÇcalage;
                                                               NLD=Offset breedte] }
     { 50020;  ;ALR Value Caption Offset X;Integer ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Overskriftsforskydning X;
                                                               DEU=Wert Suchtext Offset X;
                                                               ENU=Caption Offset X;
-                                                              FRA=Caption Offset X;
+                                                              FRA=DÇcalage de lÇgende X;
                                                               NLD=Offset bijschrift X] }
     { 50021;  ;ALR Value Caption Offset Y;Integer ;DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Overskriftsforskydning Y;
                                                               DEU=Wert Suchtext Offset Y;
                                                               ENU=Caption Offset Y;
-                                                              FRA=Caption Offset Y;
+                                                              FRA=DÇcalage de lÇgende Y;
                                                               NLD=Offset bijschrift Y] }
     { 50022;  ;ALR Typical Value Field Width;Decimal;
                                                    DataClassification=ToBeClassified;
                                                    CaptionML=[DAN=Vërdifeltets typiske bredde;
                                                               DEU=Typische Wert Feldbreite;
                                                               ENU=Field Width;
-                                                              FRA=Field Width;
+                                                              FRA=Largeur de champ;
                                                               NLD=Veldbreedte];
                                                    DecimalPlaces=0:5 }
   }

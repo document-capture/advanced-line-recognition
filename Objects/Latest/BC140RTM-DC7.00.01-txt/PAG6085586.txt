@@ -2,7 +2,7 @@ OBJECT Page 6085586 CDC Template Field Card
 {
   OBJECT-PROPERTIES
   {
-    Date=30.03.21;
+    Date=31.03.21;
     Time=12:00:00;
     Modified=Yes;
     Version List=DCW16.00.00.6.50,ALR;
@@ -726,7 +726,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver hvordan feltvërdien genkendes. Med Standard fremsõges vërdien ved hjëlp af standardlinjegenkendelse.;
                            DEU=Gibt an, wie der Feldwert gefunden werden soll. Bei Standard wird das Feld Åber die Standard Zeilenerkennung gesucht.;
                            ENU=Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.;
-                           FRA=Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.;
+                           FRA=SpÇcifie comment la valeur du champ doit àtre trouvÇe. Avec Standard, le champ est recherchÇ en utilisant la reconnaissance de ligne standard.;
                            NLD=Hiermee geeft u aan hoe de waarde van het veld wordt gevonden. Met standaardwaarde wordt het veld gezocht naar het gebruik van de standaard lijnherkenning.];
                 SourceExpr="Advanced Line Recognition Type" }
 
@@ -742,46 +742,43 @@ OBJECT Page 6085586 CDC Template Field Card
                 Importance=Additional }
 
     { 1160040028;2;Field  ;
-                ToolTipML=[DAN=Angiver kildefeltet der bruges til at beregne feltvërdien ved hjëlp af afstande/forskydninger.
+                ToolTipML=[DAN=Angiver kildefeltet der bruges til at beregne feltvërdien ved hjëlp af afstande/forskydninger.
                            ;
                            DEU=Gibt das Herkunftsfeld an, welches zur Berechnung des Feldwerts Åber AbstÑnde/Offsets genutzt wird.;
                            ENU=Specifies the source field used to calculate the field value via distances/offsets.;
-                           FRA=Specifies the source field used to calculate the field value via distances/offsets.;
+                           FRA=SpÇcifie le champ source utilisÇ pour calculer la valeur du champ via des distances/dÇcalages.;
                            NLD=Geeft het bronveld in dat gebruikt wordt om de waarde van het veld te bepalen via afstanden/offsets.];
                 SourceExpr="Anchor Field" }
 
     { 1160040027;2;Field  ;
-                ToolTipML=[DAN=Angiver om det genkendte felt sõges over eller under den linje hvor vërdierne for standardlinjegenkendelsen blev fundet.
-                           ;
+                ToolTipML=[DAN=Angiver om det genkendte felt sõges over eller under den linje hvor vërdierne for standardlinjegenkendelsen blev fundet.;
                            DEU=Gibt an, ob das gesuchte Feld ober- oder unterhalb der Zeile gesucht wird, in welcher die Werte der Standard Zeilenerkennung gefunden wurden.;
                            ENU=Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.;
-                           FRA=Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.;
+                           FRA=SpÇcifie si le champ recherchÇ est recherchÇ au-dessus ou en dessous de la ligne dans laquelle les valeurs de la reconnaissance de ligne standard ont ÇtÇ trouvÇes.;
                            NLD=Geeft aan of het zoekveld boven of onder de regel wordt gezocht waarin de waarden van de standaardregelherkenning werden gevonden.];
                 SourceExpr="Field Position" }
 
     { 1160040026;2;Field  ;
-                ToolTipML=[DAN=Angiver linjefeltet hvor indholdet benyttes som vërdi, hvis vërdien af det aktuelle felt ikke kan genkendes.
-                           ;
+                ToolTipML=[DAN=Angiver linjefeltet hvor indholdet benyttes som vërdi, hvis vërdien af det aktuelle felt ikke kan genkendes.;
                            DEU=Gibt das Zeilenfeld an, dessen Inhalt als Wert verwendet wird, wenn der Wert des aktuellen Feldes nicht gefunden werden kann.;
                            ENU=Specifies the line field whose content will be used as value if the value of the current field cannot be found.;
-                           FRA=Specifies the line field whose content will be used as value if the value of the current field cannot be found.;
+                           FRA=SpÇcifie le champ de ligne dont le contenu sera utilisÇ comme valeur si la valeur du champ actuel est introuvable.;
                            NLD=Geeft het regelveld aan waarvan de inhoud als waarde wordt gebruikt indien de waarde van het huidige veld niet kan worden gevonden.];
                 SourceExpr="Substitution Field" }
 
     { 1160040025;2;Field  ;
-                ToolTipML=[DAN=Hvis vërdien af det aktuelle felt ikke findes, kopieres vërdien til den aktuelle linje fra det samme felt i den forrige linje.
-                           ;
+                ToolTipML=[DAN=Hvis vërdien af det aktuelle felt ikke findes, kopieres vërdien til den aktuelle linje fra det samme felt i den forrige linje.;
                            DEU=Wenn der Wert des aktuellen Feldes nicht gefunden wird, wird vom gleichen Feld aus der vorherigen Zeile dessen Wert in die aktuelle Zeile kopiert.;
                            ENU=If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.;
-                           FRA=If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.;
+                           FRA=Si la valeur du champ actuel n'est pas trouvÇe, la valeur est copiÇe dans la ligne actuelle Ö partir du màme champ de la ligne prÇcÇdente.;
                            NLD=Als de waarde van dit veld niet wordt gevonden op de huidige regel, wordt de waarde overgenomen van de vorige regel.];
                 SourceExpr="Get Value from Previous Value" }
 
     { 1160040024;2;Group  ;
                 CaptionML=[DAN=Forskydninger;
-                           DEU=Offsets;
+                           DEU=AbstÑnde;
                            ENU=Offsets;
-                           FRA=Offsets;
+                           FRA=DÇcalages;
                            NLD=Verschuivingen];
                 GroupType=Group }
 
@@ -789,7 +786,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver afstanden til top.;
                            DEU=Gibt den Abstand nach oben an.;
                            ENU=Specifies the distance to the top.;
-                           FRA=Specifies the distance to the top.;
+                           FRA=SpÇcifie la distance par rapport au haut.;
                            NLD=Bepaalt de afstand naar de bovenkant.];
                 SourceExpr="Offset Top";
                 Importance=Additional }
@@ -798,7 +795,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver afstanden til bund.;
                            DEU=Gibt den Abstand nach unten an.;
                            ENU=Specifies the distance to the bottom.;
-                           FRA=Specifies the distance to the bottom.;
+                           FRA=SpÇcifie la distance par rapport au bas.;
                            NLD=Bepaalt de afstand naar de onderkant.];
                 SourceExpr="Offset Bottom";
                 Importance=Additional }
@@ -807,7 +804,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver afstanden til venstre.;
                            DEU=Gibt den Abstand nach links an.;
                            ENU=Specifies the distance to the left.;
-                           FRA=Specifies the distance to the left.;
+                           FRA=SpÇcifie la distance par rapport Ö la gauche.;
                            NLD=Bepaalt de afstand naar de linkerkant.];
                 SourceExpr="Offset Left";
                 Importance=Additional }
@@ -816,7 +813,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver afstanden til hõjre.;
                            DEU=Gibt den Abstand nach rechts an.;
                            ENU=Specifies the distance to the right.;
-                           FRA=Specifies the distance to the right.;
+                           FRA=SpÇcifie la distance par rapport Ö la droite.;
                            NLD=Bepaalt de afstand naar de rechterkant.];
                 SourceExpr="Offset Right";
                 Importance=Additional }
@@ -826,7 +823,7 @@ OBJECT Page 6085586 CDC Template Field Card
                            ;
                            DEU=Gibt den Abstand zum Suchtext an auf der X-Achse an.;
                            ENU=Specifies the distance to the search text/caption on the X axis.;
-                           FRA=Specifies the distance to the search text/caption on the X axis.;
+                           FRA=SpÇcifie la distance avec le texte/lÇgende de la recherche sur l'axe X.;
                            NLD=Specificeert de afstand naar de zoektekst/bijschrift op de X-as.];
                 SourceExpr="ALR Value Caption Offset X";
                 Importance=Additional }
@@ -836,7 +833,7 @@ OBJECT Page 6085586 CDC Template Field Card
                            ;
                            DEU=Gibt den Abstand zum Suchtext an auf der Y-Achse an.;
                            ENU=Specifies the distance to the search text/caption on the Y axis.;
-                           FRA=Specifies the distance to the search text/caption on the Y axis.;
+                           FRA=SpÇcifie la distance avec le texte/lÇgende de la recherche sur l'axe Y.;
                            NLD=Bepaalt de afstand naar de zoektekst/bijschrift op de X-as.];
                 SourceExpr="ALR Value Caption Offset Y";
                 Importance=Additional }
@@ -845,7 +842,7 @@ OBJECT Page 6085586 CDC Template Field Card
                 ToolTipML=[DAN=Angiver den forventede feltbredde for feltet.;
                            DEU=Gibt die erwartete Feldbreite des Feldes an.;
                            ENU=Specifies the expected field width of the field.;
-                           FRA=Specifies the expected field width of the field.;
+                           FRA=SpÇcifie la largeur attendue du champ.;
                            NLD=Specificeert de verwachte veldbreedte.];
                 SourceExpr="ALR Typical Value Field Width";
                 Importance=Additional }
