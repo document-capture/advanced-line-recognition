@@ -48,5 +48,5 @@ Based on the position of this field the user will define the "offset" of other f
 9. Test your setup by `Recognize Fields`
 
 Still not sure what to do? Watch this click guide:
-![](https://github.com/sradloff/Document-Capture-Advanced-Line-Recognition/raw/master/Documentation/UsageOfAdvancedLineRecognition.gif)
+![](https://github.com/document-capture/Advanced-Line-Recognition/blob/master/Documentation/ExampleDocument.png)
 
