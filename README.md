@@ -35,7 +35,7 @@ The concept of the Advanced Line Recognition extension is to identify at least o
 
 Based on the position of this field the user will define the "offset" of other fields that he wants to capture. 
 
-![](https://github.com/sradloff/Document-Capture/blob/master/Advanced%20Line%20Recognition/Documentation/ExampleDocument.png)
+![](https://github.com/Document-Capture/blob/master/Advanced%20Line%20Recognition/Documentation/ExampleDocument.png)
 
 1. Open Dynamics NAV Client
 2. Import open Documents to Document Capture
