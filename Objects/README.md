@@ -14,9 +14,45 @@ If you need to implement the Advanced Line Recognition for older NAV or DC Versi
 
 ![Global Variables](../Documentation/COD6085575_Global_Variables.png)
 
+* Add local variable ALRDocumentPage to function BufferWords
+
+![Global Variables](../Documentation/COD6085575_LocalVariable_in_BufferWords.png)
+
 * Add/Modify CAL Code in function BufferWords
 
 ![Global Variables](../Documentation/COD6085575_BufferWords_ALR.png)
+
+```
+//<ALR>
+IF (LineRegionFromPage > 0) OR (LineRegionToPage > 0) THEN BEGIN
+  ALRDocumentPage.SETRANGE("Document No.",DocumentNo);
+  ALRDocumentPage.SETRANGE("Page No.",LineRegionFromPage,LineRegionToPage);
+  IF ALRDocumentPage.FINDSET THEN
+    REPEAT
+      IF LineRegionToPos = 0 THEN
+        Words.SETFILTER(Top,STRSUBSTNO('%1..%2',LineRegionFromPos,ALRDocumentPage."Bottom Word Pos."))
+      ELSE
+        Words.SETFILTER(Top,DELCHR(STRSUBSTNO('%1..%2',LineRegionFromPos,LineRegionToPos),'=',' '));
+
+      IF Words.FINDSET(FALSE,FALSE) THEN
+        REPEAT
+          GlobalWords := Words;
+          GlobalWords.INSERT;
+        UNTIL Words.NEXT = 0;
+    UNTIL ALRDocumentPage.NEXT = 0;
+END ELSE BEGIN
+//</ALR>
+IF PageNo <> 0 THEN
+  Words.SETRANGE("Page No.",PageNo);
+IF Words.FINDSET(FALSE,FALSE) THEN
+  REPEAT
+    GlobalWords := Words;
+    GlobalWords.INSERT;
+  UNTIL Words.NEXT = 0;
+//<ALR>
+END;
+//</ALR>
+```
 
 2. Codeunit 61001
 * change the Object ID of variable LineManagementSI to 6085575
