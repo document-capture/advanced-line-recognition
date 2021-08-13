@@ -21,4 +21,4 @@ If you need to implement the Advanced Line Recognition for older NAV or DC Versi
 2. Codeunit 61001
 * change the Object ID of variable LineManagementSI to 6085575
 
-![Global Variables](../Documentation/COD61001_ChangeCodeunitID_61001.png)
+![Global Variables](../Documentation/COD61001_ChangeCodeunitID_Variable_61001.png)
