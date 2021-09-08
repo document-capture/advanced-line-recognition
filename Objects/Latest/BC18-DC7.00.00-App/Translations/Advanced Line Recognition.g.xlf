@@ -108,6 +108,96 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adv. Purch. - Line Validation - NamedType WarningTxt</note>
         </trans-unit>
+        <trans-unit id="Page 50604516 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Field rule examples</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 3830740531" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Feldwert muss mit "P" beginnen, gefolgt von 8 Ziffern von 0 bis 9.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription1</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 1793740707" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Erkennt Zeilen in denen das Feld entweder das Wort "Rechnung" oder das Wort „Gutschrift“ enthält.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription10</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 2431437324" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Zeilen überspringen, die das Wort "Zwischensumme" enthalten.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription11</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 3069133941" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Zeilen überspringen, in denen das Feld mit dem Wort "Größe" beginnt.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription12</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 3706830558" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Filtert Zeilen in denen das Feld mit POS anfängt, gefolgt von 3 Ziffern im Bereich von 0-9</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription13</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 1448863086" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Feldwert muss entweder mit "F" oder "R" und "-" beginnen, gefolgt von mindestens 3 Ziffern (0-9).</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription2</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 811166469" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Der Feldwert muss entweder mit "F" oder "R" und "-" beginnen, gefolgt von 3 bis 5 Stellen (0-9).</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription3</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 1917650680" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Feldwert muss mit "I" beginnen, gefolgt von 8 Ziffern von 0 bis 9.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription4</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 1279954063" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Der Feldwert muss mit "RG" beginnen, gefolgt von 5 Stellen, dann "X" gefolgt von 1 Stelle.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription5</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 3193043914" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Der Feldwert darft nicht "ABC" und nicht "DEF" sein.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription6</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 2555347297" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Feldwert muss entweder “Rechnung” oder “Gutschrift” sein.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription7</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 980075492" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Der Feldwert muss die Zeichen “AG” enthalten.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription8</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - NamedType 342378875" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Erkennt nur Zeilen, in denen das Feld das Wort Rechnung enthält.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription9</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Describes the rule</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - Control 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Rule description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - Control 2666907530 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the rule</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Rule - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 50604516 - Control 2666907530 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Rule</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Rule - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Adv. line recognition</source>
           <note from="Developer" annotates="general" priority="2"></note>
