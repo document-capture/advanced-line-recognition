@@ -1,4 +1,4 @@
-codeunit 61000 "Adv. Line Recognition Mgt."
+codeunit 61000 "ALR Adv. Recognition Mgt."
 {
 
     trigger OnRun()
@@ -23,6 +23,7 @@ codeunit 61000 "Adv. Line Recognition Mgt."
         ALRVersionNoText: Label 'ALR%1 (%2 Build %3)';
         NoALRFieldsForReset: Label 'There are not fields configured for advanced line recognition, that can be reset.';
         YouAreUsingALRVersion: Label 'You are using version %1 of the advanced line recognition.', Comment = 'Displays the current version of the Advanced line recognition to the user including the build';
+        ALRMgtSI: Codeunit "ALR Line Management SI";
 
     procedure SetToAnchorLinkedField(var TempDocumentLine: Record "CDC Temp. Document Line")
     var
@@ -49,9 +50,14 @@ codeunit 61000 "Adv. Line Recognition Mgt."
             Error(MissingSourceFieldValue, AnchorField.Code, TempDocumentLine."Line No.");
 
         // Select the field that should be linked with anchor field
-        Message(SelectTheOffsetField, AnchorField."Field Name");
-        if not SelectField(LinkedField, TempDocumentLine."Template No.", AnchorField.Code, false) then
-            Error(FieldSetupCanceled);
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+            if not LinkedField.Get(TempDocumentLine."Template No.", LinkedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
+        end;
+        if LinkedField.Code = '' then begin
+            Message(SelectTheOffsetField, AnchorField."Field Name");
+            if not SelectField(LinkedField, TempDocumentLine."Template No.", AnchorField.Code, false) then
+                Error(FieldSetupCanceled);
+        end;
 
         // Link the selected field to anchor field
         // Find the value of the selected field
@@ -79,7 +85,6 @@ codeunit 61000 "Adv. Line Recognition Mgt."
         UpdateExecutionSequence(LinkedField, LinkedField."Anchor Field");
 
         if LinkedField.Modify(true) then begin
-            SetTemplateToALRProcessing(TempDocumentLine."Template No.");
             Message(FieldIsLinkedToSourceField, LinkedField."Field Name", AnchorField."Field Name");
         end else
             Message(ErrorDuringFieldSetup);
@@ -96,9 +101,14 @@ codeunit 61000 "Adv. Line Recognition Mgt."
         GetLineIdentifierValue(TempDocumentLine, LineIdentFieldDocumentValue);
 
         // Select field
-        Message(SelectFieldForColumnHeaderSearch);
-        if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
-            Error(FieldSetupCanceled);
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+            if not SelectedField.Get(TempDocumentLine."Template No.", SelectedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
+        end;
+        if SelectedField.Code = '' then begin
+            Message(SelectFieldForColumnHeaderSearch);
+            if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
+                Error(FieldSetupCanceled);
+        end;
 
         // Check that the selected field has at least one caption
         TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
@@ -121,7 +131,6 @@ codeunit 61000 "Adv. Line Recognition Mgt."
             SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
 
         if SelectedField.Modify(true) then begin
-            SetTemplateToALRProcessing(TempDocumentLine."Template No.");
             Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", TemplateFieldCaption.Caption);
         end else
             Message(ErrorDuringFieldSetup);
@@ -140,9 +149,14 @@ codeunit 61000 "Adv. Line Recognition Mgt."
         GetLineIdentifierValue(TempDocumentLine, LineIdentFieldDocumentValue);
 
         // Select field
-        Message(SelectFieldForCaptionSearch);
-        if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
-            Error(FieldSetupCanceled);
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+            if not SelectedField.Get(TempDocumentLine."Template No.", SelectedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
+        end;
+        if SelectedField.Code = '' then begin
+            Message(SelectFieldForCaptionSearch);
+            if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
+                Error(FieldSetupCanceled);
+        end;
 
         // Check that the selected field has at least one caption
         TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
@@ -178,8 +192,6 @@ codeunit 61000 "Adv. Line Recognition Mgt."
             SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
 
         if SelectedField.Modify(true) then begin
-            ;
-            SetTemplateToALRProcessing(TempDocumentLine."Template No.");
             Message(FieldIsCapturedByCaption, SelectedField."Field Name");
         end else
             Message(ErrorDuringFieldSetup);
@@ -241,23 +253,23 @@ codeunit 61000 "Adv. Line Recognition Mgt."
         end;
     end;
 
-    procedure SetTemplateToALRProcessing(TemplateNo: Code[20])
-    var
-        lTemplate: Record "CDC Template";
-    begin
-        // Change Codeunit ID to the advanced line recognition codeunit on template
-        if lTemplate.Get(TemplateNo) then begin
-            lTemplate.Validate("Codeunit ID: Line Capture", GetAdvLineRecCodeunit());
-            lTemplate.Modify(true);
-        end;
-    end;
+    // procedure SetTemplateToALRProcessing(TemplateNo: Code[20])
+    // var
+    //     lTemplate: Record "CDC Template";
+    // begin
+    //     // Change Codeunit ID to the advanced line recognition codeunit on template
+    //     if lTemplate.Get(TemplateNo) then begin
+    //         lTemplate.Validate("Codeunit ID: Line Capture", GetAdvLineRecCodeunit());
+    //         lTemplate.Modify(true);
+    //     end;
+    // end;
 
 
-    local procedure GetAdvLineRecCodeunit(): Integer
-    var
-    begin
-        exit(61001);
-    end;
+    // local procedure GetAdvLineRecCodeunit(): Integer
+    // var
+    // begin
+    //     exit(61001);
+    // end;
 
     local procedure GetLineIdentifierValue(var TempDocumentLine: Record "CDC Temp. Document Line"; var LineIdentFieldDocumentValue: Record "CDC Document Value")
     var
@@ -328,7 +340,18 @@ codeunit 61000 "Adv. Line Recognition Mgt."
     begin
         VersionTriggers.GetApplicationVersion(ApplicationVersion);
         VersionTriggers.GetApplicationBuild(ApplicationBuild);
-        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '13', ApplicationVersion, ApplicationBuild));
+        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '14', ApplicationVersion, ApplicationBuild));
     end;
+
+    // procedure HasExecutePermission(ObjType2: Option TableData,"Table",Form,"Report",Dataport,"Codeunit","XMLport",MenuSuite,"Page",System,FieldNumber; ObjectNumber2: Integer): Boolean
+    // var
+    //     LicensePermission: Record "License Permission";
+    // begin
+    //     if LicensePermission.GET(ObjType2, ObjectNumber2) then
+    //         if LicensePermission."Execute Permission" = LicensePermission."Execute Permission"::Yes then
+    //             exit(true);
+
+    //     exit(false);
+    // end;
 }
 

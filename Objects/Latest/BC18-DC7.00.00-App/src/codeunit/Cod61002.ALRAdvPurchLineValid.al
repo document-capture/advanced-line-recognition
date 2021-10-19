@@ -1,5 +1,5 @@
 #pragma implicitwith disable
-codeunit 61002 "Adv. Purch. - Line Validation"
+codeunit 61002 "ALR Adv. Purch. - Line Valid."
 {
     // This codeunit validates lines on purchase documents
 

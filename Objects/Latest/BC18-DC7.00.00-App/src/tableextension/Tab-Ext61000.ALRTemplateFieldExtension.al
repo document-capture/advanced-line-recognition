@@ -8,14 +8,6 @@ tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
             DataClassification = CustomerContent;
             TableRelation = "CDC Template Field".Code WHERE("Template No." = FIELD("Template No."),
                                                              Type = CONST(Line));
-
-            trigger OnValidate()
-            var
-                CKLAdvLineRecognitionMgt: Codeunit "Adv. Line Recognition Mgt.";
-            begin
-                if "Substitution Field" <> '' then
-                    CKLAdvLineRecognitionMgt.SetTemplateToALRProcessing("Template No.");
-            end;
         }
         field(50002; "Anchor Field"; Code[20])
         {
