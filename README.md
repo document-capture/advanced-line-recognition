@@ -20,7 +20,10 @@ You can use the Advanced Line Recognition on your own risk.
 5. Copy a value from the previous line. If it was not able to find a value for a field the system will use the value of this field from the previous line. 
 
 ## Documentation ##
-At the moment there is no other documentation than this readme file.
+There is a basic english documentation available in the repositories Documentation directories:
+- [Microsoft Word](https://github.com/document-capture/advanced-line-recognition/blob/master/Documentation/Advanced%20line%20recognition%20-%20ENU.docx)
+- [PDF Format](https://github.com/document-capture/advanced-line-recognition/blob/master/Documentation/Advanced%20line%20recognition%20-%20ENU.pdf)
+
 
 ## Available versions ##
 The code will be updated unregularly for new versions of Document Capture. 
