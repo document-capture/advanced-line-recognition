@@ -7,8 +7,8 @@
   "description": "Advanced Recognition extension for Continia Document Capture",
   "privacyStatement": "",
   "EULA": "",
-  "help": "https://github.com/document-capture/",
-  "url": "https://github.com/document-capture/",
+  "help": "https://github.com/document-capture/advanced-line-recognition/wiki/",
+  "url": "https://github.com/document-capture/advanced-line-recognition/tree/master/Objects",
   "logo": "./res/images/logo.png",
   "dependencies": [
     {
@@ -45,7 +45,7 @@
       "to": 61010
     }
   ],
-  "contextSensitiveHelpUrl": "https://github.com/document-capture/",
+  "contextSensitiveHelpUrl": "https://github.com/document-capture/advanced-line-recognition/wiki/",
   "showMyCode": true,
   "runtime": "6.0",
   "target": "Cloud",

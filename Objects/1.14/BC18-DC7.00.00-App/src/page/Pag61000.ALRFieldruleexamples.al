@@ -107,7 +107,7 @@ page 61000 "ALR Field rule examples"
         RuleDescription12: Label 'Zeilen überspringen, in denen das Feld mit dem Wort "Größe" beginnt.', MaxLength = 100;
         Rule13: Label 'POS[0-9]{3}', MaxLength = 50, Locked = true;
         RuleDescription13: Label 'Filtert Zeilen in denen das Feld mit POS anfängt, gefolgt von 3 Ziffern im Bereich von 0-9', MaxLength = 100;
+
     //Rule: Label '', MaxLength = 50, Locked = true;
     //RuleDescription: Label '', MaxLength = 100;
-
 }
