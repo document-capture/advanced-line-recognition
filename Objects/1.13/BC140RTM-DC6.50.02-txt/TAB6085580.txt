@@ -1,0 +1,915 @@
+OBJECT Table 6085580 CDC Template Field
+{
+  OBJECT-PROPERTIES
+  {
+    Date=20210211D;
+    Time=120000T;
+    Modified=true;
+    Version List=DCW13.70.00.6.50.02,ALR;
+  }
+  PROPERTIES
+  {
+    DataCaptionFields=Type,Code,"Field Name";
+    OnInsert=VAR
+               Template@1000000000 : Record "CDC Template";
+             BEGIN
+               if "Language Code" = '' then begin
+                 Template.Get("Template No.");
+                 "Language Code" := Template."Language Code";
+               end;
+
+               "Source Table Filter GUID" := CreateGuid;
+               SetOrderRecords;
+             END;
+
+    OnDelete=VAR
+               TemplField@161024012 : Record "CDC Template Field";
+               Rule@1000000002 : Record "CDC Template Field Rule";
+               Caption@1000000000 : Record "CDC Template Field Caption";
+               Translation@1000000001 : Record "CDC Template Field Transl.";
+               DataTransl@1160040001 : Record "CDC Data Translation";
+               RecIDMgt@1160040000 : Codeunit "CDC Record ID Mgt.";
+             BEGIN
+               if ("G/L Account Field Code" <> '') and ("G/L Account Field Code" <> Code) then begin
+                 TemplField.SetRange("Template No.","Template No.");
+                 TemplField.SetRange(Type,Type);
+                 TemplField.SetRange("G/L Account Field Code","G/L Account Field Code");
+                 if TemplField.Count = 1 then
+                   if TemplField.Get("Template No.",Type,"G/L Account Field Code") then
+                     TemplField.Delete(true);
+               end;
+
+               Rule.SetRange("Template No.","Template No.");
+               Rule.SetRange(Type,Type);
+               Rule.SetRange(Code,Code);
+               Rule.DeleteAll(true);
+
+               Caption.SetRange("Template No.","Template No.");
+               Caption.SetRange(Type,Type);
+               Caption.SetRange(Code,Code);
+               Caption.DeleteAll(true);
+
+               Translation.SetRange("Template No.","Template No.");
+               Translation.SetRange(Type,Type);
+               Translation.SetRange(Code,Code);
+               Translation.DeleteAll(true);
+
+               DataTransl.SetRange("Template No.","Template No.");
+               DataTransl.SetRange(Type,Type);
+               DataTransl.SetRange("Field Code",Code);
+               DataTransl.DeleteAll(true);
+
+               RecIDMgt.DeleteTableFilter("Source Table Filter GUID");
+             END;
+
+    CaptionML=[DEU=Vorlagenfeld;
+               ENU=Template Field];
+    LookupPageID="CDC Template Field List";
+    DrillDownPageID="CDC Template Field List";
+  }
+  FIELDS
+  {
+    { 1   ;   ;Template No.        ;Code20        ;TableRelation="CDC Template";
+                                                   CaptionML=[DEU=Vorlagennr.;
+                                                              ENU=Template No.];
+                                                   NotBlank=true }
+    { 2   ;   ;Type                ;Option        ;CaptionML=[DEU=Art;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Kopf,Zeile;
+                                                                    ENU=Header,Line];
+                                                   OptionString=Header,Line }
+    { 3   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=true }
+    { 4   ;   ;Data Type           ;Option        ;OnValidate=VAR
+                                                                GLSetup@161024012 : Record "General Ledger Setup";
+                                                                Template@161024013 : Record "CDC Template";
+                                                              BEGIN
+                                                                SetFixedValue('');
+
+                                                                if "Data Type" <> "Data Type"::Lookup then
+                                                                  Validate("Source Table No.",0);
+
+                                                                if "Data Type" = "Data Type"::Number then begin
+                                                                  GLSetup.Get;
+                                                                  Validate("Decimal Places",GLSetup."Amount Decimal Places");
+                                                                  Validate("Blank Zero",true);
+                                                                end;
+
+                                                                if "Data Type" = "Data Type"::Date then begin
+                                                                  Template.Get("Template No.");
+                                                                  "Date Format" := Template."Date Format" + 1;
+                                                                end;
+
+                                                                if not ("Data Type" in ["Data Type"::Text,"Data Type"::Date]) then
+                                                                  "Enable Rule Generation" := false;
+                                                              END;
+
+                                                   CaptionML=[DEU=Datentyp;
+                                                              ENU=Data Type];
+                                                   OptionCaptionML=[DEU=Text,Nummer,Datum,Boolesch,,,,,Lookup;
+                                                                    ENU=Text,Number,Date,Boolean,,,,,Lookup];
+                                                   OptionString=Text,Number,Date,Boolean,,,,,Lookup }
+    { 5   ;   ;Required            ;Boolean       ;CaptionML=[DEU=Erforderlich;
+                                                              ENU=Required] }
+    { 6   ;   ;Search for Value    ;Boolean       ;CaptionML=[DEU=Nach Wert suchen;
+                                                              ENU=Search for Value] }
+    { 7   ;   ;Caption Is Part Of Value;Boolean   ;CaptionML=[DEU=Suchbegriff ist Teil des Wertes;
+                                                              ENU=Caption Is Part Of Value] }
+    { 8   ;   ;Insert on new Templates;Boolean    ;InitValue=true;
+                                                   CaptionML=[DEU=In neue Vorlage einfÅgen;
+                                                              ENU=Insert on new Templates] }
+    { 9   ;   ;Number Has Decimals ;Boolean       ;CaptionML=[DEU=Zahl enthÑlt Dezimalstellen;
+                                                              ENU=Number Has Decimals] }
+    { 10  ;   ;Caption Offset X    ;Integer       ;CaptionML=[DEU=Suchbegriff Offset X;
+                                                              ENU=Caption Offset X] }
+    { 11  ;   ;Caption Offset Y    ;Integer       ;CaptionML=[DEU=Suchbegriff Offset Y;
+                                                              ENU=Caption Offset Y] }
+    { 12  ;   ;Fixed Value (Text)  ;Text250       ;CaptionML=[DEU=Fester Wert (Text);
+                                                              ENU=Fixed Value (Text)] }
+    { 13  ;   ;Fixed Value (Decimal);Decimal      ;CaptionML=[DEU=Fester Wert (Dezimal);
+                                                              ENU=Fixed Value (Decimal)] }
+    { 14  ;   ;Fixed Value (Date)  ;Date          ;CaptionML=[DEU=Fester Wert (Datum);
+                                                              ENU=Fixed Value (Date)] }
+    { 15  ;   ;Fixed Value (Lookup);Code20        ;TableRelation=IF ("Lookup Table"=CONST(Vendor)) Vendor
+                                                                 ELSE IF ("Lookup Table"=CONST(Contact)) Contact
+                                                                 ELSE IF ("Lookup Table"=CONST(Customer)) Customer
+                                                                 ELSE IF ("Lookup Table"=CONST(Job)) Job
+                                                                 ELSE IF ("Lookup Table"=CONST(Item)) Item
+                                                                 ELSE IF ("Lookup Table"=CONST("Fixed Asset")) "Fixed Asset"
+                                                                 ELSE IF ("Lookup Table"=CONST(Employee)) Employee
+                                                                 ELSE IF ("Lookup Table"=CONST("Dimension Value")) "Dimension Value".Code WHERE ("Dimension Code"=FIELD("Lookup Rel. Code"));
+                                                   CaptionML=[DEU=Fester Wert (Lookup);
+                                                              ENU=Fixed Value (Lookup)] }
+    { 17  ;   ;Validation Dateformula From;DateFormula;
+                                                   CaptionML=[DEU=Validierung Datumsformel von;
+                                                              ENU=Validation Dateformula From] }
+    { 18  ;   ;Validation Dateformula To;DateFormula;
+                                                   CaptionML=[DEU=Validierung Datumsformel bis;
+                                                              ENU=Validation Dateformula To] }
+    { 19  ;   ;Never use Global Captions;Boolean  ;InitValue=true;
+                                                   CaptionML=[DEU=Globale Suchbegriffe nie benutzen;
+                                                              ENU=Never use Global Captions];
+                                                   Description=Deprecated NAV }
+    { 20  ;   ;Decimal Places      ;Code10        ;CaptionML=[DEU=Dezimalstellen;
+                                                              ENU=Decimal Places] }
+    { 21  ;   ;Blank Zero          ;Boolean       ;CaptionML=[DEU=Blank Zero;
+                                                              ENU=Blank Zero] }
+    { 22  ;   ;Language Code       ;Code10        ;TableRelation=Language;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 23  ;   ;Enable Rule Generation;Boolean     ;OnValidate=BEGIN
+                                                                if "Enable Rule Generation" then
+                                                                  if not ("Data Type" in ["Data Type"::Text,"Data Type"::Date]) then
+                                                                    Error(EnableRuleActivateErr,FieldCaption("Enable Rule Generation"),"Data Type"::Text,"Data Type"::Date);
+                                                              END;
+
+                                                   CaptionML=[DEU=Regelerzeugung aktivieren;
+                                                              ENU=Enable Rule Generation] }
+    { 24  ;   ;Multiline           ;Boolean       ;CaptionML=[DEU=Mehrzeilig;
+                                                              ENU=Multiline] }
+    { 25  ;   ;Default Page Source ;Option        ;CaptionML=[DEU=Vorgabe Seitenherkunft;
+                                                              ENU=Default Page Source];
+                                                   OptionCaptionML=[DEU=Erste Seite,Letzte Seite;
+                                                                    ENU=First Page,Last Page];
+                                                   OptionString="First Page","Last Page" }
+    { 26  ;   ;Auto Update Caption ;Boolean       ;InitValue=true;
+                                                   CaptionML=[DEU=Suchbegriffe autom. aktualisieren;
+                                                              ENU=Auto Update Caption] }
+    { 27  ;   ;Typical Field Width ;Decimal       ;CaptionML=[DEU=Typische Feldbreite;
+                                                              ENU=Field Width];
+                                                   DecimalPlaces=0:5 }
+    { 28  ;   ;Auto Update Field Width;Boolean    ;InitValue=true;
+                                                   CaptionML=[DEU=Feldbreite automatisch aktualisieren;
+                                                              ENU=Auto Update Field Width];
+                                                   Description=Deprecated NAV }
+    { 29  ;   ;Typical Field Height;Decimal       ;CaptionML=[DEU=Typische Feldhîhe;
+                                                              ENU=Field Height];
+                                                   DecimalPlaces=0:5 }
+    { 30  ;   ;Auto Update Field Height;Boolean   ;InitValue=true;
+                                                   CaptionML=[DEU=Feldhîhe automatisch aktualisieren;
+                                                              ENU=Auto Update Field Height];
+                                                   Description=Deprecated NAV }
+    { 31  ;   ;Sort Order          ;Integer       ;CaptionML=[DEU=Sortierung;
+                                                              ENU=Sort Order] }
+    { 32  ;   ;Field Name          ;Text50        ;CaptionML=[DEU=Feldname;
+                                                              ENU=Field Name] }
+    { 33  ;   ;Stop Lines Recognition;Option      ;CaptionML=[DEU=Zeilenerkennung stoppen;
+                                                              ENU=Stop Lines Recognition];
+                                                   OptionCaptionML=[DEU=" ,Falls die Caption in der gleichen Zeile ist,Falls der Wert in der gleichen Zeile ist,Falls die Caption oder der Wert in der gleichen Zeile ist,Falls die Caption in der gleichen Zeile ist (weiter auf nÑchster Seite),Falls der Wert in der gleichen Zeile ist (weiter auf nÑchster Seite),Falls die Caption oder der Wert in der gleichen Zeile ist (weiter auf nÑchster Seite)";
+                                                                    ENU=" ,If Caption is on same line,If Value is on same line,If Caption or Value is on same line,If Caption is on same line (continue on next page),If Value is on same line (continue on next page),If Caption or Value is on same line (continue on next page)"];
+                                                   OptionString=" ","If Caption is on same line","If Value is on same line","If Caption or Value is on same line","If Caption is on same line (continue on next page)","If Value is on same line (continue on next page)","If Caption or Value is on same line (continue on next page)" }
+    { 34  ;   ;Make Absolute Number;Boolean       ;CaptionML=[DEU=Absolutbetrag erzeugen;
+                                                              ENU=Make Absolute Number] }
+    { 37  ;   ;Lookup Table        ;Option        ;CaptionML=[DEU=Lookup Tabelle;
+                                                              ENU=Lookup Table];
+                                                   OptionCaptionML=[DEU=" ,Kreditor,Kontakt,Debitor,Projekt,Artikel,Anlage,Mitarbeiter,Dimensionswert";
+                                                                    ENU=" ,Vendor,Contact,Customer,Job,Item,Fixed Asset,Employee,Dimension Value"];
+                                                   OptionString=" ",Vendor,Contact,Customer,Job,Item,"Fixed Asset",Employee,"Dimension Value" }
+    { 38  ;   ;Lookup Rel. Code    ;Code20        ;TableRelation=IF ("Lookup Table"=CONST("Dimension Value")) Dimension;
+                                                   CaptionML=[DEU=Relation Code;
+                                                              ENU=Relation Code] }
+    { 39  ;   ;Codeunit ID: Is OK  ;Integer       ;TableRelation=AllObj."Object ID" WHERE ("Object Type"=CONST(Codeunit));
+                                                   CaptionML=[DEU=Codeunit ID: Ist OK;
+                                                              ENU=Codeunit ID: Is OK];
+                                                   BlankZero=true }
+    { 41  ;   ;Codeunit ID: Lookup ;Integer       ;TableRelation=AllObj."Object ID" WHERE ("Object Type"=CONST(Codeunit));
+                                                   CaptionML=[DEU=Codeunit ID: Lookup;
+                                                              ENU=Codeunit ID: Lookup];
+                                                   BlankZero=true }
+    { 43  ;   ;Codeunit ID: Validate;Integer      ;TableRelation=AllObj."Object ID" WHERE ("Object Type"=CONST(Codeunit));
+                                                   CaptionML=[DEU=Codeunit ID: Validate;
+                                                              ENU=Codeunit ID: Validate];
+                                                   BlankZero=true }
+    { 45  ;   ;Formula             ;Code250       ;OnValidate=VAR
+                                                                CaptureMgt@1160040000 : Codeunit "CDC Capture Management";
+                                                                WebClientManagement@6085574 : Codeunit "CDC Web Client Management";
+                                                                TempDec@6085573 : Decimal;
+                                                              BEGIN
+                                                                SetFormula(Formula);
+                                                              END;
+
+                                                   CaptionML=[DEU=Formel;
+                                                              ENU=Formula] }
+    { 46  ;   ;G/L Account Field Code;Code20      ;TableRelation="CDC Template Field".Code WHERE ("Template No."=FIELD("Template No."),
+                                                                                                  Type=CONST(Header),
+                                                                                                  "Data Type"=CONST(Text));
+                                                   OnLookup=VAR
+                                                              TemplateField@6085573 : Record "CDC Template Field";
+                                                            BEGIN
+                                                              TemplateField.FilterGroup(4);
+                                                              TemplateField.SetRange("Template No.","Template No.");
+                                                              TemplateField.SetRange(Type,TemplateField.Type::Header);
+                                                              TemplateField.SetRange("Data Type",TemplateField."Data Type"::Text);
+                                                              TemplateField.FilterGroup(0);
+                                                              if TemplateField.Get("Template No.",TemplateField.Type::Header,"G/L Account Field Code") then;
+                                                              if PAGE.RunModal(0,TemplateField) = ACTION::LookupOK then
+                                                                "G/L Account Field Code" := TemplateField.Code;
+                                                            END;
+
+                                                   CaptionML=[DEU=Konto Feldcode;
+                                                              ENU=G/L Account Field Code] }
+    { 47  ;   ;Transfer Amount to Document;Option ;CaptionML=[DEU=Betrag an Beleg Åbertragen;
+                                                              ENU=Transfer Amount to Document];
+                                                   OptionCaptionML=[DEU=" ,falls Zeilen nicht erkannt wurden,Immer";
+                                                                    ENU=" ,If lines are not recognised,Always"];
+                                                   OptionString=" ","If lines are not recognised",Always }
+    { 48  ;   ;Subtract from Amount Field;Code20  ;TableRelation="CDC Template Field".Code WHERE ("Template No."=FIELD("Template No."),
+                                                                                                  Type=FIELD(Type),
+                                                                                                  "Transfer Amount to Document"=FILTER(<>" "));
+                                                   OnValidate=BEGIN
+                                                                if "Subtract from Amount Field" = Code then
+                                                                  Error(Text003);
+                                                              END;
+
+                                                   CaptionML=[DEU=Betrag bei Registrierung abziehen von;
+                                                              ENU=Subtract from Amount Field (on registration)] }
+    { 49  ;   ;Codeunit ID: Capture Value;Integer ;TableRelation=AllObj."Object ID" WHERE ("Object Type"=CONST(Codeunit));
+                                                   CaptionML=[DEU=Codeunit ID: Capture Wert;
+                                                              ENU=Codeunit ID: Capture Value];
+                                                   BlankZero=true }
+    { 51  ;   ;Purch. Alloc. G/L Account No.;Code20;
+                                                   TableRelation="G/L Account";
+                                                   CaptionML=[DEU=Eink. Zuordnungssachkonto;
+                                                              ENU=Purch. Alloc. G/L Account No.] }
+    { 52  ;   ;Date Format         ;Option        ;CaptionML=[DEU=Datumsformat;
+                                                              ENU=Date Format];
+                                                   OptionCaptionML=[DEU=" ,Tag / Monat / Jahr,Monat / Tag / Jahr,Jahr / Tag / Monat,Jahr / Monat / Tag,Tag / Jahr / Monat,Monat / Jahr / Tag";
+                                                                    ENU=" ,Day / Month / Year,Month / Day / Year,Year / Day / Month,Year / Month / Day,Day / Year / Month,Month / Year / Day"];
+                                                   OptionString=" ","Day / Month / Year","Month / Day / Year","Year / Day / Month","Year / Month / Day","Day / Year / Month","Month / Year / Day" }
+    { 53  ;   ;Source Table No.    ;Integer       ;TableRelation=AllObj."Object ID" WHERE ("Object Type"=CONST(Table));
+                                                   OnValidate=VAR
+                                                                RecIDMgt@1160040000 : Codeunit "CDC Record ID Mgt.";
+                                                                DCLogMgt@1000 : Codeunit "CDC Log Mgt.";
+                                                              BEGIN
+                                                                if "Source Table No." <> 0 then
+                                                                  TestField("Data Type","Data Type"::Lookup);
+
+                                                                DCLogMgt.IsLogActive2("Source Table No.",true);
+
+                                                                if "Source Table No." = xRec."Source Table No." then
+                                                                  exit;
+
+                                                                RecIDMgt.CheckDocValue(Type = Type::Line,Code,"Template No.",FieldCaption("Source Table No."));
+                                                                RecIDMgt.DeleteTableFilter("Source Table Filter GUID");
+                                                                Clear("Source Table Filter GUID");
+                                                                "Fixed Value (Rec. ID Tree ID)" := 0;
+                                                                "Source Field No." := RecIDMgt.GetFirstKeyField("Source Table No.");
+                                                              END;
+
+                                                   CaptionML=[DEU=Herkunftstabellennr.;
+                                                              ENU=Source Table No.];
+                                                   BlankZero=true }
+    { 55  ;   ;Source Table Filter GUID;GUID      ;CaptionML=[DEU=Herkunftsfeldfilter GUID;
+                                                              ENU=Source Table Filter GUID] }
+    { 56  ;   ;Source Field No.    ;Integer       ;TableRelation=Field."No." WHERE (TableNo=FIELD("Source Table No."));
+                                                   OnValidate=VAR
+                                                                RecIDMgt@1160040000 : Codeunit "CDC Record ID Mgt.";
+                                                              BEGIN
+                                                                if "Source Field No." = xRec."Source Field No." then
+                                                                  exit;
+
+                                                                if xRec."Source Field No." > 0 then
+                                                                  RecIDMgt.CheckDocValue(Type = Type::Line,Code,"Template No.",FieldCaption("Source Field No."));
+
+                                                                if not RecIDMgt.PartOfKey("Source Table No.","Source Field No.") then
+                                                                  Error(Text005,FieldCaption("Source Field No."),FieldCaption("Source Table No."));
+                                                              END;
+
+                                                   CaptionML=[DEU=Herkunftsfeldnr.;
+                                                              ENU=Source Field No.];
+                                                   BlankZero=true }
+    { 57  ;   ;Destination Header Field No.;Integer;
+                                                   TableRelation=Field."No.";
+                                                   OnValidate=VAR
+                                                                Template@1160040001 : Record "CDC Template";
+                                                                Field@161024013 : Record Field;
+                                                                DocCat@161024012 : Record "CDC Document Category";
+                                                                RecIDMgt@1160040000 : Codeunit "CDC Record ID Mgt.";
+                                                              BEGIN
+                                                                if ("Destination Header Field No." = xRec."Destination Header Field No.") or ("Destination Header Field No." = 0) then
+                                                                  exit;
+
+                                                                Template.Get("Template No.");
+                                                                DocCat.Get(Template."Category Code");
+                                                                DocCat.TestField("Destination Header Table No.");
+
+                                                                Field.Get(DocCat."Destination Header Table No.","Destination Header Field No.");
+                                                                Field.TestField(Enabled);
+                                                                Field.TestField(Class,Field.Class::Normal);
+                                                              END;
+
+                                                   CaptionML=[DEU=Feldnr. Zielkopf;
+                                                              ENU=Destination Header Field No.];
+                                                   BlankZero=true }
+    { 58  ;   ;No. of Source Table Filters;Integer;FieldClass=FlowField;
+                                                   CalcFormula=Count("CDC Table Filter Field" WHERE ("Table Filter GUID"=FIELD("Source Table Filter GUID")));
+                                                   CaptionML=[DEU=Anzahl von Herkunftstabellenfiltern;
+                                                              ENU=No. of Source Table Filters];
+                                                   BlankZero=true;
+                                                   Editable=false }
+    { 59  ;   ;Fixed Value (Rec. ID Tree ID);Integer;
+                                                   TableRelation="CDC Record ID Tree";
+                                                   CaptionML=[DEU=Fester Wert (Datensatz-ID Baum-ID);
+                                                              ENU=Fixed Value (Rec. ID Tree ID)] }
+    { 60  ;   ;Destination Line Field No.;Integer ;TableRelation=Field."No.";
+                                                   OnValidate=VAR
+                                                                Template@1160040001 : Record "CDC Template";
+                                                                Field@161024013 : Record Field;
+                                                                DocCat@161024012 : Record "CDC Document Category";
+                                                                RecIDMgt@1160040000 : Codeunit "CDC Record ID Mgt.";
+                                                              BEGIN
+                                                                if ("Destination Line Field No." = xRec."Destination Line Field No.") or ("Destination Line Field No." = 0) then
+                                                                  exit;
+
+                                                                Template.Get("Template No.");
+                                                                DocCat.Get(Template."Category Code");
+                                                                DocCat.TestField("Destination Line Table No.");
+
+                                                                Field.Get(DocCat."Destination Line Table No.","Destination Line Field No.");
+                                                                Field.TestField(Enabled);
+                                                                Field.TestField(Class,Field.Class::Normal);
+                                                              END;
+
+                                                   CaptionML=[DEU=Feldnr. Zielzeile;
+                                                              ENU=Destination Line Field No.];
+                                                   BlankZero=true }
+    { 61  ;   ;Delete Blanks       ;Boolean       ;CaptionML=[DEU=Leerzeichen lîschen;
+                                                              ENU=Delete Blanks] }
+    { 62  ;   ;Caption Mandatory   ;Boolean       ;CaptionML=[DEU=Suchtext notwendig;
+                                                              ENU=Caption Mandatory] }
+    { 63  ;   ;Use as Doc. Separator;Boolean      ;OnValidate=BEGIN
+                                                                if not "Use as Doc. Separator" then
+                                                                  exit;
+
+                                                                TestField(Type,Type::Header);
+                                                              END;
+
+                                                   CaptionML=[DEU=Als Belegtrenner verwenden;
+                                                              ENU=Use as Document Separator] }
+    { 64  ;   ;Fixed Value (Boolean);Boolean      ;CaptionML=[DEU=Fester Wert (Boolesch);
+                                                              ENU=Fixed Value (Boolean)] }
+    { 65  ;   ;Offset DPI          ;Integer       ;CaptionML=[DEU=Offset DPI;
+                                                              ENU=Offset DPI] }
+    { 66  ;   ;Typical Field DPI   ;Integer       ;CaptionML=[DEU=Typische Feld DPI;
+                                                              ENU=Typical Field DPI] }
+    { 67  ;   ;Transfer Blank Values;Boolean      ;CaptionML=[DEU=Leere Werte Åbertragen;
+                                                              ENU=Transfer Blank Values] }
+    { 100 ;   ;XML Path            ;Text250       ;OnValidate=VAR
+                                                                XmlLibrary@1000 : Codeunit "CDC Xml Library";
+                                                              BEGIN
+                                                                XmlLibrary.FormatXmlPath("XML Path");
+                                                                "XML Path" := XmlLibrary.StripHeaderLineTag(Rec,"XML Path");
+                                                              END;
+
+                                                   CaptionML=[DEU=XML-Pfad;
+                                                              ENU=XML Path] }
+    { 101 ;   ;Change Sign         ;Boolean       ;CaptionML=[DEU=Vorzeichen Ñndern;
+                                                              ENU=Change Sign] }
+    { 102 ;   ;Show Field          ;Option        ;CaptionML=[DEU=Feld anzeigen;
+                                                              ENU=Show Field];
+                                                   OptionCaptionML=[DEU=Nie,Wenn ein Wert existiert,Immer;
+                                                                    ENU=Never,If it has a value,Always];
+                                                   OptionString=Never,IfValue,Always }
+    { 50001;  ;Substitution Field  ;Code20        ;TableRelation="CDC Template Field".Code WHERE ("Template No."=FIELD("Template No."),
+                                                                                                  Type=CONST(Line));
+                                                   OnValidate=VAR
+                                                                CKLAdvLineRecognitionMgt@1000000000 : Codeunit "Adv. Line Recognition Mgt.";
+                                                              BEGIN
+                                                                if "Substitution Field" <> '' then
+                                                                  CKLAdvLineRecognitionMgt.SetTemplateToALRProcessing("Template No.");
+                                                              END;
+
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Ersatzfeld;
+                                                              ENU=Substitution Field] }
+    { 50002;  ;Anchor Field        ;Code20        ;TableRelation="CDC Template Field".Code WHERE ("Template No."=FIELD("Template No."),
+                                                                                                  Type=CONST(Line));
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Anker Feld;
+                                                              ENU=Anchor Field] }
+    { 50003;  ;Sorting             ;Integer       ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Sortierung;
+                                                              ENU=Sorting] }
+    { 50004;  ;Field Position      ;Option        ;DataClassification=ToBeClassified;
+                                                   CaptionML=DEU=Feldposition;
+                                                   OptionCaptionML=[DEU=" ,Oberhalb Standardzeile,Unterhalb Standardzeile";
+                                                                    ENU=" ,Above standard line,Below standard line"];
+                                                   OptionString=" ",StandardLine,BelowStandardLine }
+    { 50005;  ;Max. Bottom Position;Integer       ;DataClassification=ToBeClassified }
+    { 50006;  ;Min. Top Position   ;Integer       ;DataClassification=ToBeClassified }
+    { 50007;  ;Get Value from Previous Value;Boolean;
+                                                   OnValidate=BEGIN
+                                                                TestField("Substitution Field",'');
+                                                              END;
+
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=DEU=Wert vom vorherigen Wert kopieren }
+    { 50011;  ;Advanced Line Recognition Type;Option;
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Erw. Zeilenerkennung Art;
+                                                              ENU=Advanced Line Recognition Type];
+                                                   OptionCaptionML=[DEU=Standard,Mit Anker verknÅpftes Feld,Feldsuche mit Caption,Feldsuche mit SpaltenÅberschrift,Gruppierungsfeld mit Caption;
+                                                                    ENU=Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption];
+                                                   OptionString=Default,LinkedToAnchorField,FindFieldByCaptionInPosition,FindFieldByColumnHeading,GroupValue }
+    { 50012;  ;Offset Top          ;Integer       ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Offset Oben;
+                                                              ENU=Offset Top] }
+    { 50013;  ;Offset Bottom       ;Integer       ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Offset Unten;
+                                                              ENU=Offset Height] }
+    { 50014;  ;Offset Left         ;Integer       ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Offset Links;
+                                                              ENU=Offset Left] }
+    { 50015;  ;Offset Right        ;Integer       ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Offset Rechts;
+                                                              ENU=Offset Width] }
+    { 50020;  ;ALR Value Caption Offset X;Integer ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Wert Suchtext Offset X;
+                                                              ENU=Caption Offset X] }
+    { 50021;  ;ALR Value Caption Offset Y;Integer ;DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Wert Suchtext Offset Y;
+                                                              ENU=Caption Offset Y] }
+    { 50022;  ;ALR Typical Value Field Width;Decimal;
+                                                   DataClassification=ToBeClassified;
+                                                   CaptionML=[DEU=Typische Wert Feldbreite;
+                                                              ENU=Field Width];
+                                                   DecimalPlaces=0:5 }
+  }
+  KEYS
+  {
+    {    ;"Template No.",Type,Code                ;Clustered=true }
+    {    ;"Template No.",Type,"Sort Order"         }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text001@1000000000 : TextConst 'DEU=Es ist nicht ratsam, Leerzeichen als Trennzeichen fÅr Datumsvalidierungsregeln zu benutzen, da sie vor der Verarbeitung gelîscht werden. Benutzen Sie stattdessen einen Bindestrich - oder einen SchrÑgstrich /.;ENU=It is not recommended to use space as a seperator in Date Validation Rules as they will be deleted before evaluation. Use a seperator line - or / instead.';
+      Text002@161024012 : TextConst 'DEU=Mîchten Sie auch das Feld ''%1'' lîschen?;ENU=Do you also want to delete the field ''%1''?';
+      Text003@161024013 : TextConst 'DEU=Das Feld kann nicht aus sich selbst erzeugt werden.;ENU=The field cannot be subtracted from itself';
+      Text004@1160040000 : TextConst 'DEU=Der Datensatz ist nicht in den Filtern von %1 enthalten.;ENU=The record is not within the filters of the %1.';
+      Text005@1160040001 : TextConst 'DEU=%1 ist kein Teil des PrimÑrschlÅssels von %2.;ENU=The %1 is not part of the primary key of the %2.';
+      Text006@1160040002 : TextConst 'DEU=Feld in %1;ENU=Field in %1';
+      Text007@1160040011 : TextConst 'DEU=Feld Zielkopf;ENU=Destination Header Field';
+      Text008@1160040010 : TextConst 'DEU=Feld Zielzeile;ENU=Destination Line Field';
+      EnableRuleActivateErr@6085573 : TextConst 'DEU=%1 kann nur fÅr Datumstyp %2 oder %3 aktiviert werden.;ENU=%1 can only be activated for Date Type %2 or %3.';
+      AlwaysOneDecimal@6085574 : TextConst 'DEU=Immer 1 Dezimalstelle;ENU=Always 1 decimal';
+      AlwaysNoDecimals@6085575 : TextConst 'DEU=Immer %1 Dezimalstellen;ENU=Always %1 decimals';
+      RangeOfDecimals@6085576 : TextConst 'DEU=%1-%2 Dezimalstellen;ENU=%1-%2 decimals';
+      WrongExpressionFormat@6085577 : TextConst 'DEU=Geben Sie eine oder zwei Zahlen ein, die durch einen Doppelpunkt getrennt sind. Die erste Zahl muss kleiner oder gleich der zweiten Zahl sein. Zahlen mÅssen zwischen 0 und 9 liegen.;ENU=Enter one number or two numbers separated by a colon. The first number must be less or equal to the second number. Numbers must be between 0 and 9.';
+      UnableToParseDecimalExpression@6085578 : TextConst 'DEU=Der eingegebene Ausdruck kann nicht Åbersetzt werden.;ENU=Unable to translate typed expression.';
+      InvalidFormulaErr@6085600 : TextConst 'DEU=Die Formel fÅr das Vorlagenfeld ''%1'' ist ungÅltig. Sie darf nicht mit ''+'', ''-'', ''*'', ''/'', ''^'', ''%'' enden.;ENU=Formula for Template Field ''%1'' is invalid. It must not end with ''+'', ''-'', ''*'', ''/'', ''^'', ''%''.';
+      InvalidFormulaErr2@6085290 : TextConst 'ENU=Formula for Template Field ''%1'' is invalid. It must not begin with ''+'', ''*'', ''/'', ''^'', ''%''.';
+
+    [LineStart(41)]
+    PROCEDURE Clone@161024012(FromCompany@1160040002 : Text[30];FromField@1160040003 : Record "CDC Template Field";ToTemplate@161024013 : Record "CDC Template";CreatedFromMasterTemplate@6085581 : Boolean);
+    VAR
+      ToField@1000000002 : Record "CDC Template Field";
+      FromFieldRule@1000000010 : Record "CDC Template Field Rule";
+      ToFieldRule@1000000009 : Record "CDC Template Field Rule";
+      FromFieldCapt@1000000003 : Record "CDC Template Field Caption";
+      ToFieldCaption@1000000004 : Record "CDC Template Field Caption";
+      FromFieldTransl@1000000005 : Record "CDC Template Field Transl.";
+      ToFieldTransl@1000000006 : Record "CDC Template Field Transl.";
+      FromTableFilterFields@1160040000 : Record "CDC Table Filter Field";
+      ToTableFilterFields@1160040001 : Record "CDC Table Filter Field";
+      NoOfFromFieldRule@6085573 : Integer;
+      Handled@6085600 : Boolean;
+    BEGIN
+      OnBeforeClone(FromCompany,FromField,ToTemplate,CreatedFromMasterTemplate,Handled);
+      if Handled then
+        exit;
+
+      ToField := FromField;
+      ToField."Template No." := ToTemplate."No.";
+      if ToField.Find('=') then
+        exit;
+
+      ToField.Insert(true);
+
+      if FromCompany <> '' then begin
+        FromFieldRule.ChangeCompany(FromCompany);
+        FromFieldCapt.ChangeCompany(FromCompany);
+        FromFieldTransl.ChangeCompany(FromCompany);
+        FromTableFilterFields.ChangeCompany(FromCompany);
+      end;
+
+      FromFieldRule.SetRange("Template No.",FromField."Template No.");
+      FromFieldRule.SetRange(Type,FromField.Type);
+      FromFieldRule.SetRange(Code,FromField.Code);
+      if FromFieldRule.FindSet then begin
+        NoOfFromFieldRule := FromFieldRule.Count;
+
+        repeat
+          ToFieldRule := FromFieldRule;
+          ToFieldRule."Template No." := ToField."Template No.";
+          if (NoOfFromFieldRule > 1) and CreatedFromMasterTemplate and FromField."Enable Rule Generation" then
+            ToFieldRule."Created from Master Template" := true
+          else
+            ToFieldRule."Created from Master Template" := false;
+          ToFieldRule.Insert(true);
+        until FromFieldRule.Next = 0;
+      end;
+
+      FromFieldCapt.SetRange("Template No.",FromField."Template No.");
+      FromFieldCapt.SetRange(Type,FromField.Type);
+      FromFieldCapt.SetRange(Code,FromField.Code);
+      if FromFieldCapt.FindSet then
+        repeat
+          ToFieldCaption := FromFieldCapt;
+          ToFieldCaption."Template No." := ToField."Template No.";
+          ToFieldCaption.Insert(true);
+        until FromFieldCapt.Next = 0;
+
+      FromFieldTransl.SetRange("Template No.",FromField."Template No.");
+      FromFieldTransl.SetRange(Type,FromField.Type);
+      FromFieldTransl.SetRange(Code,FromField.Code);
+      if FromFieldTransl.FindSet then
+        repeat
+          ToFieldTransl := FromFieldTransl;
+          ToFieldTransl."Template No." := ToField."Template No.";
+          ToFieldTransl.Insert(true);
+        until FromFieldTransl.Next = 0;
+
+      FromTableFilterFields.SetRange("Table Filter GUID",FromField."Source Table Filter GUID");
+      if FromTableFilterFields.FindSet then
+        repeat
+          ToTableFilterFields := FromTableFilterFields;
+          ToTableFilterFields."Table Filter GUID" := ToField."Source Table Filter GUID";
+          ToTableFilterFields.Insert(true);
+        until FromTableFilterFields.Next = 0;
+    END;
+
+    [LineStart(105)]
+    PROCEDURE SetFixedValue@1000000000(Value@1000000000 : Text[250]);
+    VAR
+      RecIDMgt@161024013 : Codeunit "CDC Record ID Mgt.";
+      CaptureMgt@1160040001 : Codeunit "CDC Capture Management";
+      RecID@161024012 : Text[30];
+      DCLogMgt@1000 : Codeunit "CDC Log Mgt.";
+    BEGIN
+      if ("Source Table No." <> 0) or ("Data Type" = "Data Type"::Lookup) then begin
+        "Fixed Value (Text)" := '';
+        if Value <> '' then
+          DCLogMgt.IsLogActive("Source Table No.",true);
+        "Fixed Value (Rec. ID Tree ID)" := RecIDMgt.SetKeyValueWithGUID("Source Table No.","Source Field No.",0,
+          "Source Table Filter GUID",Value,true);
+      end;
+
+      case "Data Type" of
+        "Data Type"::Text:
+          Evaluate("Fixed Value (Text)",Value);
+        "Data Type"::Number:
+          if Value = '' then
+            "Fixed Value (Decimal)" := 0
+          else
+            Evaluate("Fixed Value (Decimal)",Value);
+        "Data Type"::Date:
+          if Value = 'TODAY' then
+            Evaluate("Fixed Value (Text)",Value)
+          else begin
+            "Fixed Value (Text)" := '';
+            Evaluate("Fixed Value (Date)",Value);
+          end;
+        "Data Type"::Boolean:
+          if Value = '' then
+            "Fixed Value (Boolean)" := false
+          else
+            CaptureMgt.ParseBoolean(Value,"Fixed Value (Boolean)");
+      end;
+
+      if Value <> '' then
+        "Search for Value" := false;
+    END;
+
+    [LineStart(139)]
+    PROCEDURE GetFixedValue@1000000001() : Text[250];
+    VAR
+      RecIDMgt@161024012 : Codeunit "CDC Record ID Mgt.";
+    BEGIN
+      if ("Source Table No." <> 0) or ("Data Type" = "Data Type"::Lookup) then
+        exit(RecIDMgt.GetKeyValue("Fixed Value (Rec. ID Tree ID)","Source Field No."));
+
+      case "Data Type" of
+        "Data Type"::Text:
+          exit(Format("Fixed Value (Text)"));
+        "Data Type"::Date:
+          if "Fixed Value (Date)" <> 0D then
+            exit(Format("Fixed Value (Date)"))
+          else
+            exit("Fixed Value (Text)");
+        "Data Type"::Number:
+          if "Fixed Value (Decimal)" <> 0 then
+            exit(Format("Fixed Value (Decimal)"));
+        "Data Type"::Boolean:
+          exit(Format("Fixed Value (Boolean)"));
+      end;
+    END;
+
+    [LineStart(158)]
+    PROCEDURE FormulaOnLookup@161024013(VAR Text@161024012 : Text[1024]) : Boolean;
+    VAR
+      TemplField@161024013 : Record "CDC Template Field";
+    BEGIN
+      TemplField.FilterGroup(2);
+      TemplField.SetCurrentKey("Template No.",Type,"Sort Order");
+      TemplField.SetRange("Template No.","Template No.");
+      TemplField.SetRange(Type,Type);
+      TemplField.SetFilter(Code,'<>%1',Code);
+      if "Data Type" = "Data Type"::Number then
+        TemplField.SetRange("Data Type","Data Type");
+      TemplField.FilterGroup(0);
+      if StrLen(Text) <= MaxStrLen(TemplField.Code) then
+        if TemplField.Get("Template No.",Type,Text) then;
+
+      if PAGE.RunModal(0,TemplField) = ACTION::LookupOK then begin
+        Text := TemplField.Code;
+        exit(true);
+      end;
+    END;
+
+    [LineStart(175)]
+    PROCEDURE GetDestFieldCaption@1160040000(FieldType@1160040002 : 'Header,Line') FieldCap : Text[250];
+    VAR
+      Template@1160040001 : Record "CDC Template";
+      DocCat@1160040000 : Record "CDC Document Category";
+      AllObjWithCaption@1160040004 : Record AllObjWithCaption;
+      RecIDMgt@1160040003 : Codeunit "CDC Record ID Mgt.";
+    BEGIN
+      if Template.Get("Template No.") then
+        DocCat.Get(Template."Category Code");
+
+      if FieldType = FieldType::Header then begin
+        FieldCap := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table,DocCat."Destination Header Table No.");
+        if FieldCap = '' then
+          FieldCap := Text007
+        else
+          FieldCap := StrSubstNo(Text006,FieldCap);
+      end else begin
+        FieldCap := RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table,DocCat."Destination Line Table No.");
+        if FieldCap = '' then
+          FieldCap := Text008
+        else
+          FieldCap := StrSubstNo(Text006,FieldCap);
+      end;
+    END;
+
+    [LineStart(193)]
+    LOCAL PROCEDURE SetOrderRecords@6085573();
+    VAR
+      SingleInstanceStorage@6085574 : Codeunit "CDC Single Instance Storage";
+      TemplateField@6085573 : Record "CDC Template Field";
+      TemplateField2@6085576 : Record "CDC Template Field";
+      i@6085575 : Integer;
+    BEGIN
+      if "Sort Order" <> 0 then
+        exit;
+
+      i := SingleInstanceStorage.GetActiveTemplFieldForP6085585;
+      if i = 0 then begin
+        TemplateField.SetCurrentKey("Template No.",Type,"Sort Order");
+        TemplateField.SetRange("Template No.","Template No.");
+        TemplateField.SetRange(Type,Type);
+        if TemplateField.FindLast then
+          "Sort Order" := TemplateField."Sort Order" + 1
+        else
+          "Sort Order" := 1;
+      end else begin
+        TemplateField.SetRange("Template No.","Template No.");
+        TemplateField.SetRange(Type,Type);
+        TemplateField.SetFilter("Sort Order",'>%1',i);
+        if TemplateField.FindSet(true,false) then
+          repeat
+            TemplateField2.Get(TemplateField."Template No.",TemplateField.Type,TemplateField.Code);
+            TemplateField2."Sort Order" := TemplateField2."Sort Order" + 1;
+            TemplateField2.Modify;
+          until TemplateField.Next = 0;
+
+        "Sort Order" := i + 1;
+      end;
+      SingleInstanceStorage.SetActiveTemplFieldForP6085585("Sort Order");
+    END;
+
+    [LineStart(221)]
+    PROCEDURE ValidateDecimalPlaces@6085575(DecimalPlacesDescriptionIn@6085573 : Text[5]) DecimalPlacesDescriptionOut : Text[50];
+    VAR
+      MinNoOfDecimals@6085578 : Integer;
+      MinNoOfDecimalsText@6085580 : Text[10];
+      MaxNoOfDecimals@6085579 : Integer;
+      MaxNoOfDecimalsText@6085581 : Text[10];
+      GenLedgerSetup@6085582 : Record "General Ledger Setup";
+      ColonPosition@6085583 : Integer;
+    BEGIN
+      if not ("Data Type" = "Data Type"::Number) then
+        exit('');
+
+      if not CheckDecimalPlacesFormat(DecimalPlacesDescriptionIn) then
+        Error(WrongExpressionFormat);
+
+      Validate("Decimal Places",DecimalPlacesDescriptionIn);
+      ColonPosition := StrPos(DecimalPlacesDescriptionIn,':');
+      if ColonPosition = 0 then begin
+        if "Decimal Places" = '1' then
+          DecimalPlacesDescriptionOut := StrSubstNo(AlwaysOneDecimal)
+        else
+          DecimalPlacesDescriptionOut := StrSubstNo(AlwaysNoDecimals,"Decimal Places");
+      end else begin
+        MinNoOfDecimalsText := CopyStr(DecimalPlacesDescriptionIn,1,ColonPosition - 1);
+        Evaluate(MinNoOfDecimals,MinNoOfDecimalsText);
+        MaxNoOfDecimalsText := CopyStr(DecimalPlacesDescriptionIn,ColonPosition + 1,StrLen(DecimalPlacesDescriptionIn));
+        Evaluate(MaxNoOfDecimals,MaxNoOfDecimalsText);
+        if (MinNoOfDecimals = MaxNoOfDecimals) then begin
+          if MinNoOfDecimals = 1 then
+            DecimalPlacesDescriptionOut := StrSubstNo(AlwaysOneDecimal)
+          else
+            DecimalPlacesDescriptionOut := StrSubstNo(AlwaysNoDecimals,MinNoOfDecimals);
+        end else
+          DecimalPlacesDescriptionOut := StrSubstNo(RangeOfDecimals,MinNoOfDecimals,MaxNoOfDecimals);
+      end;
+    END;
+
+    [LineStart(249)]
+    PROCEDURE CheckDecimalPlacesFormat@1(VAR DecimalPlaces@1000 : Text[5]) OK : Boolean;
+    VAR
+      ColonPlace@1002 : Integer;
+      DecimalPlacesPart1@1003 : Integer;
+      DecimalPlacesPart2@1004 : Integer;
+      Check@1005 : Text[5];
+    BEGIN
+      // Copied from T98 - need a local copy of the function due to wrong error handling in org. function
+      OK := true;
+      ColonPlace := StrPos(DecimalPlaces,':');
+
+      if ColonPlace = 0 then begin
+        if not Evaluate(DecimalPlacesPart1,DecimalPlaces) then
+          OK := false;
+        if (DecimalPlacesPart1 < 0) or (DecimalPlacesPart1 > 9) then
+          OK := false;
+      end else begin
+        Check := CopyStr(DecimalPlaces,1,ColonPlace - 1);
+        if Check = '' then
+          OK := false;
+        if not Evaluate(DecimalPlacesPart1,Check) then
+          OK := false;
+        Check := CopyStr(DecimalPlaces,ColonPlace + 1,StrLen(DecimalPlaces));
+        if Check = '' then
+          OK := false;
+        if not Evaluate(DecimalPlacesPart2,Check) then
+          OK := false;
+        if DecimalPlacesPart1 > DecimalPlacesPart2 then
+          OK := false;
+        if (DecimalPlacesPart1 < 0) or (DecimalPlacesPart1 > 9) then
+          OK := false;
+        if (DecimalPlacesPart2 < 0) or (DecimalPlacesPart2 > 9) then
+          OK := false;
+      end;
+    END;
+
+    [LineStart(278)]
+    PROCEDURE ParseDecimalPlacesDescription@6085574(DecimalPlacesDescriptionIn@6085573 : Text[50]) DecimalPlacesOut : Text[5];
+    VAR
+      IntegerVar@6085574 : Integer;
+      MinNoOfDecimals@6085577 : Integer;
+      MaxNoOfDecimals@6085576 : Integer;
+      DashPosition@6085575 : Integer;
+      FirstBlankPosition@6085578 : Integer;
+      i@6085579 : Integer;
+    BEGIN
+      FirstBlankPosition := StrPos(DecimalPlacesDescriptionIn,' ');
+
+      // Expression is of form "blabla X blabla" -> Translate to X (=X:X)
+      if (DecimalPlacesDescriptionIn[FirstBlankPosition+2] = ' ') and (DecimalPlacesDescriptionIn[FirstBlankPosition+1] in
+        ['0','1','2','3','4','5','6','7','8','9'])
+      then begin
+        DecimalPlacesOut := Format(DecimalPlacesDescriptionIn[FirstBlankPosition+1]);
+        exit(DecimalPlacesOut);
+      end;
+
+      // Expression is of form "X", "X-", "X-Y", "-Y" -> Translate to X:X, X:Y, 0:Y
+      DecimalPlacesOut := '';
+      DecimalPlacesDescriptionIn := CopyStr(DecimalPlacesDescriptionIn,1,3);
+      for i := 1 to 3 do
+        if DecimalPlacesDescriptionIn[i] in ['0','1','2','3','4','5','6','7','8','9','-',':'] then
+          DecimalPlacesOut += Format(DecimalPlacesDescriptionIn[i]);
+
+      DecimalPlacesOut := ConvertStr(DecimalPlacesOut,'-',':');
+      if DecimalPlacesOut[1] = ':' then
+        DecimalPlacesOut := '0' + DecimalPlacesOut;
+
+      if CheckDecimalPlacesFormat(DecimalPlacesOut) then
+        exit(DecimalPlacesOut)
+      else
+        Error(UnableToParseDecimalExpression);
+    END;
+
+    [LineStart(305)]
+    PROCEDURE SetFormula@6085577(FormulaTxt@6085576 : Text[250]);
+    VAR
+      CaptureMgt@6085575 : Codeunit "CDC Capture Management";
+      TempDec@6085573 : Decimal;
+    BEGIN
+      if FormulaTxt = '' then begin
+        SetFixedValue(FormulaTxt);
+        Formula := '';
+        exit;
+      end;
+
+      if ("Data Type" = "Data Type"::Number) then begin
+        CaptureMgt.ValidateNumberFormula("Template No.",FormulaTxt);
+        if Evaluate(TempDec,FormulaTxt) then begin
+          SetFixedValue(FormulaTxt);
+          Formula := '';
+        end else begin
+          SetFixedValue('');
+          Formula := FormulaTxt;
+        end;
+      end else
+        if CaptureMgt.ValidateTextFormula("Template No.",FormulaTxt) then begin
+          // FormulaTxt contains references to Template Fields
+          SetFixedValue('');
+          Formula := FormulaTxt;
+        end else begin
+          // No references, so must be Fixed Value
+          SetFixedValue(FormulaTxt);
+          Formula := '';
+        end;
+
+      "Search for Value" := false;
+    END;
+
+    [LineStart(334)]
+    PROCEDURE IsFormulaValid@6085600(FormulaTxt@6085601 : Text[250];ShowError@6085600 : Boolean) : Boolean;
+    BEGIN
+      if FormulaTxt = '' then
+        exit(true);
+      if "Data Type" <> "Data Type"::Text then begin
+        if CopyStr(FormulaTxt,StrLen(FormulaTxt),1) in ['+','-','*','/','^','%'] then begin
+          // Formula cannot end with an operator
+          if ShowError then
+            Error(StrSubstNo(InvalidFormulaErr,Code));
+          exit(false);
+        end;
+        if CopyStr(FormulaTxt,1,1) in ['+','*','/','^','%'] then begin
+          // Formula cannot begin with an operator (except '-')
+          if ShowError then
+            Error(StrSubstNo(InvalidFormulaErr2,Code));
+          exit(false);
+        end;
+      end;
+      exit(true);
+    END;
+
+    [Integration]
+    [LineStart(353)]
+    LOCAL PROCEDURE OnBeforeClone@6085601(FromCompany@6085600 : Text[30];FromField@6085601 : Record "CDC Template Field";ToTemplate@6085602 : Record "CDC Template";CreatedFromMasterTemplate@6085603 : Boolean;VAR Handled@6085604 : Boolean);
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
