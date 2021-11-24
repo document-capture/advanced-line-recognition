@@ -1,0 +1,1039 @@
+OBJECT Page 6085597 CDC Document Lines ListPart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=20210211D;
+    Time=120000T;
+    Modified=true;
+    Version List=DCW17.00.00.6.50,ALR;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=CDC Document Lines ListPart;
+               ENU=CDC Document Lines ListPart];
+    LinksAllowed=false;
+    SourceTable="CDC Temp. Document Line";
+    PageType=ListPart;
+    SourceTableTemporary=true;
+    OnInit=BEGIN
+             IdentifierVisible := true;
+           END;
+
+    OnOpenPage=BEGIN
+                 IdentifierVisible := false;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       UpdateTranslInfo;
+                       FillSortingBuffer;
+                     END;
+
+    OnNewRecord=BEGIN
+                  "Document No." := Document."No.";
+                  "Template No." := Document."Template No.";
+                  "Translate to Type" := 0;
+                  "Translate to No." := '';
+
+                  if not BelowxRec then begin
+                    xRecLineNo := xRec."Line No.";
+                    "Line No." := 0
+                  end else
+                    "Line No." := GetLastLineNo + 1;
+
+                  CurrLineNo := "Line No.";
+                END;
+
+    OnInsertRecord=BEGIN
+                     xRecLineNo := 0;
+
+                     if not BelowxRec then
+                       ManuallyInsertLine(xRec."Line No.");
+                     exit(true);
+                   END;
+
+    OnDeleteRecord=VAR
+                     Value@1000000000 : Record "CDC Document Value";
+                   BEGIN
+                     Value.SetCurrentKey("Document No.","Is Value",Type,"Page No.","Line No.");
+                     Value.SetRange("Document No.",Document."No.");
+                     Value.SetRange("Is Value",true);
+                     Value.SetRange(Type,Value.Type::Line);
+                     Value.SetRange("Line No.","Line No.");
+                     Value.DeleteAll;
+                     exit(true);
+                   END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           CurrLineNo := "Line No.";
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1160040000;  ;ActionContainer;
+                      Name=ActionItems;
+                      ActionContainerType=ActionItems }
+      { 1160040002;1 ;ActionGroup;
+                      Name=Line;
+                      CaptionML=[DEU=&Zeile;
+                                 ENU=&Line];
+                      Image=Line }
+      { 1160040001;2 ;Action    ;
+                      Name=Card;
+                      CaptionML=[DEU=Karte;
+                                 ENU=Card];
+                      ToolTipML=[DEU=Zeigt detaillierte Informationen ber den in der Belegzeile oder Buchungsblattzeile befindlichen Datensatz an oder „ndert diese.;
+                                 ENU=View or change detailed information about the record on the document or journal line.];
+                      Image=EditLines;
+                      OnAction=BEGIN
+                                 Rec.ShowCard;
+                               END;
+                                }
+      { 3       ;1   ;ActionGroup;
+                      Name=TranslationsGr;
+                      CaptionML=[DEU=šbersetzungen;
+                                 ENU=&Translations];
+                      Image=Track }
+      { 6       ;2   ;Action    ;
+                      Name=NoTranslation;
+                      CaptionML=[DEU=Nr.;
+                                 ENU=No.];
+                      ToolTipML=[DEU=šbersetzungen fr Nr. anzeigen oder bearbeiten.;
+                                 ENU=View or edit No. translations of the template.];
+                      Image=Track;
+                      OnAction=VAR
+                                 PurchSalesTransl@1001 : Codeunit "CDC Purch./Sales - Transl.";
+                               BEGIN
+                                 PurchSalesTransl.ShowItemNoTrans(Document);
+                               END;
+                                }
+      { 5       ;2   ;Action    ;
+                      Name=DescriptionTranslation;
+                      CaptionML=[DEU=Beschreibung;
+                                 ENU=Description];
+                      ToolTipML=[DEU=šbersetzungen fr Beschreibung anzeigen oder bearbeiten.;
+                                 ENU=View or edit Description translations of the template.];
+                      Image=Track;
+                      OnAction=VAR
+                                 PurchSalesTransl@1001 : Codeunit "CDC Purch./Sales - Transl.";
+                               BEGIN
+                                 PurchSalesTransl.ShowDescriptionTrans(Document);
+                               END;
+                                }
+      { 4       ;2   ;Action    ;
+                      Name=UOM;
+                      CaptionML=[DEU=Einheit;
+                                 ENU=Unit of Measure];
+                      ToolTipML=[DEU=šbersetzungen fr Einheit anzeigen oder bearbeiten.;
+                                 ENU=View or edit Unit of Measure translations.];
+                      Visible=ShowUOMTranslation;
+                      Image=Track;
+                      OnAction=VAR
+                                 PurchSalesTransl@1001 : Codeunit "CDC Purch./Sales - Transl.";
+                               BEGIN
+                                 if "Translate to Type" = "Translate to Type"::Item then
+                                   PurchSalesTransl.ShowUOMTrans(Document,"Translate to No.")
+                                 else
+                                   PurchSalesTransl.ShowUOMTrans(Document,'');
+                               END;
+                                }
+      { 8       ;2   ;Action    ;
+                      Name=CrossReferences;
+                      CaptionML=[DEU=Artikelreferenzen;
+                                 ENU=Cross References];
+                      ToolTipML=[DEU=Richtet eine eigene šbersetzung des ausgew„hlten Artikel fr den Debitor oder Kreditor ein. Artikelreferenzen auf die Artikelnummer des Debitors bedeuten, dass ihre Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.;
+                                 ENU=Set up a customer's or vendor's own identification of the selected item. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.];
+                      Image=Change;
+                      OnAction=VAR
+                                 ItemCrossRef@1000 : Record "Item Cross Reference";
+                               BEGIN
+                                 if Document."Source Record Table ID" = DATABASE::Vendor then
+                                   ItemCrossRef.SetFilter("Cross-Reference Type",'%1|%2',ItemCrossRef."Cross-Reference Type"::" ",
+                                     ItemCrossRef."Cross-Reference Type"::Vendor)
+                                 else
+                                   if Document."Source Record ID Tree ID" = DATABASE::Customer then
+                                     ItemCrossRef.SetFilter("Cross-Reference Type",'%1|%2',ItemCrossRef."Cross-Reference Type"::" ",
+                                       ItemCrossRef."Cross-Reference Type"::Customer);
+
+                                 ItemCrossRef.SetRange("Cross-Reference Type No.",Document."Source Record No.");
+
+                                 PAGE.Run(0,ItemCrossRef);
+                               END;
+                                }
+      { 1160040009;1 ;ActionGroup;
+                      Name=AdvancedLineRecognition;
+                      CaptionML=[DEU=Erw. Zeilenerkennung;
+                                 ENU=Adv. line recognition];
+                      Image=SetupLines }
+      { 1160040008;2 ;Action    ;
+                      Name=SearchByLinkedField;
+                      CaptionML=[DEU=Suche ber verknpftes Feld;
+                                 ENU=Find value by linked field];
+                      ToolTipML=[DEU=Das gewnschte Feld wird ber einen fest definiertes Offset (Abstand) von einem anderen Feld gefunden.;
+                                 ENU=The desired field is found via a fixed offset (distance) from another field.];
+                      Description=Das ist eine Beschreibung;
+                      Promoted=true;
+                      Image=Link;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 AdvLineRecognitionMgt@1000000000 : Codeunit "Adv. Line Recognition Mgt.";
+                               BEGIN
+                                 AdvLineRecognitionMgt.SetToAnchorLinkedField(Rec);
+                               END;
+                                }
+      { 1160040007;2 ;Action    ;
+                      Name=SearchByColumnHeading;
+                      CaptionML=[DEU=Feld mit Spaltenberschrift;
+                                 ENU=Find value by column heading];
+                      ToolTipML=[DEU=Das gewnschte Feld wird ber eine vorher trainierte Spaltenberschrift im Bereich der aktuellen Position gesucht.;
+                                 ENU=The desired field is searched for using a previously trained column heading in the range of the current position.];
+                      Promoted=true;
+                      Image=Table;
+                      OnAction=VAR
+                                 AdvLineRecognitionMgt@1113400000 : Codeunit "Adv. Line Recognition Mgt.";
+                               BEGIN
+                                 AdvLineRecognitionMgt.SetToFieldSearchWithColumnHeding(Rec);
+                               END;
+                                }
+      { 1160040006;2 ;Action    ;
+                      Name=SearchByCaption;
+                      CaptionML=[DEU=Feld mit Suchtext;
+                                 ENU=Find value by caption];
+                      ToolTipML=[DEU=Das gewnschte Feld wird ber einen vorher trainierten Suchtext/Caption im Bereich der aktuellen Position gesucht.;
+                                 ENU=The desired field is searched for using a previously trained search text/caption in the area of the current position.];
+                      Promoted=true;
+                      Image=Find;
+                      OnAction=VAR
+                                 AdvLineRecognitionMgt@1113400000 : Codeunit "Adv. Line Recognition Mgt.";
+                               BEGIN
+                                 AdvLineRecognitionMgt.SetToFieldSearchWithCaption(Rec);
+                               END;
+                                }
+      { 1160040005;2 ;Separator ;
+                      Name=Separator1160040005 }
+      { 1160040004;2 ;Action    ;
+                      Name=ResetFieldToDefault;
+                      CaptionML=[DEU=Feld zurcksetzen;
+                                 ENU=Reset field];
+                      ToolTipML=[DEU=Die Einstellungen der erweiterten Zeilenerkennung werden fr das gewnschte Feld zurckgesetzt.;
+                                 ENU=The advanced line recognition settings are reset for the desired field.];
+                      Image=ResetStatus;
+                      OnAction=VAR
+                                 AdvLineRecognitionMgt@1000 : Codeunit "Adv. Line Recognition Mgt.";
+                               BEGIN
+                                 AdvLineRecognitionMgt.ResetFieldFromMenu(Rec);
+                               END;
+                                }
+      { 1160040003;2 ;Action    ;
+                      Name=ShowVersionNo;
+                      CaptionML=[DEU=Version;
+                                 ENU=Version];
+                      ToolTipML=[DEU=Zeigt die aktuell verwendete Version der erweiterten Zeilenerkennung an.;
+                                 ENU=Displays the currently used version of the advanced line detection.];
+                      Image=Info;
+                      OnAction=VAR
+                                 AdvLineRecognitionMgt@1160040000 : Codeunit "Adv. Line Recognition Mgt.";
+                                 YouAreUsingALRVersion@1160040001 : TextConst 'DEU=Sie nutzen die Version %1 der erweiterten Zeilenerkennung.;ENU=You are using version %1 of the advanced line recognition.';
+                               BEGIN
+                                 Message(YouAreUsingALRVersion,AdvLineRecognitionMgt.ShowVersionNo);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;;Container;
+                Name=ContentArea;
+                ContainerType=ContentArea }
+
+    { 6085600;1;Field     ;
+                Name=CDC Document Lines ListPart;
+                SourceExpr='';
+                Visible=IdentifierVisible }
+
+    { 1000000001;1;Group  ;
+                Name=Repeater;
+                IndentationColumnName=1;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                Name=OK;
+                ToolTipML=[DEU=Gibt an, ob die Zeile gltig ist.;
+                           ENU=Specifies whether the line is valid.];
+                SourceExpr=OK;
+                Editable=FALSE;
+                ImplicitType=Boolean }
+
+    { 1   ;2   ;Field     ;
+                Name=Translate to Type;
+                ToolTipML=[DEU=Gibt die interne Art an, in den die erkannte Nummer bersetzt werden soll.;
+                           ENU=Specifies the internal type to translate the recognized number value to.];
+                SourceExpr="Translate to Type";
+                Editable=AllowEdit;
+                ImplicitType=Option }
+
+    { 2   ;2   ;Field     ;
+                Name=Translate to No.;
+                ToolTipML=[DEU=Gibt die interne Nummer an, in die die erkannte Nummer bersetzt werden soll.;
+                           ENU=Specifies the internal number to translate the recognized number value to.];
+                SourceExpr="Translate to No.";
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             FillSortingBuffer;
+                             Document.Find('=');
+                             Document.ValidateDocument;
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupTranslToNo(Text));
+                         END;
+
+                ImplicitType=Code20 }
+
+    { 1000000013;2;Field  ;
+                Name=Control1000000013;
+                CaptionML=[DEU=Zugeordnete Menge;
+                           ENU=Matched Quantity];
+                ToolTipML=[DEU=Gibt die mit der Zeile bereinstimmende Menge an.;
+                           ENU=Specifies the quantity matched to the line.];
+                DecimalPlaces=0:5;
+                BlankZero=true;
+                SourceExpr=GetMatchedQty;
+                Visible=ShowMatchedQty;
+                Editable=AllowEdit;
+                OnDrillDown=BEGIN
+                              ShowMatchSpec;
+                            END;
+                             }
+
+    { 161024012;2;Field   ;
+                Name=Line No.;
+                ToolTipML=[DEU=Gibt die Zeilennummer an.;
+                           ENU=Specifies the line number.];
+                SourceExpr="Line No.";
+                Visible=FALSE;
+                Editable=FALSE;
+                ImplicitType=Integer }
+
+    { 1100000000;2;Field  ;
+                Name=Field Value 1;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 1";
+                CaptionClass=FieldCaptions[1];
+                Visible=NoOfColumns >= 1;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(1,"Field Value 1");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(1,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(1);
+                             END;
+
+                ImplicitType=Text250 }
+
+    { 1100000001;2;Field  ;
+                Name=Field Value 2;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 2";
+                CaptionClass=FieldCaptions[2];
+                Visible=NoOfColumns >= 2;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(2,"Field Value 2");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(2,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(2);
+                             END;
+
+                ImplicitType=Text250 }
+
+    { 1100000002;2;Field  ;
+                Name=Field Value 3;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 3";
+                CaptionClass=FieldCaptions[3];
+                Visible=NoOfColumns >= 3;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(3,"Field Value 3");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(3,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(3);
+                             END;
+
+                ImplicitType=Text250 }
+
+    { 1100000003;2;Field  ;
+                Name=Field Value 4;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 4";
+                CaptionClass=FieldCaptions[4];
+                Visible=NoOfColumns >= 4;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(4,"Field Value 4");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(4,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(4);
+                             END;
+
+                ImplicitType=Text250 }
+
+    { 1100000004;2;Field  ;
+                Name=Field Value 5;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 5";
+                CaptionClass=FieldCaptions[5];
+                Visible=NoOfColumns >= 5;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(5,"Field Value 5");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(5,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(5);
+                             END;
+
+                ImplicitType=Text250 }
+
+    { 1100000005;2;Field  ;
+                Name=Field Value 6;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 6";
+                CaptionClass=FieldCaptions[6];
+                Visible=NoOfColumns >= 6;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(6,"Field Value 6");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(6,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(6);
+                             END;
+
+                ImplicitType=Text200 }
+
+    { 1100000006;2;Field  ;
+                Name=Field Value 7;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 7";
+                CaptionClass=FieldCaptions[7];
+                Visible=NoOfColumns >= 7;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(7,"Field Value 7");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(7,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(7);
+                             END;
+
+                ImplicitType=Text200 }
+
+    { 1100000007;2;Field  ;
+                Name=Field Value 8;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 8";
+                CaptionClass=FieldCaptions[8];
+                Visible=NoOfColumns >= 8;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(8,"Field Value 8");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(8,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(8);
+                             END;
+
+                ImplicitType=Text200 }
+
+    { 1100000008;2;Field  ;
+                Name=Field Value 9;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 9";
+                CaptionClass=FieldCaptions[9];
+                Visible=NoOfColumns >= 9;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(9,"Field Value 9");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(9,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(9);
+                             END;
+
+                ImplicitType=Text200 }
+
+    { 1100000009;2;Field  ;
+                Name=Field Value 10;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 10";
+                CaptionClass=FieldCaptions[10];
+                Visible=NoOfColumns >= 10;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(10,"Field Value 10");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(10,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(10);
+                             END;
+
+                ImplicitType=Text200 }
+
+    { 1000000003;2;Field  ;
+                Name=Field Value 11;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 11";
+                CaptionClass=FieldCaptions[11];
+                Visible=NoOfColumns >= 11;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(11,"Field Value 11");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(11,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(11);
+                             END;
+
+                ImplicitType=Text150 }
+
+    { 1000000004;2;Field  ;
+                Name=Field Value 12;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 12";
+                CaptionClass=FieldCaptions[12];
+                Visible=NoOfColumns >= 12;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(12,"Field Value 12");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(12,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(12);
+                             END;
+
+                ImplicitType=Text150 }
+
+    { 1000000005;2;Field  ;
+                Name=Field Value 13;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 13";
+                CaptionClass=FieldCaptions[13];
+                Visible=NoOfColumns >= 13;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(13,"Field Value 13");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(13,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(13);
+                             END;
+
+                ImplicitType=Text150 }
+
+    { 1000000006;2;Field  ;
+                Name=Field Value 14;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 14";
+                CaptionClass=FieldCaptions[14];
+                Visible=NoOfColumns >= 14;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(14,"Field Value 14");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(14,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(14);
+                             END;
+
+                ImplicitType=Text150 }
+
+    { 1000000007;2;Field  ;
+                Name=Field Value 15;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 15";
+                CaptionClass=FieldCaptions[15];
+                Visible=NoOfColumns >= 15;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(15,"Field Value 15");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(15,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(15);
+                             END;
+
+                ImplicitType=Text150 }
+
+    { 1000000008;2;Field  ;
+                Name=Field Value 16;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 16";
+                CaptionClass=FieldCaptions[16];
+                Visible=NoOfColumns >= 16;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(16,"Field Value 16");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(16,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(16);
+                             END;
+
+                ImplicitType=Text100 }
+
+    { 1000000009;2;Field  ;
+                Name=Field Value 17;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 17";
+                CaptionClass=FieldCaptions[17];
+                Visible=NoOfColumns >= 17;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(17,"Field Value 17");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(17,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(17);
+                             END;
+
+                ImplicitType=Text100 }
+
+    { 1000000010;2;Field  ;
+                Name=Field Value 18;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 18";
+                CaptionClass=FieldCaptions[18];
+                Visible=NoOfColumns >= 18;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(18,"Field Value 18");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(18,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(18);
+                             END;
+
+                ImplicitType=Text100 }
+
+    { 1000000011;2;Field  ;
+                Name=Field Value 19;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 19";
+                CaptionClass=FieldCaptions[19];
+                Visible=NoOfColumns >= 19;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(19,"Field Value 19");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(19,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(19);
+                             END;
+
+                ImplicitType=Text100 }
+
+    { 1000000012;2;Field  ;
+                Name=Field Value 20;
+                AssistEdit=true;
+                ToolTipML=[DEU=Gibt den Wert des konfigurierten Felds an.;
+                           ENU=Specifies the value of the configured field.];
+                SourceExpr="Field Value 20";
+                CaptionClass=FieldCaptions[20];
+                Visible=NoOfColumns >= 20;
+                Editable=AllowEdit;
+                OnValidate=BEGIN
+                             UpdateFieldValue(20,"Field Value 20");
+                           END;
+
+                OnLookup=BEGIN
+                           exit(LookupValue(20,Text));
+                         END;
+
+                OnAssistEdit=BEGIN
+                               Assist(20);
+                             END;
+
+                ImplicitType=Text100 }
+
+  }
+  CODE
+  {
+    VAR
+      Document@1000000010 : Record "CDC Document";
+      DocCat@1160040002 : Record "CDC Document Category";
+      CaptureMgt@1000000008 : Codeunit "CDC Capture Management";
+      WebClientMgt@6085575 : Codeunit "CDC Web Client Management";
+      ShowMatchedQty@1000000001 : Boolean INDATASET;
+      AllowEdit@1000000002 : Boolean INDATASET;
+      IdentifierVisible@6085600 : Boolean;
+      FieldCodes@1001 : ARRAY [20] OF Code[20];
+      FieldCaptions@1000 : ARRAY [20] OF Text[250];
+      xRecLineNo@6085573 : Integer;
+      CurrLineNo@6085574 : Integer;
+      NoOfColumns@6085577 : Integer INDATASET;
+      ShowUOMTranslation@6085576 : Boolean INDATASET;
+
+    [LineStart(43)]
+    PROCEDURE GetCaptions@1000000002();
+    VAR
+      Field@1000000003 : Record "CDC Template Field";
+      Template@1000000001 : Record "CDC Template";
+      I@1000000002 : Integer;
+      AddField@1000 : Boolean;
+    BEGIN
+      Clear(FieldCodes);
+      Clear(FieldCaptions);
+      NoOfColumns := 0;
+
+      Field.SetCurrentKey("Template No.",Type,"Sort Order");
+      Field.SetRange("Template No.",Document."Template No.");
+      Field.SetRange(Type,Field.Type::Line);
+      if Field.FindSet then
+        repeat
+          AddField := true;
+          if Document."File Type" = Document."File Type"::XML then begin
+            if Field."Show Field" = Field."Show Field"::IfValue then
+              if not CaptureMgt.LineFieldHasAnyValues(Document,Field.Code) then
+                AddField := false;
+
+            if Field."Show Field" = Field."Show Field"::Never then
+              AddField := false;
+          end;
+
+          if AddField then begin
+            I := I + 1;
+            FieldCodes[I] := Field.Code;
+            FieldCaptions[I] := Field."Field Name";
+            NoOfColumns += 1;
+          end;
+        until (Field.Next = 0) or (I = 20);
+
+      for I := 1 to 20 do
+        if FieldCaptions[I] = '' then
+          FieldCaptions[I] := '-';
+    END;
+
+    [LineStart(75)]
+    PROCEDURE SetDocument@1000000003(VAR NewDocument@1000000001 : Record "CDC Document";BuildTempLines@1000 : Boolean);
+    VAR
+      Value@1000000003 : Record "CDC Document Value";
+      Template@1000000005 : Record "CDC Template";
+      i@1000000000 : Integer;
+      NoOfLines@1000000004 : Integer;
+    BEGIN
+      Document := NewDocument;
+      ShowUOMTranslation := Document.GetSourceTableNo = DATABASE::Vendor;
+
+      if not DocCat.Get(Document."Document Category Code") then
+        Clear(DocCat);
+
+      DeleteAll;
+
+      GetCaptions;
+
+      if BuildTempLines then
+        Document.BuildTempLinesTable(Rec);
+
+      CurrPage.Update(false);
+    END;
+
+    [LineStart(91)]
+    PROCEDURE UpdatePage@1000000000();
+    BEGIN
+      UpdateFieldValues;
+    END;
+
+    [LineStart(94)]
+    PROCEDURE UpdateFieldValues@1000000006();
+    VAR
+      Template@1000000002 : Record "CDC Template";
+      Field@1000000000 : Record "CDC Template Field";
+      i@1000000001 : Integer;
+      Update@6085573 : Boolean;
+    BEGIN
+      if CurrLineNo > 0 then // We store the line number OnAfterGetCurrRecord as the Rec point might be invalid in NAV2017 at the point of invocation (UpdatePage).
+        Update := not Get("Document No.",CurrLineNo);
+
+      "Field Value 1" := GetValueAsText(FieldCodes[1]);
+      "Field Value 2" := GetValueAsText(FieldCodes[2]);
+      "Field Value 3" := GetValueAsText(FieldCodes[3]);
+      "Field Value 4" := GetValueAsText(FieldCodes[4]);
+      "Field Value 5" := GetValueAsText(FieldCodes[5]);
+      "Field Value 6" := GetValueAsText(FieldCodes[6]);
+      "Field Value 7" := GetValueAsText(FieldCodes[7]);
+      "Field Value 8" := GetValueAsText(FieldCodes[8]);
+      "Field Value 9" := GetValueAsText(FieldCodes[9]);
+      "Field Value 10" := GetValueAsText(FieldCodes[10]);
+      "Field Value 11" := GetValueAsText(FieldCodes[11]);
+      "Field Value 12" := GetValueAsText(FieldCodes[12]);
+      "Field Value 13" := GetValueAsText(FieldCodes[13]);
+      "Field Value 14" := GetValueAsText(FieldCodes[14]);
+      "Field Value 15" := GetValueAsText(FieldCodes[15]);
+      "Field Value 16" := GetValueAsText(FieldCodes[16]);
+      "Field Value 17" := GetValueAsText(FieldCodes[17]);
+      "Field Value 18" := GetValueAsText(FieldCodes[18]);
+      "Field Value 19" := GetValueAsText(FieldCodes[19]);
+      "Field Value 20" := GetValueAsText(FieldCodes[20]);
+
+      AllowEdit := Document.Status = Document.Status::Open;
+
+      if WebClientMgt.IsWebClient and Update then begin
+        DeleteAll;
+        Document.BuildTempLinesTable(Rec);
+        CurrPage.Update(false);
+      end else
+        if LineIsInserted("Document No.",CurrLineNo) then
+          CurrPage.Update(true);
+    END;
+
+    [LineStart(129)]
+    LOCAL PROCEDURE LineIsInserted@1(DocumentNo@1001 : Code[20];LineNo@1002 : Integer) : Boolean;
+    VAR
+      TempDocumentLine@1000 : TEMPORARY Record "CDC Temp. Document Line";
+    BEGIN
+      TempDocumentLine.Copy(Rec,true);
+      exit(TempDocumentLine.Get(DocumentNo,LineNo));
+    END;
+
+    [LineStart(133)]
+    PROCEDURE GetValueAsText@1000000008(FieldCode@1000000000 : Code[20]) : Text[250];
+    VAR
+      Field@1000000001 : Record "CDC Template Field";
+    BEGIN
+      if Field.Get(Document."Template No.",Field.Type::Line,FieldCode) then
+        exit(CaptureMgt.GetValueAsText(Document."No.","Line No.",Field));
+    END;
+
+    [LineStart(137)]
+    PROCEDURE UpdateFieldValue@1000000007(ActiveFieldIndex@1000000003 : Integer;VAR NewValue@1000000000 : Text[250]);
+    VAR
+      Field@1000000004 : Record "CDC Template Field";
+      Value@1000000002 : Record "CDC Document Value";
+    BEGIN
+      if xRecLineNo <> 0 then begin
+        ManuallyInsertLine(xRecLineNo);
+        xRecLineNo := 0;
+      end;
+
+      Field.Get(Document."Template No.",Field.Type::Line,FieldCodes[ActiveFieldIndex]);
+      CaptureMgt.UpdateFieldValue(Document."No.","Page No.","Line No.",Field,NewValue,true,true);
+      NewValue := GetValueAsText(FieldCodes[ActiveFieldIndex]);
+
+      ValidateLine;
+      if Modify then;
+
+      UpdatePage;
+    END;
+
+    [LineStart(152)]
+    PROCEDURE Assist@1000000011(ActiveFieldIndex@1000000001 : Integer);
+    VAR
+      TemplateFieldCard@6085573 : Page "CDC Template Field Card";
+      Field@1000000000 : Record "CDC Template Field";
+    BEGIN
+      Field.Get(Document."Template No.",Field.Type::Line,FieldCodes[ActiveFieldIndex]);
+      Field.SetRecFilter;
+      TemplateFieldCard.SetDocumentNo(Document."No.");
+      TemplateFieldCard.SetTableView(Field);
+      TemplateFieldCard.Run;
+    END;
+
+    [LineStart(159)]
+    PROCEDURE LookupValue@1000000004(ActiveFieldIndex@1000000001 : Integer;VAR Text@1000000002 : Text[1024]) : Boolean;
+    VAR
+      Field@1000000000 : Record "CDC Template Field";
+      NewText@1000000003 : Text[1024];
+    BEGIN
+      Field.Get(Document."Template No.",Field.Type::Line,FieldCodes[ActiveFieldIndex]);
+      NewText := CaptureMgt.LookupValue("Document No.",Field,"Line No.",Text);
+      if NewText <> '' then begin
+        Text := NewText;
+        exit(true);
+      end;
+    END;
+
+    [LineStart(167)]
+    PROCEDURE GetMatchedQty@1000000005() : Decimal;
+    VAR
+      PurchDocMatch@1000000000 : Record "CDC Purch. Doc. Match";
+    BEGIN
+      PurchDocMatch.SetRange("Document No.",Document."No.");
+      PurchDocMatch.SetRange("Document Line No.","Line No.");
+      PurchDocMatch.CalcSums(Quantity);
+      exit(PurchDocMatch.Quantity);
+    END;
+
+    [LineStart(173)]
+    PROCEDURE SetShowMatchedQty@1000000001(NewShowMatchedQty@1000000000 : Boolean);
+    BEGIN
+      ShowMatchedQty := NewShowMatchedQty;
+    END;
+
+    [LineStart(176)]
+    PROCEDURE ValidateLine@1160040000();
+    VAR
+      Template@1160040000 : Record "CDC Template";
+    BEGIN
+      if Template.Get(Document."Template No.") and (Template."Codeunit ID: Line Validation" <> 0) then
+        CODEUNIT.Run(Template."Codeunit ID: Line Validation",Rec)
+      else
+        OK := true;
+    END;
+
+    [LineStart(182)]
+    PROCEDURE HasLines@6085573() : Boolean;
+    BEGIN
+      if Count = 0 then
+        exit(false)
+      else
+        if Count = 1 then begin
+          if ("Field Value 1" = '') and
+            ("Field Value 2" = '') and
+            ("Field Value 3" = '') and
+            ("Field Value 4" = '') and
+            ("Field Value 5" = '') and
+            ("Field Value 6" = '') and
+            ("Field Value 7" = '') and
+            ("Field Value 8" = '') and
+            ("Field Value 9" = '') and
+            ("Field Value 10" = '') and
+            ("Field Value 11" = '') and
+            ("Field Value 12" = '') and
+            ("Field Value 13" = '') and
+            ("Field Value 14" = '') and
+            ("Field Value 15" = '') and
+            ("Field Value 16" = '') and
+            ("Field Value 17" = '') and
+            ("Field Value 18" = '') and
+            ("Field Value 19" = '') and
+            ("Field Value 20" = '')
+          then
+            exit(false);
+        end;
+      exit(true);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
