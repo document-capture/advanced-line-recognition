@@ -8,6 +8,7 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
             {
                 Caption = 'Adv. line recognition';
                 Image = SetupLines;
+
                 action(SearchByLinkedField)
                 {
                     ApplicationArea = All;
@@ -106,6 +107,7 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     trigger OnAction()
                     var
                     begin
+
                         ALRMgtSI.FlipAutoFieldRecognition();
                         ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
                     end;

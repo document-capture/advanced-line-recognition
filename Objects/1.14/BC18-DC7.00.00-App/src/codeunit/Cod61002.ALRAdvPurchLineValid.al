@@ -2,10 +2,15 @@
 codeunit 61002 "ALR Adv. Purch. - Line Valid."
 {
     // This codeunit validates lines on purchase documents
-
     TableNo = "CDC Temp. Document Line";
 
     trigger OnRun()
+    begin
+        ALRLineValidation(Rec);
+
+    end;
+
+    local procedure ALRLineValidation(var TempDocumentLine: Record "CDC Temp. Document Line")
     var
         Document: Record "CDC Document";
         "Field": Record "CDC Template Field";
@@ -14,34 +19,33 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         PurchDocMgt: Codeunit "CDC Purch. Doc. - Management";
         CaptureMgt: Codeunit "CDC Capture Management";
         DCAppMgt: Codeunit "CDC Approval Management";
+        LineAccountNo: Code[250];
+        LineDescription: Text[250];
         Quantity: Decimal;
         UnitCost: Decimal;
         LineAmount: Decimal;
         DiscAmount: Decimal;
         DiscPct: Decimal;
         LineAmount2: Decimal;
-        AmountRoundingPrecision: Decimal;
         OtherCharges: Decimal;
         UnitCharge: Decimal;
-        LineDescription: Text[250];
-        CommentText: Text[1024];
-        LineAccountNo: Code[250];
         CurrencyCode: Code[10];
+        AmountRoundingPrecision: Decimal;
+        CommentText: Text[1024];
         CommentType: Option Information,Warning,Error;
-        ALRTemplateField: Record "CDC Template Field";
     begin
-        if not Document.Get(Rec."Document No.") then
+        if not Document.Get(TempDocumentLine."Document No.") then
             exit;
 
-        LineAccountNo := PurchDocMgt.GetLineAccountNo(Document, Rec."Line No.");
-        LineDescription := PurchDocMgt.GetLineDescription(Document, Rec."Line No.");
-        Quantity := PurchDocMgt.GetLineQuantity(Document, Rec."Line No.");
-        UnitCost := PurchDocMgt.GetLineUnitCost(Document, Rec."Line No.");
-        DiscPct := PurchDocMgt.GetLineDiscPct(Document, Rec."Line No.");
-        DiscAmount := PurchDocMgt.GetLineDiscAmount(Document, Rec."Line No.");
-        LineAmount := PurchDocMgt.GetLineAmount(Document, Rec."Line No.");
-        OtherCharges := PurchDocMgt.GetLineOtherCharges(Document, Rec."Line No.");
-        UnitCharge := PurchDocMgt.GetLineUnitCharge(Document, Rec."Line No.");
+        LineAccountNo := PurchDocMgt.GetLineAccountNo(Document, TempDocumentLine."Line No.");
+        LineDescription := PurchDocMgt.GetLineDescription(Document, TempDocumentLine."Line No.");
+        Quantity := PurchDocMgt.GetLineQuantity(Document, TempDocumentLine."Line No.");
+        UnitCost := PurchDocMgt.GetLineUnitCost(Document, TempDocumentLine."Line No.");
+        DiscPct := PurchDocMgt.GetLineDiscPct(Document, TempDocumentLine."Line No.");
+        DiscAmount := PurchDocMgt.GetLineDiscAmount(Document, TempDocumentLine."Line No.");
+        LineAmount := PurchDocMgt.GetLineAmount(Document, TempDocumentLine."Line No.");
+        OtherCharges := PurchDocMgt.GetLineOtherCharges(Document, TempDocumentLine."Line No.");
+        UnitCharge := PurchDocMgt.GetLineUnitCharge(Document, TempDocumentLine."Line No.");
         CurrencyCode := PurchDocMgt.GetCurrencyCode(Document);
 
         //ALR >>>
@@ -51,31 +55,30 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         //  Skip := TRUE;
         //  EXIT;
         //END;
-        ALRTemplateField.SetRange("Template No.", Rec."Template No.");
-        ALRTemplateField.SetRange(Type, ALRTemplateField.Type::Line);
-        ALRTemplateField.SetRange(Required, true);
-        if ALRTemplateField.FindSet then
+        Field.SetRange("Template No.", TempDocumentLine."Template No.");
+        Field.SetRange(Type, Field.Type::Line);
+        Field.SetRange(Required, true);
+        if Field.FindSet then
             repeat
-                if StrLen(CaptureMgt.GetValueAsText(Rec."Document No.", Rec."Line No.", ALRTemplateField)) = 0 then
-                    Rec.Skip := true;
-            until ALRTemplateField.Next = 0;
-        if Rec.Skip then
+                if StrLen(CaptureMgt.GetValueAsText(TempDocumentLine."Document No.", TempDocumentLine."Line No.", Field)) = 0 then
+                    TempDocumentLine.Skip := true;
+            until Field.Next = 0;
+        if TempDocumentLine.Skip then
             exit;
         //ALR <<<
 
-        Field.SetRange("Template No.", Rec."Template No.");
-        Field.SetRange(Type, Field.Type::Line);
+        Field.SetRange(Required);
         if Field.FindSet then
             repeat
-                if not CaptureMgt.IsValidValue(Field, Rec."Document No.", Rec."Line No.") then begin
+                if not CaptureMgt.IsValidValue(Field, TempDocumentLine."Document No.", TempDocumentLine."Line No.") then begin
                     // No need to write an error here as an error written in C6085580 - CDC Doc. - Field Validation
-                    Rec.OK := false;
+                    TempDocumentLine.OK := false;
                     exit;
                 end;
             until Field.Next = 0;
 
         if not DCAppMgt.GetAmountRoundingPrecision(CurrencyCode, AmountRoundingPrecision) then begin
-            Rec.OK := false;
+            TempDocumentLine.OK := false;
             exit;
         end;
 
@@ -94,11 +97,11 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         // We use AmountRoundingPrecision as any roundings should be equal to AmountRoundingPrecision. In this situation,
         // we want the used to be able to register the document.
         // When a document is registered with a rounding difference, the
-        Rec.OK := (Abs(LineAmount - LineAmount2) <= AmountRoundingPrecision);
+        TempDocumentLine.OK := (Abs(LineAmount - LineAmount2) <= AmountRoundingPrecision);
 
-        if Rec."Create Comment" then
+        if TempDocumentLine."Create Comment" then
             if LineAmount <> LineAmount2 then begin
-                if Rec.OK then begin
+                if TempDocumentLine.OK then begin
                     CommentType := CommentType::Warning;
                     CommentText := WarningTxt;
                 end else begin
@@ -108,21 +111,37 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
 
                 // LineAmount is Line Amount as captured/keyed in on the document line. We therefore want to show all decimals.
                 if (DiscPct = 0) and (DiscAmount = 0) then
-                    DocumentComment.Add(Document, EmptyField, Rec."Line No.", DocumentComment.Area::Validation, CommentType,
-                      StrSubstNo(CommentText, StrSubstNo(LineAmountDiffTxt, Rec."Line No.", DCAppMgt.FormatAmountNoRounding(LineAmount, CurrencyCode),
+                    DocumentComment.Add(Document, EmptyField, TempDocumentLine."Line No.", DocumentComment.Area::Validation, CommentType,
+                      StrSubstNo(CommentText, StrSubstNo(LineAmountDiffTxt, TempDocumentLine."Line No.", DCAppMgt.FormatAmountNoRounding(LineAmount, CurrencyCode),
                         DCAppMgt.FormatAmount(LineAmount2, CurrencyCode))))
                 else
                     if DiscPct <> 0 then
-                        DocumentComment.Add(Document, EmptyField, Rec."Line No.", DocumentComment.Area::Validation, CommentType,
-                          StrSubstNo(CommentText, StrSubstNo(LineAmountDiffCalcDiscAmtTxt, Rec."Line No.",
+                        DocumentComment.Add(Document, EmptyField, TempDocumentLine."Line No.", DocumentComment.Area::Validation, CommentType,
+                          StrSubstNo(CommentText, StrSubstNo(LineAmountDiffCalcDiscAmtTxt, TempDocumentLine."Line No.",
                             DCAppMgt.FormatAmountNoRounding(LineAmount, CurrencyCode),
                             DCAppMgt.FormatAmount(LineAmount2, CurrencyCode), DiscPct, DCAppMgt.FormatAmount(DiscAmount, CurrencyCode))))
                     else
-                        DocumentComment.Add(Document, EmptyField, Rec."Line No.", DocumentComment.Area::Validation, CommentType,
-                          StrSubstNo(CommentText, StrSubstNo(LineAmountDiffCapDiscAmtTxt, Rec."Line No.",
+                        DocumentComment.Add(Document, EmptyField, TempDocumentLine."Line No.", DocumentComment.Area::Validation, CommentType,
+                          StrSubstNo(CommentText, StrSubstNo(LineAmountDiffCapDiscAmtTxt, TempDocumentLine."Line No.",
                             DCAppMgt.FormatAmountNoRounding(LineAmount, CurrencyCode),
                             DCAppMgt.FormatAmount(LineAmount2, CurrencyCode), DCAppMgt.FormatAmount(DiscAmount, CurrencyCode))));
             end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Purch. - Line Validation", 'OnBeforeLineValidation', '', true, true)]
+    local procedure PurchLineValidation_OnBeforeLineValidation(var TempDocumentLine: Record "CDC Temp. Document Line"; Document: Record "CDC Document"; var Handled: Boolean)
+    var
+        Template: record "CDC Template";
+    begin
+        if Handled then
+            exit;
+
+        if not Template.Get(Document."Template No.") then
+            exit;
+
+        if Template."ALR Line Validation Type" <> Template."ALR Line Validation Type"::AdvancedLineRecognition then
+            exit;
+
     end;
 
     var

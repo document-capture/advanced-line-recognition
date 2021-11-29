@@ -2,16 +2,23 @@ tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
 {
     fields
     {
-        field(50001; "Substitution Field"; Code[20])
+        field(50001; "Replacement Field"; Code[20])
         {
-            Caption = 'Substitution Field';
+            Caption = 'Use replacement line field';
             DataClassification = CustomerContent;
             TableRelation = "CDC Template Field".Code WHERE("Template No." = FIELD("Template No."),
-                                                             Type = CONST(Line));
+                                                             Type = Field("Replacement Field Type"));
+            trigger OnValidate()
+            begin
+                if Rec."Replacement Field" <> '' then begin
+                    Rec.Validate("Copy Value from Previous Value", false);
+                end
+
+            end;
         }
-        field(50002; "Anchor Field"; Code[20])
+        field(50002; "Linked Field"; Code[20])
         {
-            Caption = 'Anchor Field';
+            Caption = 'Linked to field';
             DataClassification = CustomerContent;
             TableRelation = "CDC Template Field".Code WHERE("Template No." = FIELD("Template No."),
                                                              Type = CONST(Line));
@@ -21,29 +28,62 @@ tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
             Caption = 'Sorting', Comment = 'Position in the sort order in which the field will be processed', Locked = false, MaxLength = 999;
             DataClassification = CustomerContent;
         }
-        field(50004; "Field Position"; Option)
+        field(50004; "Field value position"; Option)
         {
-            Caption = 'Field position', Comment = 'Defines if the field is above or below the standard line fields', Locked = false, MaxLength = 999;
+            Caption = 'Value position', Comment = 'Defines if the value should be searched above or below the standard line.', Locked = false, MaxLength = 999;
             DataClassification = CustomerContent;
             OptionCaption = ' ,Above standard line,Below standard line';
-            OptionMembers = " ",StandardLine,BelowStandardLine;
+            OptionMembers = " ",AboveStandardLine,BelowStandardLine;
         }
-        field(50007; "Get Value from Previous Value"; Boolean)
+        field(50005; "Field value search direction"; Option)
+        {
+            Caption = 'Value search direction', Comment = 'Defines the search direction to find the value', Locked = false, MaxLength = 999;
+            DataClassification = CustomerContent;
+            OptionCaption = 'Downwards,Upwards';
+            OptionMembers = Downwards,Upwards;
+            trigger OnValidate()
+            begin
+                // Only possible for feature Search value by column heading
+                TestField("Advanced Line Recognition Type", "Advanced Line Recognition Type"::FindFieldByColumnHeading);
+            end;
+        }
+
+        field(50006; "Replacement Field Type"; Option)
+        {
+            Caption = 'Replacement field type';
+            DataClassification = CustomerContent;
+            OptionCaption = 'Header,Line';
+            OptionMembers = Header,Line;
+            trigger OnValidate()
+            begin
+                if xRec."Replacement Field Type" <> Rec."Replacement Field Type" then
+                    clear(rec."Replacement Field");
+            end;
+        }
+        field(50007; "Copy Value from Previous Value"; Boolean)
         {
             Caption = 'Copy value from previous value';
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
-                TestField("Substitution Field", '');
+                if Rec."Copy Value from Previous Value" then begin
+                    Clear(Rec."Replacement Field");
+                end
             end;
         }
+        field(50010; "Data version"; Integer)
+        {
+            Caption = 'ALR Data version';
+            DataClassification = CustomerContent;
+        }
+
         field(50011; "Advanced Line Recognition Type"; Option)
         {
             Caption = 'Advanced Line Recognition Type';
             DataClassification = CustomerContent;
-            OptionCaption = 'Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption';
-            OptionMembers = Default,LinkedToAnchorField,FindFieldByCaptionInPosition,FindFieldByColumnHeading,GroupValue;
+            OptionCaption = 'Standard,Anchor linked field,Field search with caption,Field search with column heading';
+            OptionMembers = Default,LinkedToAnchorField,FindFieldByCaptionInPosition,FindFieldByColumnHeading;
         }
         field(50012; "Offset Top"; Integer)
         {

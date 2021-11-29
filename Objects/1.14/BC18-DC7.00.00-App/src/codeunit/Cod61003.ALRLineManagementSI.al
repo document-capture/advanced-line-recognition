@@ -14,6 +14,7 @@ codeunit 61003 "ALR Line Management SI"
         LineRegionToPos: Integer;
         AutoFieldRecognition: Boolean;
         LastCapturedField: Code[20];
+        LastCapturedFieldTimeStamp: DateTime;
 
     procedure SetLineRegion(DocumentNo: Code[20]; FromPage: Integer; FromPos: Integer; ToPage: Integer; ToPos: Integer)
     begin
@@ -64,26 +65,31 @@ codeunit 61003 "ALR Line Management SI"
         end;
     end;
 
+    // Function to temporary store the last updated field from the clien addin to be used for faster ALR handling
     [EventSubscriber(ObjectType::Page, Page::"CDC Doc. Capture Client Addin", 'OnBeforeCaptureEnded', '', false, false)]
     local procedure SaveCurrFieldByOnOnBeforeCaptureEnded(PageNo: Integer; "Area": Code[20]; FieldName: Text[1024]; LineNo: Integer; IsValue: Boolean; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer; var Handled: Boolean)
     begin
         if AutoFieldRecognition then
             if ("Area" = 'LINE') AND (FieldName <> '') AND (IsValue) then begin
                 LastCapturedField := CopyStr(FieldName, 1, STRLEN(FieldName) - STRLEN(FORMAT(LineNo)));
+                LastCapturedFieldTimeStamp := CurrentDateTime;
             end;
     end;
 
-    // [EventSubscriber(ObjectType::Table, Database::"CDC Document Value", 'OnAfterModifyEvent', '', false, false)]
-    // local procedure SaveCurrFieldByOnAfterModifyDocumentValue(var Rec: Record "CDC Document Value"; var xRec: Record "CDC Document Value")
-    // begin
-    //     if AutoFieldRecognition then
-    //         if Rec.Code <> '' then
-    //             LastCapturedField := Rec.Code;
-    // end;
-
     procedure GetLastCapturedField(): Code[20]
+    var
+        FieldModifiedDuration: Duration;
     begin
-        exit(LastCapturedField);
+        //Last field update shouldn't be more than 60 seconds before to avoid fields from last session/document/template
+        if LastCapturedFieldTimeStamp = 0DT then
+            exit;
+
+        FieldModifiedDuration := CurrentDateTime - LastCapturedFieldTimeStamp;
+
+        if FieldModifiedDuration < (60 * 1000) then
+            exit(LastCapturedField)
+        else
+            Clear(LastCapturedField);
     end;
 }
 

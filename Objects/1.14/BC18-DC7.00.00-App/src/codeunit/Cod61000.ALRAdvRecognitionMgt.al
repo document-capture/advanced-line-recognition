@@ -20,9 +20,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         FieldIsCapturedByColumnHeading: Label 'The field "%1" will now be searched via the column heading "%2".';
         FieldIsCapturedByCaption: Label 'The value of field "%1" will now been searched via the caption in the current line.';
         NoRequiredFieldFound: Label 'No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.';
-        ALRVersionNoText: Label 'ALR%1 (%2 Build %3)';
+        ALRVersionNoText: Label 'ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)';
         NoALRFieldsForReset: Label 'There are not fields configured for advanced line recognition, that can be reset.';
-        YouAreUsingALRVersion: Label 'You are using version %1 of the advanced line recognition.', Comment = 'Displays the current version of the Advanced line recognition to the user including the build';
+        YouAreUsingALRVersion: Label 'You are using version advanced line recognition version:\%1', Comment = 'Displays the current version of the Advanced line recognition to the user including the build';
         ALRMgtSI: Codeunit "ALR Line Management SI";
 
     procedure SetToAnchorLinkedField(var TempDocumentLine: Record "CDC Temp. Document Line")
@@ -80,9 +80,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LinkedField."Offset Bottom" := LinkedFieldDocumentValue.Bottom - LinkedFieldDocumentValue.Top;
         LinkedField."Offset Right" := LinkedFieldDocumentValue.Right - LinkedFieldDocumentValue.Left;
         LinkedField."Advanced Line Recognition Type" := LinkedField."Advanced Line Recognition Type"::LinkedToAnchorField;
-        LinkedField."Anchor Field" := AnchorFieldDocumentValue.Code;
+        LinkedField."Linked Field" := AnchorFieldDocumentValue.Code;
 
-        UpdateExecutionSequence(LinkedField, LinkedField."Anchor Field");
+        UpdateExecutionSequence(LinkedField, LinkedField."Linked Field");
 
         if LinkedField.Modify(true) then begin
             Message(FieldIsLinkedToSourceField, LinkedField."Field Name", AnchorField."Field Name");
@@ -126,9 +126,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         SelectedField."Advanced Line Recognition Type" := SelectedField."Advanced Line Recognition Type"::FindFieldByColumnHeading;
 
         if SelectedFieldDocumentValue.Top < LineIdentFieldDocumentValue.Top then
-            SelectedField."Field Position" := SelectedField."Field Position"::StandardLine
+            SelectedField."Field value position" := SelectedField."Field value position"::AboveStandardLine
         else
-            SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
+            SelectedField."Field value position" := SelectedField."Field value position"::BelowStandardLine;
 
         if SelectedField.Modify(true) then begin
             Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", TemplateFieldCaption.Caption);
@@ -187,9 +187,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         SelectedField."Advanced Line Recognition Type" := SelectedField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition;
 
         if SelectedFieldDocumentValue.Top < LineIdentFieldDocumentValue.Top then
-            SelectedField."Field Position" := SelectedField."Field Position"::StandardLine
+            SelectedField."Field value position" := SelectedField."Field value position"::AboveStandardLine
         else
-            SelectedField."Field Position" := SelectedField."Field Position"::BelowStandardLine;
+            SelectedField."Field value position" := SelectedField."Field value position"::BelowStandardLine;
 
         if SelectedField.Modify(true) then begin
             Message(FieldIsCapturedByCaption, SelectedField."Field Name");
@@ -213,15 +213,17 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         TemplateField."Search for Value" := false;
         TemplateField.Required := false;
         Clear(TemplateField."Advanced Line Recognition Type");
-        Clear(TemplateField."Anchor Field");
+        Clear(TemplateField."Linked Field");
         Clear(TemplateField."Offset Top");
         Clear(TemplateField."Offset Bottom");
         Clear(TemplateField."Offset Left");
         Clear(TemplateField."Offset Right");
-        Clear(TemplateField."Field Position");
+        Clear(TemplateField."Field value position");
+        Clear(TemplateField."Field value search direction");
         Clear(TemplateField.Sorting);
-        Clear(TemplateField."Substitution Field");
-        Clear(TemplateField."Get Value from Previous Value");
+        Clear(TemplateField."Replacement Field");
+        Clear(TemplateField."Replacement Field Type");
+        Clear(TemplateField."Copy Value from Previous Value");
         Clear(TemplateField."ALR Typical Value Field Width");
         Clear(TemplateField."Typical Field Height");
         Clear(TemplateField."Caption Mandatory");
@@ -231,7 +233,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
 
     local procedure SelectField(var TemplateField: Record "CDC Template Field"; TemplateNo: Code[20]; ExcludedFieldsFilter: Text[250]; ALROnlyFields: Boolean): Boolean
     var
-        lTemplateFieldList: Page "CDC Template Field List";
+        TemplateFieldList: Page "CDC Template Field List";
     begin
         TemplateField.SetRange("Template No.", TemplateNo);
         TemplateField.SetRange(Type, TemplateField.Type::Line);
@@ -245,31 +247,13 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
                 Error(NoALRFieldsForReset);
         end;
 
-        lTemplateFieldList.SetTableView(TemplateField);
-        lTemplateFieldList.LookupMode(true);
-        if lTemplateFieldList.RunModal = ACTION::LookupOK then begin
-            lTemplateFieldList.GetRecord(TemplateField);
+        TemplateFieldList.SetTableView(TemplateField);
+        TemplateFieldList.LookupMode(true);
+        if TemplateFieldList.RunModal = ACTION::LookupOK then begin
+            TemplateFieldList.GetRecord(TemplateField);
             exit(true);
         end;
     end;
-
-    // procedure SetTemplateToALRProcessing(TemplateNo: Code[20])
-    // var
-    //     lTemplate: Record "CDC Template";
-    // begin
-    //     // Change Codeunit ID to the advanced line recognition codeunit on template
-    //     if lTemplate.Get(TemplateNo) then begin
-    //         lTemplate.Validate("Codeunit ID: Line Capture", GetAdvLineRecCodeunit());
-    //         lTemplate.Modify(true);
-    //     end;
-    // end;
-
-
-    // local procedure GetAdvLineRecCodeunit(): Integer
-    // var
-    // begin
-    //     exit(61001);
-    // end;
 
     local procedure GetLineIdentifierValue(var TempDocumentLine: Record "CDC Temp. Document Line"; var LineIdentFieldDocumentValue: Record "CDC Document Value")
     var
@@ -335,23 +319,13 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     procedure ShowVersionNo(): Text
     var
         VersionTriggers: Codeunit "Version Triggers";
+        InstallMgt: Codeunit "ALR Install Management";
         ApplicationVersion: Text;
         ApplicationBuild: Text;
     begin
         VersionTriggers.GetApplicationVersion(ApplicationVersion);
         VersionTriggers.GetApplicationBuild(ApplicationBuild);
-        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '14', ApplicationVersion, ApplicationBuild));
+        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '14', InstallMgt.GetDataVersion(), ApplicationVersion, ApplicationBuild));
     end;
-
-    // procedure HasExecutePermission(ObjType2: Option TableData,"Table",Form,"Report",Dataport,"Codeunit","XMLport",MenuSuite,"Page",System,FieldNumber; ObjectNumber2: Integer): Boolean
-    // var
-    //     LicensePermission: Record "License Permission";
-    // begin
-    //     if LicensePermission.GET(ObjType2, ObjectNumber2) then
-    //         if LicensePermission."Execute Permission" = LicensePermission."Execute Permission"::Yes then
-    //             exit(true);
-
-    //     exit(false);
-    // end;
 }
 

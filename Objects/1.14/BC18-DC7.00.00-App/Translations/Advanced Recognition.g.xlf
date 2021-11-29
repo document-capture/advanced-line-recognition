@@ -24,7 +24,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Purch. - Line Valid. - NamedType WarningTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>ALR%1 (%2 Build %3)</source>
+          <source>ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
         </trans-unit>
@@ -104,99 +104,24 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType TrainCaptionFirstForField</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve">
-          <source>You are using version %1 of the advanced line recognition.</source>
+          <source>You are using version advanced line recognition version:\%1</source>
           <note from="Developer" annotates="general" priority="2">Displays the current version of the Advanced line recognition to the user including the build</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType YouAreUsingALRVersion</note>
         </trans-unit>
-        <trans-unit id="Page 50604516 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Field rule examples</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Property Caption</note>
+        <trans-unit id="Codeunit 28597237 - NamedType 4138536381" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!</source>
+          <note from="Developer" annotates="general" priority="2">Show when the template does not have at least one line field marked as required.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Advanced Line Capture - NamedType LblNoMandatoryFieldsFound</note>
         </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 3830740531" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Feldwert muss mit "P" beginnen, gefolgt von 8 Ziffern von 0 bis 9.</source>
+        <trans-unit id="Codeunit 4076633063 - NamedType 352954057" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ALRDataVersion</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription1</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Install Management - NamedType ALRDataVersionLbl</note>
         </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 1793740707" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Erkennt Zeilen in denen das Feld entweder das Wort "Rechnung" oder das Wort „Gutschrift“ enthält.</source>
+        <trans-unit id="PageExtension 850305244 - Control 940755310 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644">
+          <source>Select if you want to use the default line validation from the template codeunit or the Adv. line recognition validation</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription10</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 2431437324" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Zeilen überspringen, die das Wort "Zwischensumme" enthalten.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription11</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 3069133941" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Zeilen überspringen, in denen das Feld mit dem Wort "Größe" beginnt.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription12</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 3706830558" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Filtert Zeilen in denen das Feld mit POS anfängt, gefolgt von 3 Ziffern im Bereich von 0-9</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription13</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 1448863086" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Feldwert muss entweder mit "F" oder "R" und "-" beginnen, gefolgt von mindestens 3 Ziffern (0-9).</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription2</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 811166469" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Der Feldwert muss entweder mit "F" oder "R" und "-" beginnen, gefolgt von 3 bis 5 Stellen (0-9).</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription3</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 1917650680" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Feldwert muss mit "I" beginnen, gefolgt von 8 Ziffern von 0 bis 9.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription4</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 1279954063" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Der Feldwert muss mit "RG" beginnen, gefolgt von 5 Stellen, dann "X" gefolgt von 1 Stelle.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription5</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 3193043914" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Der Feldwert darft nicht "ABC" und nicht "DEF" sein.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription6</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 2555347297" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Feldwert muss entweder “Rechnung” oder “Gutschrift” sein.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription7</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 980075492" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Der Feldwert muss die Zeichen “AG” enthalten.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription8</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - NamedType 342378875" maxwidth="100" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Erkennt nur Zeilen, in denen das Feld das Wort Rechnung enthält.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - NamedType RuleDescription9</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Describes the rule</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Description - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - Control 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Rule description</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Description - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - Control 2666907530 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the rule</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Rule - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 50604516 - Control 2666907530 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Rule</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Field rule examples - Control Rule - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR CDC Template Card Ext. - Control ALR Line Validation Type - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 483047780 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Adv. line recognition</source>
@@ -283,20 +208,40 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Advanced Line Recognition Type - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 655255760 - Control 1914719493 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
-          <source>Specifies the source field used to calculate the field value via distances/offsets.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Anchor Field - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 655255760 - Control 1025235501 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+        <trans-unit id="PageExtension 655255760 - Control 3559966052 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Field Position - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Field value Position - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 655255760 - Control 3387624123 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+        <trans-unit id="PageExtension 655255760 - Control 1831634694 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the search direction from the standard line that is used to find the field value.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Field value search direction - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 655255760 - Control 3878945789 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the source field used to calculate the field value via distances/offsets.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Linked Field - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 655255760 - Control 2356822968 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>When value is empty</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control NoValueFound - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 655255760 - Control 3090058030 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Get Value from Previous Value - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Copy Value from Previous Value - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 655255760 - Control 3883364029 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies if the selected field is a header or line field (Default = line)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Replacement Header Field - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 655255760 - Control 721162422 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the line field whose content will be used as value if the value of the current field cannot be found.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Replacement Line Field - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 655255760 - Control 1188470490 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Offsets</source>
@@ -343,10 +288,15 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Sorting - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 655255760 - Control 2744589791 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
-          <source>Specifies the line field whose content will be used as value if the value of the current field cannot be found.</source>
+        <trans-unit id="TableExtension 1485895920 - Field 940755310 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928">
+          <source>Line validation type</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Field Card Ext. - Control Substitution Field - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR CDC Template Ext. - Field ALR Line Validation Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1485895920 - Field 940755310 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928">
+          <source>Default template codeunit,Advanced Line Recognition</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR CDC Template Ext. - Field ALR Line Validation Type - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3024729169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Advanced Line Recognition Type</source>
@@ -354,7 +304,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Advanced Line Recognition Type - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3024729169 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source>Standard,Anchor linked field,Field search with caption,Field search with column heading,Group value with caption</source>
+          <source>Standard,Anchor linked field,Field search with caption,Field search with column heading</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Advanced Line Recognition Type - Property OptionCaption</note>
         </trans-unit>
@@ -373,25 +323,40 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field ALR Value Caption Offset Y - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 2154276848 - Field 1914719493 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source>Anchor Field</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Anchor Field - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2154276848 - Field 1025235501 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source>Field position</source>
-          <note from="Developer" annotates="general" priority="2">Defines if the field is above or below the standard line fields</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field Position - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2154276848 - Field 1025235501 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source> ,Above standard line,Below standard line</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field Position - Property OptionCaption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2154276848 - Field 3387624123 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+        <trans-unit id="TableExtension 2154276848 - Field 3090058030 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Copy value from previous value</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Get Value from Previous Value - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Copy Value from Previous Value - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 1342876022 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>ALR Data version</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Data version - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3800550788 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Value position</source>
+          <note from="Developer" annotates="general" priority="2">Defines if the value should be searched above or below the standard line.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field value position - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3800550788 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source> ,Above standard line,Below standard line</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field value position - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 1831634694 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Value search direction</source>
+          <note from="Developer" annotates="general" priority="2">Defines the search direction to find the value</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field value search direction - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 1831634694 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Downwards,Upwards</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Field value search direction - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3878945789 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Linked Field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Linked Field - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3134861838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Height</source>
@@ -413,15 +378,25 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Offset Top - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3200689824 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Use replacement line field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Replacement Field - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3015600400 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Replacement field type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Replacement Field Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2154276848 - Field 3015600400 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Header,Line</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Replacement Field Type - Property OptionCaption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 2154276848 - Field 3299771246 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Sorting</source>
           <note from="Developer" annotates="general" priority="2">Position in the sort order in which the field will be processed</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Sorting - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2154276848 - Field 2744589791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source>Substitution Field</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field Extension - Field Substitution Field - Property Caption</note>
         </trans-unit>
       </group>
     </body>
