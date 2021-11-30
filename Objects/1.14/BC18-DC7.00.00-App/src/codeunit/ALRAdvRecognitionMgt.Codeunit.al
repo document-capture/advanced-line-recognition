@@ -7,24 +7,24 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     end;
 
     var
+        ALRMgtSI: Codeunit "ALR Single Instance Mgt.";
         FieldSetupCanceled: Label 'Field setup aborted because no field was selected!';
-        FieldIsLinkedToSourceField: Label 'The field "%1" is now linked to field "%2"!';
-        MissingSourceFieldValue: Label 'The value for source field %1 in line %2 is missing! Please train this value first!';
-        lblMissingFieldExampleValue: Label 'The value for for %1 (%2) in row %3 is missing! Please train this value first!', Comment = 'Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.';
+        FieldIsLinkedToSourceField: Label 'The field "%1" is now linked to field "%2"!', Comment = '%1 = field description of selected field | %2 = field description of linked field';
+        MissingSourceFieldValue: Label 'The value for source field "%1" in line %2 is missing! Please train this value first!', Comment = '%1 = source field description | %2 = line no';
+        lblMissingFieldExampleValue: Label 'The value for for %1 (%2) in line %3 is missing! Please train this value first!', Comment = 'Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.';
         SelectOffsetSourceFieldFirst: Label 'Please select first the source field on the basis of which position the value should be found. ';
-        CodeunitDoesNotExist: Label 'Codeunit %1 does not exist! Has the object been renamed?';
-        TrainCaptionFirstForField: Label 'Error! For the field %1 hasn|t been trained a caption! Please train the caption first.';
-        SelectTheOffsetField: Label 'Please choose the field, which should be linked with the source field "%1".';
+        TrainCaptionFirstForField: Label 'No caption has been configured for field "%1". You must configure the caption first.', Comment = ' %1 = field description';
+        SelectTheOffsetField: Label 'Please choose the field, which should be linked with the source field "%1".', Comment = ' %1 = field description of source field';
         ErrorDuringFieldSetup: Label 'Error during field setup.';
         SelectFieldForColumnHeaderSearch: Label 'Select the field that should be found by the column heading.';
         SelectFieldForCaptionSearch: Label 'Choose the field whose value should be found by the caption in the current line.';
-        FieldIsCapturedByColumnHeading: Label 'The field "%1" will now be searched via the column heading "%2".';
-        FieldIsCapturedByCaption: Label 'The value of field "%1" will now been searched via the caption in the current line.';
-        NoRequiredFieldFound: Label 'No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.';
-        ALRVersionNoText: Label 'ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)';
+        FieldIsCapturedByColumnHeading: Label 'The field "%1" will now be searched via the column heading "%2".', Comment = '%1 = field description | %2 = caption of column heading';
+        FieldIsCapturedByCaption: Label 'The value of field "%1" will now been searched via the caption in the current line.', Comment = '%1 = field description';
+        NoRequiredFieldFound: Label 'No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.', Comment = '%1 = line no.';
+        ALRVersionNoText: Label 'ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)', Comment = '%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build';
         NoALRFieldsForReset: Label 'There are not fields configured for advanced line recognition, that can be reset.';
-        YouAreUsingALRVersion: Label 'You are using version advanced line recognition version:\%1', Comment = 'Displays the current version of the Advanced line recognition to the user including the build';
-        ALRMgtSI: Codeunit "ALR Line Management SI";
+        YouAreUsingALRVersion: Label 'You are using version advanced line recognition version:\%1', Comment = '%1 Displays the current version of the Advanced line recognition to the user including the build';
+
 
     procedure SetToAnchorLinkedField(var TempDocumentLine: Record "CDC Temp. Document Line")
     var
@@ -70,7 +70,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LinkedFieldDocumentValue.SetRange("Is Valid", true);
         LinkedFieldDocumentValue.SetRange("Template No.", TempDocumentLine."Template No.");
         if not LinkedFieldDocumentValue.FindFirst() then
-            Error(lblMissingFieldExampleValue, LinkedField."Field Name", LinkedField.Code);  //value is mandatory
+            Error(lblMissingFieldExampleValue, LinkedField."Field Name", LinkedField.Code, TempDocumentLine."Line No.");  //value is mandatory
 
         ResetField(LinkedField);
 
@@ -95,7 +95,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LineIdentFieldDocumentValue: Record "CDC Document Value";
         SelectedField: Record "CDC Template Field";
         SelectedFieldDocumentValue: Record "CDC Document Value";
-        TemplateFieldCaption: Record "CDC Template Field Caption";
+        CDCTemplateFieldCaption: Record "CDC Template Field Caption";
     begin
         // Find field value of a normal position field
         GetLineIdentifierValue(TempDocumentLine, LineIdentFieldDocumentValue);
@@ -111,10 +111,10 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         end;
 
         // Check that the selected field has at least one caption
-        TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
-        TemplateFieldCaption.SetRange(Code, SelectedField.Code);
-        TemplateFieldCaption.SetRange(Type, TemplateFieldCaption.Type::Line);
-        if not TemplateFieldCaption.FindFirst() then
+        CDCTemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
+        CDCTemplateFieldCaption.SetRange(Code, SelectedField.Code);
+        CDCTemplateFieldCaption.SetRange(Type, CDCTemplateFieldCaption.Type::Line);
+        if not CDCTemplateFieldCaption.FindFirst() then
             Error(TrainCaptionFirstForField, SelectedField.Code);
 
         // Find the value of the selected field
@@ -131,7 +131,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
             SelectedField."Field value position" := SelectedField."Field value position"::BelowStandardLine;
 
         if SelectedField.Modify(true) then
-            Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", TemplateFieldCaption.Caption)
+            Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", CDCTemplateFieldCaption.Caption)
         else
             Message(ErrorDuringFieldSetup);
     end;
@@ -142,7 +142,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         SelectedField: Record "CDC Template Field";
         SelectedFieldDocumentValue: Record "CDC Document Value";
 #pragma warning disable AA0237
-        TemplateFieldCaption: Record "CDC Template Field Caption";
+        CDCTemplateFieldCaption: Record "CDC Template Field Caption";
 #pragma warning restore AA0237
         DocumentPage: Record "CDC Document Page";
         CaptureEngine: Codeunit "CDC Capture Engine";
@@ -161,10 +161,10 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         end;
 
         // Check that the selected field has at least one caption
-        TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
-        TemplateFieldCaption.SetRange(Code, SelectedField.Code);
-        TemplateFieldCaption.SetRange(Type, TemplateFieldCaption.Type::Line);
-        if not TemplateFieldCaption.FindFirst() then
+        CDCTemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
+        CDCTemplateFieldCaption.SetRange(Code, SelectedField.Code);
+        CDCTemplateFieldCaption.SetRange(Type, CDCTemplateFieldCaption.Type::Line);
+        if not CDCTemplateFieldCaption.FindFirst() then
             Error(TrainCaptionFirstForField, SelectedField.Code);
 
         // Find the value of the selected field
@@ -178,9 +178,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
                                                                    / CaptureEngine.GetDPIFactor(150, DocumentPage."TIFF Image Resolution"), 1);
         end;
 
-        if (SelectedFieldDocumentValue.Top <> 0) and (TemplateFieldCaption.Top <> 0) and (SelectedFieldDocumentValue.Left <> 0) and (TemplateFieldCaption.Left <> 0) then begin
-            SelectedField."ALR Value Caption Offset X" := SelectedFieldDocumentValue.Left - TemplateFieldCaption.Left;
-            SelectedField."ALR Value Caption Offset Y" := SelectedFieldDocumentValue.Top - TemplateFieldCaption.Top;
+        if (SelectedFieldDocumentValue.Top <> 0) and (CDCTemplateFieldCaption.Top <> 0) and (SelectedFieldDocumentValue.Left <> 0) and (CDCTemplateFieldCaption.Left <> 0) then begin
+            SelectedField."ALR Value Caption Offset X" := SelectedFieldDocumentValue.Left - CDCTemplateFieldCaption.Left;
+            SelectedField."ALR Value Caption Offset Y" := SelectedFieldDocumentValue.Top - CDCTemplateFieldCaption.Top;
         end;
 
         SelectedField."Caption Mandatory" := true;
@@ -193,9 +193,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         else
             SelectedField."Field value position" := SelectedField."Field value position"::BelowStandardLine;
 
-        if SelectedField.Modify(true) then begin
-            Message(FieldIsCapturedByCaption, SelectedField."Field Name");
-        end else
+        if SelectedField.Modify(true) then
+            Message(FieldIsCapturedByCaption, SelectedField."Field Name")
+        else
             Message(ErrorDuringFieldSetup);
     end;
 
@@ -292,7 +292,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         SelectedFieldDocumentValue.SetRange("Is Valid", true);
         SelectedFieldDocumentValue.SetRange("Template No.", TempDocumentLine."Template No.");
         if not SelectedFieldDocumentValue.FindFirst() then
-            Error(lblMissingFieldExampleValue, SelectedField."Field Name", SelectedField.Code);  //value is mandatory
+            Error(lblMissingFieldExampleValue, SelectedField."Field Name", SelectedField.Code, TempDocumentLine."Line No.");  //value is mandatory
     end;
 
     local procedure UpdateExecutionSequence(var LinkedField: Record "CDC Template Field"; PreviousFieldCode: Code[20])

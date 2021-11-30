@@ -1,4 +1,4 @@
-tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
+tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 {
     fields
     {
@@ -10,9 +10,8 @@ tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
                                                              Type = Field("Replacement Field Type"));
             trigger OnValidate()
             begin
-                if Rec."Replacement Field" <> '' then begin
+                if Rec."Replacement Field" <> '' then
                     Rec.Validate("Copy Value from Previous Value", false);
-                end
 
             end;
         }
@@ -67,9 +66,8 @@ tableextension 61000 "ALR Template Field Extension" extends "CDC Template Field"
 
             trigger OnValidate()
             begin
-                if Rec."Copy Value from Previous Value" then begin
+                if Rec."Copy Value from Previous Value" then
                     Clear(Rec."Replacement Field");
-                end
             end;
         }
         field(50010; "Data version"; Integer)

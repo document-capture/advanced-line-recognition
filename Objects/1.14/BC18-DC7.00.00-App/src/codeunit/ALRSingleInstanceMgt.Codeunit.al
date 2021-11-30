@@ -1,4 +1,4 @@
-codeunit 61003 "ALR Line Management SI"
+codeunit 61003 "ALR Single Instance Mgt."
 {
     SingleInstance = true;
 
@@ -15,6 +15,7 @@ codeunit 61003 "ALR Line Management SI"
         AutoFieldRecognition: Boolean;
         LastCapturedField: Code[20];
         LastCapturedFieldTimeStamp: DateTime;
+        StringFilterLbl: Label '%1..%2', Comment = '%1 start filter | %2 end filter', Locked = true;
 
     procedure SetLineRegion(DocumentNo: Code[20]; FromPage: Integer; FromPos: Integer; ToPage: Integer; ToPos: Integer)
     begin
@@ -44,22 +45,20 @@ codeunit 61003 "ALR Line Management SI"
             Words.SetRange("Document No.", DocumentNo);
             DocumentPage.SetRange("Document No.", DocumentNo);
             DocumentPage.SetRange("Page No.", LineRegionFromPage, LineRegionToPage);
-            if DocumentPage.FindSet then begin
+            if DocumentPage.FindSet() then begin
                 Handled := true;
                 repeat
-                    if LineRegionToPos = 0 then begin
-                        Words.SetFilter(Top, StrSubstNo('%1..%2', LineRegionFromPos, DocumentPage."Bottom Word Pos."))
-                    end else begin
-                        Words.SetFilter(Top, DelChr(StrSubstNo('%1..%2', LineRegionFromPos, LineRegionToPos), '=', ' '));
-                    end;
+                    if LineRegionToPos = 0 then
+                        Words.SetFilter(Top, StrSubstNo(StringFilterLbl, LineRegionFromPos, DocumentPage."Bottom Word Pos."))
+                    else
+                        Words.SetFilter(Top, DelChr(StrSubstNo(StringFilterLbl, LineRegionFromPos, LineRegionToPos), '=', ' '));
 
-                    if Words.FindSet(false, false) then begin
+                    if Words.FindSet(false, false) then
                         repeat
                             GlobalWords := Words;
-                            GlobalWords.Insert;
-                        until Words.Next = 0;
-                    end;
-                until DocumentPage.Next = 0;
+                            GlobalWords.Insert();
+                        until Words.Next() = 0
+                until DocumentPage.Next() = 0;
             end;
             SetLineRegion('', 0, 0, 0, 0);
         end;
@@ -71,7 +70,7 @@ codeunit 61003 "ALR Line Management SI"
     begin
         if AutoFieldRecognition then
             if ("Area" = 'LINE') AND (FieldName <> '') AND (IsValue) then begin
-                LastCapturedField := CopyStr(FieldName, 1, STRLEN(FieldName) - STRLEN(FORMAT(LineNo)));
+                LastCapturedField := CopyStr(CopyStr(FieldName, 1, STRLEN(FieldName) - STRLEN(FORMAT(LineNo))), 1, MaxStrLen(LastCapturedField));
                 LastCapturedFieldTimeStamp := CurrentDateTime;
             end;
     end;

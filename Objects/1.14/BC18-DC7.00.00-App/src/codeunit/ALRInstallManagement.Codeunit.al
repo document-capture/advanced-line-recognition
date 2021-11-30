@@ -18,15 +18,14 @@ codeunit 61004 "ALR Install Management"
 
     local procedure SetReplacementFieldTypeToLine()
     var
-        TemplateField: Record "CDC Template Field";
-        UpdateReplacementField: Boolean;
+        CDCTemplateField: Record "CDC Template Field";
     begin
         if (ALRVersion < 14) then begin
-            TemplateField.SetRange(Type, TemplateField.Type::Line);
-            TemplateField.SetFilter("Replacement Field", '<>%1', '');
-            if TemplateField.IsEmpty then
+            CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
+            CDCTemplateField.SetFilter("Replacement Field", '<>%1', '');
+            if CDCTemplateField.IsEmpty then
                 exit;
-            TemplateField.ModifyAll("Replacement Field Type", TemplateField."Replacement Field Type"::Line);
+            CDCTemplateField.ModifyAll("Replacement Field Type", CDCTemplateField."Replacement Field Type"::Line);
         end;
     end;
 
@@ -34,11 +33,9 @@ codeunit 61004 "ALR Install Management"
     internal procedure GetDataVersion(): Integer
     begin
         ALRVersion := 0;
-        if IsolatedStorage.Contains(ALRDataVersionLbl, DataScope::Module) then begin
-            if IsolatedStorage.Get(ALRDataVersionLbl, DataScope::Module, IsolatedStorageValue) then begin
+        if IsolatedStorage.Contains(ALRDataVersionLbl, DataScope::Module) then
+            if IsolatedStorage.Get(ALRDataVersionLbl, DataScope::Module, IsolatedStorageValue) then
                 if Evaluate(ALRVersion, IsolatedStorageValue) then;
-            end;
-        end;
         exit(ALRVersion);
     end;
     // Function to update the dataversion to prevent record modifications on next app install/update

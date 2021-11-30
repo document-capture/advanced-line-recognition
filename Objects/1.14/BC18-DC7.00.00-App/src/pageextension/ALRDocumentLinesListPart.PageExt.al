@@ -1,4 +1,5 @@
-pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines ListPart"
+#pragma warning disable AA0072
+pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines ListPart"
 {
     actions
     {
@@ -20,8 +21,6 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ToolTip = 'The desired field is found via a fixed offset (distance) from another field.';
 
                     trigger OnAction()
-                    var
-                        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
                     begin
                         AdvLineRecognitionMgt.SetToAnchorLinkedField(Rec);
                     end;
@@ -35,8 +34,6 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ToolTip = 'The desired field is searched for using a previously trained column heading in the range of the current position.';
 
                     trigger OnAction()
-                    var
-                        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
                     begin
                         AdvLineRecognitionMgt.SetToFieldSearchWithColumnHeding(Rec);
                     end;
@@ -50,8 +47,6 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ToolTip = 'The desired field is searched for using a previously trained search text/caption in the area of the current position.';
 
                     trigger OnAction()
-                    var
-                        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
                     begin
                         AdvLineRecognitionMgt.SetToFieldSearchWithCaption(Rec);
                     end;
@@ -64,8 +59,6 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ToolTip = 'The advanced line recognition settings are reset for the desired field.';
 
                     trigger OnAction()
-                    var
-                        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
                     begin
                         AdvLineRecognitionMgt.ResetFieldFromMenu(Rec);
                     end;
@@ -75,12 +68,11 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ApplicationArea = All;
                     Caption = 'Version';
                     Image = Info;
+                    Promoted = false;
                     ToolTip = 'Displays the currently used version of the advanced line detection.';
                     trigger OnAction()
-                    var
-                        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
                     begin
-                        AdvLineRecognitionMgt.ShowVersionNo;
+                        AdvLineRecognitionMgt.ShowVersionNo();
                     end;
                 }
                 action(EnableFieldRecognition)
@@ -88,10 +80,9 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ApplicationArea = All;
                     Caption = 'Felderkennung aktivieren';
                     Image = SelectField;
-                    ToolTip = 'TODO';
+                    ToolTip = 'Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.';
                     Visible = not ShowFieldRecognition;
                     trigger OnAction()
-                    var
                     begin
                         ALRMgtSI.FlipAutoFieldRecognition();
                         ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
@@ -102,10 +93,9 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
                     ApplicationArea = All;
                     Caption = 'Felderkennung deaktivieren';
                     Image = SelectField;
-                    ToolTip = 'TODO';
+                    ToolTip = 'Disables the automatic field detection.';
                     Visible = ShowFieldRecognition;
                     trigger OnAction()
-                    var
                     begin
 
                         ALRMgtSI.FlipAutoFieldRecognition();
@@ -123,9 +113,9 @@ pageextension 61001 "ALR Doc Lines ListPart Ext." extends "CDC Document Lines Li
 
 
     var
+        ALRMgtSI: Codeunit "ALR Single Instance Mgt.";
+        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
         [InDataSet]
         ShowFieldRecognition: boolean;
-        ALRMgtSI: Codeunit "ALR Line Management SI";
-
 }
-
+#pragma warning restore

@@ -1,4 +1,5 @@
 #pragma implicitwith disable
+#pragma warning disable AA0072
 codeunit 61002 "ALR Adv. Purch. - Line Valid."
 {
     // This codeunit validates lines on purchase documents
@@ -19,7 +20,7 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         PurchDocMgt: Codeunit "CDC Purch. Doc. - Management";
         CaptureMgt: Codeunit "CDC Capture Management";
         DCAppMgt: Codeunit "CDC Approval Management";
-        LineAccountNo: Code[250];
+        //LineAccountNo: Code[250];
         LineDescription: Text[250];
         Quantity: Decimal;
         UnitCost: Decimal;
@@ -37,7 +38,7 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         if not Document.Get(TempDocumentLine."Document No.") then
             exit;
 
-        LineAccountNo := PurchDocMgt.GetLineAccountNo(Document, TempDocumentLine."Line No.");
+        //LineAccountNo := PurchDocMgt.GetLineAccountNo(Document, TempDocumentLine."Line No.");
         LineDescription := PurchDocMgt.GetLineDescription(Document, TempDocumentLine."Line No.");
         Quantity := PurchDocMgt.GetLineQuantity(Document, TempDocumentLine."Line No.");
         UnitCost := PurchDocMgt.GetLineUnitCost(Document, TempDocumentLine."Line No.");
@@ -58,24 +59,24 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         Field.SetRange("Template No.", TempDocumentLine."Template No.");
         Field.SetRange(Type, Field.Type::Line);
         Field.SetRange(Required, true);
-        if Field.FindSet then
+        if Field.FindSet() then
             repeat
                 if StrLen(CaptureMgt.GetValueAsText(TempDocumentLine."Document No.", TempDocumentLine."Line No.", Field)) = 0 then
                     TempDocumentLine.Skip := true;
-            until Field.Next = 0;
+            until Field.Next() = 0;
         if TempDocumentLine.Skip then
             exit;
         //ALR <<<
 
         Field.SetRange(Required);
-        if Field.FindSet then
+        if Field.FindSet() then
             repeat
                 if not CaptureMgt.IsValidValue(Field, TempDocumentLine."Document No.", TempDocumentLine."Line No.") then begin
                     // No need to write an error here as an error written in C6085580 - CDC Doc. - Field Validation
                     TempDocumentLine.OK := false;
                     exit;
                 end;
-            until Field.Next = 0;
+            until Field.Next() = 0;
 
         if not DCAppMgt.GetAmountRoundingPrecision(CurrencyCode, AmountRoundingPrecision) then begin
             TempDocumentLine.OK := false;
@@ -131,24 +132,24 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Purch. - Line Validation", 'OnBeforeLineValidation', '', true, true)]
     local procedure PurchLineValidation_OnBeforeLineValidation(var TempDocumentLine: Record "CDC Temp. Document Line"; Document: Record "CDC Document"; var Handled: Boolean)
     var
-        Template: record "CDC Template";
+        CDCTemplate: record "CDC Template";
     begin
         if Handled then
             exit;
 
-        if not Template.Get(Document."Template No.") then
+        if not CDCTemplate.Get(Document."Template No.") then
             exit;
 
-        if Template."ALR Line Validation Type" <> Template."ALR Line Validation Type"::AdvancedLineRecognition then
+        if CDCTemplate."ALR Line Validation Type" <> CDCTemplate."ALR Line Validation Type"::AdvancedLineRecognition then
             exit;
 
     end;
 
     var
-        LineAmountDiffCalcDiscAmtTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.';
-        LineAmountDiffCapDiscAmtTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.';
-        LineAmountDiffTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.';
-        WarningTxt: Label 'WARNING: %1';
+        LineAmountDiffCalcDiscAmtTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.', Comment = '%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount in % | %5 = calculated discount';
+        LineAmountDiffCapDiscAmtTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.', Comment = '%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount';
+        LineAmountDiffTxt: Label 'Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.', Comment = '%1 = line no. | %2 = captured line amount | %3 = calculated line amount | %4 = captured discount | %5 = calculated discount';
+        WarningTxt: Label 'WARNING: %1', Comment = '%1 is the warning message';
 }
 
 #pragma implicitwith restore

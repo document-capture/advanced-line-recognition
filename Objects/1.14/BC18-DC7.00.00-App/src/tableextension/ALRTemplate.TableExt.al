@@ -1,4 +1,4 @@
-tableextension 61001 "ALR CDC Template Ext." extends "CDC Template"
+tableextension 61001 "ALR Template" extends "CDC Template"
 {
     fields
     {

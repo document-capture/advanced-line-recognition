@@ -1,4 +1,4 @@
-pageextension 61002 "ALR CDC Template Card Ext." extends "CDC Template Card"
+pageextension 61002 "ALR Template Card" extends "CDC Template Card"
 {
     ContextSensitiveHelpPage = 'template-card-options';
     layout
