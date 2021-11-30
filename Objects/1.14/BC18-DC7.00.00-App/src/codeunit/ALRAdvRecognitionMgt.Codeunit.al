@@ -1,6 +1,7 @@
 codeunit 61000 "ALR Adv. Recognition Mgt."
 {
-
+#pragma warning disable AA0072
+#pragma warning disable AA0074
     trigger OnRun()
     begin
     end;
@@ -9,7 +10,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         FieldSetupCanceled: Label 'Field setup aborted because no field was selected!';
         FieldIsLinkedToSourceField: Label 'The field "%1" is now linked to field "%2"!';
         MissingSourceFieldValue: Label 'The value for source field %1 in line %2 is missing! Please train this value first!';
-        MissingFieldExampleValue: Label 'The value for for %1 (%2) in row %3 is missing! Please train this value first!';
+        lblMissingFieldExampleValue: Label 'The value for for %1 (%2) in row %3 is missing! Please train this value first!', Comment = 'Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.';
         SelectOffsetSourceFieldFirst: Label 'Please select first the source field on the basis of which position the value should be found. ';
         CodeunitDoesNotExist: Label 'Codeunit %1 does not exist! Has the object been renamed?';
         TrainCaptionFirstForField: Label 'Error! For the field %1 hasn|t been trained a caption! Please train the caption first.';
@@ -31,7 +32,6 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LinkedField: Record "CDC Template Field";
         AnchorFieldDocumentValue: Record "CDC Document Value";
         LinkedFieldDocumentValue: Record "CDC Document Value";
-        FieldsLinked: Integer;
     begin
         // Get the anchor field that defines the position
         Message(SelectOffsetSourceFieldFirst);
@@ -46,13 +46,13 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         AnchorFieldDocumentValue.SetRange(Type, AnchorFieldDocumentValue.Type::Line);
         AnchorFieldDocumentValue.SetRange("Is Valid", true);
         AnchorFieldDocumentValue.SetRange("Template No.", TempDocumentLine."Template No.");
-        if not AnchorFieldDocumentValue.FindFirst then
+        if not AnchorFieldDocumentValue.FindFirst() then
             Error(MissingSourceFieldValue, AnchorField.Code, TempDocumentLine."Line No.");
 
         // Select the field that should be linked with anchor field
-        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then
             if not LinkedField.Get(TempDocumentLine."Template No.", LinkedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
-        end;
+
         if LinkedField.Code = '' then begin
             Message(SelectTheOffsetField, AnchorField."Field Name");
             if not SelectField(LinkedField, TempDocumentLine."Template No.", AnchorField.Code, false) then
@@ -69,8 +69,8 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LinkedFieldDocumentValue.SetRange(Type, LinkedFieldDocumentValue.Type::Line);
         LinkedFieldDocumentValue.SetRange("Is Valid", true);
         LinkedFieldDocumentValue.SetRange("Template No.", TempDocumentLine."Template No.");
-        if not LinkedFieldDocumentValue.FindFirst then
-            Error(MissingFieldExampleValue, LinkedField."Field Name", LinkedField.Code);  //value is mandatory
+        if not LinkedFieldDocumentValue.FindFirst() then
+            Error(lblMissingFieldExampleValue, LinkedField."Field Name", LinkedField.Code);  //value is mandatory
 
         ResetField(LinkedField);
 
@@ -84,9 +84,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
 
         UpdateExecutionSequence(LinkedField, LinkedField."Linked Field");
 
-        if LinkedField.Modify(true) then begin
-            Message(FieldIsLinkedToSourceField, LinkedField."Field Name", AnchorField."Field Name");
-        end else
+        if LinkedField.Modify(true) then
+            Message(FieldIsLinkedToSourceField, LinkedField."Field Name", AnchorField."Field Name")
+        else
             Message(ErrorDuringFieldSetup);
     end;
 
@@ -101,9 +101,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         GetLineIdentifierValue(TempDocumentLine, LineIdentFieldDocumentValue);
 
         // Select field
-        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then
             if not SelectedField.Get(TempDocumentLine."Template No.", SelectedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
-        end;
+
         if SelectedField.Code = '' then begin
             Message(SelectFieldForColumnHeaderSearch);
             if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
@@ -114,7 +114,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
         TemplateFieldCaption.SetRange(Code, SelectedField.Code);
         TemplateFieldCaption.SetRange(Type, TemplateFieldCaption.Type::Line);
-        if not TemplateFieldCaption.FindFirst then
+        if not TemplateFieldCaption.FindFirst() then
             Error(TrainCaptionFirstForField, SelectedField.Code);
 
         // Find the value of the selected field
@@ -130,9 +130,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         else
             SelectedField."Field value position" := SelectedField."Field value position"::BelowStandardLine;
 
-        if SelectedField.Modify(true) then begin
-            Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", TemplateFieldCaption.Caption);
-        end else
+        if SelectedField.Modify(true) then
+            Message(FieldIsCapturedByColumnHeading, SelectedField."Field Name", TemplateFieldCaption.Caption)
+        else
             Message(ErrorDuringFieldSetup);
     end;
 
@@ -141,7 +141,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LineIdentFieldDocumentValue: Record "CDC Document Value";
         SelectedField: Record "CDC Template Field";
         SelectedFieldDocumentValue: Record "CDC Document Value";
+#pragma warning disable AA0237
         TemplateFieldCaption: Record "CDC Template Field Caption";
+#pragma warning restore AA0237
         DocumentPage: Record "CDC Document Page";
         CaptureEngine: Codeunit "CDC Capture Engine";
     begin
@@ -149,9 +151,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         GetLineIdentifierValue(TempDocumentLine, LineIdentFieldDocumentValue);
 
         // Select field
-        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then begin
+        if (ALRMgtSI.GetAutoFieldRecognition() AND (ALRMgtSI.GetLastCapturedField() <> '')) then
             if not SelectedField.Get(TempDocumentLine."Template No.", SelectedField.Type::Line, ALRMgtSI.GetLastCapturedField()) then;
-        end;
+
         if SelectedField.Code = '' then begin
             Message(SelectFieldForCaptionSearch);
             if not SelectField(SelectedField, TempDocumentLine."Template No.", '', false) then
@@ -162,7 +164,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         TemplateFieldCaption.SetRange("Template No.", SelectedField."Template No.");
         TemplateFieldCaption.SetRange(Code, SelectedField.Code);
         TemplateFieldCaption.SetRange(Type, TemplateFieldCaption.Type::Line);
-        if not TemplateFieldCaption.FindFirst then
+        if not TemplateFieldCaption.FindFirst() then
             Error(TrainCaptionFirstForField, SelectedField.Code);
 
         // Find the value of the selected field
@@ -249,7 +251,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
 
         TemplateFieldList.SetTableView(TemplateField);
         TemplateFieldList.LookupMode(true);
-        if TemplateFieldList.RunModal = ACTION::LookupOK then begin
+        if TemplateFieldList.RunModal() = ACTION::LookupOK then begin
             TemplateFieldList.GetRecord(TemplateField);
             exit(true);
         end;
@@ -265,7 +267,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         LineIdentField.SetRange(Type, LineIdentField.Type::Line);
         LineIdentField.SetRange(Required, true);
         LineIdentField.SetRange("Advanced Line Recognition Type", LineIdentField."Advanced Line Recognition Type"::Default);
-        if LineIdentField.FindSet then
+        if LineIdentField.FindSet() then
             repeat
                 //IF LineIdentFieldDocumentValue.GET(TempDocumentLine."Document No.",TRUE,LineIdentField.Code,1) THEN
                 if LineIdentFieldDocumentValue.Get(TempDocumentLine."Document No.", true, LineIdentField.Code, TempDocumentLine."Line No.") then
@@ -273,7 +275,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
                        (LineIdentFieldDocumentValue.Type = LineIdentFieldDocumentValue.Type::Line)
                     then
                         LineIdentFieldFound := true;
-            until (LineIdentField.Next = 0) or LineIdentFieldFound;
+            until (LineIdentField.Next() = 0) or LineIdentFieldFound;
 
         if not LineIdentFieldFound then
             Error(NoRequiredFieldFound);
@@ -289,13 +291,12 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         SelectedFieldDocumentValue.SetRange(Type, SelectedFieldDocumentValue.Type::Line);
         SelectedFieldDocumentValue.SetRange("Is Valid", true);
         SelectedFieldDocumentValue.SetRange("Template No.", TempDocumentLine."Template No.");
-        if not SelectedFieldDocumentValue.FindFirst then
-            Error(MissingFieldExampleValue, SelectedField."Field Name", SelectedField.Code);  //value is mandatory
+        if not SelectedFieldDocumentValue.FindFirst() then
+            Error(lblMissingFieldExampleValue, SelectedField."Field Name", SelectedField.Code);  //value is mandatory
     end;
 
     local procedure UpdateExecutionSequence(var LinkedField: Record "CDC Template Field"; PreviousFieldCode: Code[20])
     var
-        CurrField: Record "CDC Template Field";
         PrevField: Record "CDC Template Field";
         SortField: Record "CDC Template Field";
     begin
@@ -307,11 +308,11 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
             SortField.SetRange(Type, SortField.Type::Line);
             SortField.SetFilter(Code, '<>%1', LinkedField.Code);
             SortField.SetFilter(Sorting, '>=%1', LinkedField.Sorting + 1);
-            if SortField.FindSet then
+            if SortField.FindSet() then
                 repeat
                     SortField.Sorting := SortField.Sorting + 1;
-                    SortField.Modify;
-                until SortField.Next = 0;
+                    SortField.Modify();
+                until SortField.Next() = 0;
             LinkedField.Sorting := LinkedField.Sorting + 1;
         end;
     end;
@@ -320,12 +321,12 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     var
         VersionTriggers: Codeunit "Version Triggers";
         InstallMgt: Codeunit "ALR Install Management";
-        ApplicationVersion: Text;
-        ApplicationBuild: Text;
+        ApplicationVersion: Text[248];
+        ApplicationBuild: Text[80];
     begin
         VersionTriggers.GetApplicationVersion(ApplicationVersion);
         VersionTriggers.GetApplicationBuild(ApplicationBuild);
         Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '14', InstallMgt.GetDataVersion(), ApplicationVersion, ApplicationBuild));
     end;
 }
-
+#pragma warning restore
