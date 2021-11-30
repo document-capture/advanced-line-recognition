@@ -1,27 +1,26 @@
+#pragma warning disable AA0072
 codeunit 61001 "ALR Advanced Line Capture"
 {
     TableNo = "CDC Document";
 
     var
-        //Document: Record "CDC Document";
+#pragma warning disable AA0237
+        TempMandatoryField: Record "CDC Temp. Document Field" temporary;
+        CDCTemplate: Record "CDC Template";
         CaptureMgt: Codeunit "CDC Capture Management";
-        AdvLineRcognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
-        LineManagementSI: Codeunit "ALR Line Management SI";
-        DocumentComment: Record "CDC Document Comment";
-        MandatoryFieldBuffer: Record "CDC Temp. Document Field" temporary;
-        Template: Record "CDC Template";
-        UseBufferWordsEvent: Boolean;
-
+        LineManagementSI: Codeunit "ALR Single Instance Mgt.";
+        NoMandatoryFieldsFoundLbl: Label 'You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!', Comment = 'Show when the template does not have at least one line field marked as required. %1 = selected ALR option', MaxLength = 999, Locked = false;
+#pragma warning restore AA0237
     trigger OnRun()
     begin
         //Reset template to standard line capture as we can now use an event
-        if not Template.Get(Rec."Template No.") then
+        if not CDCTemplate.Get(Rec."Template No.") then
             exit;
 
-        Template."Codeunit ID: Line Capture" := 6085716;
-        Template.Modify(true);
+        CDCTemplate."Codeunit ID: Line Capture" := 6085716;
+        CDCTemplate.Modify(true);
 
-        Codeunit.Run(Template."Codeunit ID: Line Capture", Rec);
+        Codeunit.Run(CDCTemplate."Codeunit ID: Line Capture", Rec);
     end;
 
 
@@ -29,19 +28,16 @@ codeunit 61001 "ALR Advanced Line Capture"
     local procedure CDCCaptureEngine_OnBeforeRunLineCaptureCodeunit(Document: Record "CDC Document"; var Handled: Boolean)
     var
         TempDocLine: Record "CDC Temp. Document Line" temporary;
-        TemplateField: Record "CDC Template Field";
+        CDCTemplateField: Record "CDC Template Field";
         TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
-        ContiniaLicenseMgt: Codeunit "CDC Continia License Mgt.";
-        ObjType: Option TableData,"Table",Form,"Report",Dataport,"Codeunit","XMLport",MenuSuite,"Page",System,FieldNumber;
-        ObjectNumber2: Integer;
     begin
         CleanupPrevValues(Document);
-        if not Template.Get(Document."Template No.") then
+        if not CDCTemplate.Get(Document."Template No.") then
             exit;
 
         //RUN STANDARD LINE CAPTURING CODEUNIT
-        if (Template."Codeunit ID: Line Capture" <> 0) then
-            Codeunit.Run(Template."Codeunit ID: Line Capture", Document);
+        if (CDCTemplate."Codeunit ID: Line Capture" <> 0) then
+            Codeunit.Run(CDCTemplate."Codeunit ID: Line Capture", Document);
 
         OnAfterStandardLineRecognition(Document, Handled);
         if Handled then
@@ -50,27 +46,27 @@ codeunit 61001 "ALR Advanced Line Capture"
         //BUILD TEMPORARY LINE TABLE AND LOOP LINES
         Document.BuildTempLinesTable(TempDocLine);
 
-        if TempDocLine.FindSet then begin
-            FillSortedFieldBuffer(TempSortedDocumentField, MandatoryFieldBuffer, TempDocLine);
+        if TempDocLine.FindSet() then begin
+            FillSortedFieldBuffer(TempSortedDocumentField, TempMandatoryField, TempDocLine);
             repeat
                 TempSortedDocumentField.SetCurrentKey("Document No.", "Sort Order");
-                if TempSortedDocumentField.FindFirst then
+                if TempSortedDocumentField.FindSet() then
                     repeat
-                        TemplateField.Get(TempDocLine."Template No.", TemplateField.Type::Line, TempSortedDocumentField."Field Code");
-                        case TemplateField."Advanced Line Recognition Type" of
-                            TemplateField."Advanced Line Recognition Type"::LinkedToAnchorField:
-                                FindValueFromOffsetField(TempDocLine, TemplateField);
-                            TemplateField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition:
-                                FindValueByCaptionInPosition(TempDocLine, TemplateField, Document);
-                            TemplateField."Advanced Line Recognition Type"::FindFieldByColumnHeading:
-                                FindFieldByColumnHeading(TempDocLine, TemplateField, Document);
+                        CDCTemplateField.Get(TempDocLine."Template No.", CDCTemplateField.Type::Line, TempSortedDocumentField."Field Code");
+                        case CDCTemplateField."Advanced Line Recognition Type" of
+                            CDCTemplateField."Advanced Line Recognition Type"::LinkedToAnchorField:
+                                FindValueFromOffsetField(TempDocLine, CDCTemplateField);
+                            CDCTemplateField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition:
+                                FindValueByCaptionInPosition(TempDocLine, CDCTemplateField, Document);
+                            CDCTemplateField."Advanced Line Recognition Type"::FindFieldByColumnHeading:
+                                FindFieldByColumnHeading(TempDocLine, CDCTemplateField, Document);
                         end;
-                    until TempSortedDocumentField.Next = 0;
+                    until TempSortedDocumentField.Next() = 0;
 
-                FindSubstitutionFieldValue(TempDocLine);
+                FindReplacementFieldValue(TempDocLine);
 
                 GetValueFromPreviousValue(TempDocLine);
-            until TempDocLine.Next = 0;
+            until TempDocLine.Next() = 0;
             CleanupTempValues(Document);
         end;
 
@@ -91,7 +87,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         //This function will capture the field value based on the offset/distance of a source field value
 
         //Get Line Identification Field Position
-        if not OffsetSourceField.Get(TempDocLine."Template No.", OffsetSourceField.Type::Line, OffsetField."Anchor Field") then
+        if not OffsetSourceField.Get(TempDocLine."Template No.", OffsetSourceField.Type::Line, OffsetField."Linked Field") then
             exit;
 
         // Get current value record of offset source field
@@ -108,7 +104,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         CaptureMgt.CaptureFromPos(CurrPage, OffsetField, TempDocLine."Line No.", true, CurrTop, CurrLeft, CurrBottom, CurrRight, DocumentValue);
         if DocumentValue.Get(TempDocLine."Document No.", true, OffsetField.Code, TempDocLine."Line No.") then
             if ((DocumentValue."Value (Text)" = '') and (DocumentValue."Value (Decimal)" = 0)) or (not DocumentValue."Is Valid") then
-                DocumentValue.Delete;
+                DocumentValue.Delete();
 
     end;
 
@@ -117,7 +113,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         DocumentValue: Record "CDC Document Value";
         DocumentValueCopy: Record "CDC Document Value";
         CurrPage: Record "CDC Document Page";
-        NextPos: Integer;
         CaptureEngine: Codeunit "CDC Capture Engine";
         Word: Text[1024];
         FromTopPos: Integer;
@@ -126,66 +121,69 @@ codeunit 61001 "ALR Advanced Line Capture"
         ToBottomPage: Integer;
         i: Integer;
     begin
+        // We cannot proceed if there is no line field in the template defined as required=true
+        if TempMandatoryField.Count = 0 then
+            error(NoMandatoryFieldsFoundLbl, CurrField."Advanced Line Recognition Type");
+
         //This function will capture the field value based on the caption(s) in the area between the previous and next
         if not Document.Get(TempDocLine."Document No.") then
             exit;
 
         //Delete current value
         if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, TempDocLine."Line No.") then
-            DocumentValue.Delete;
+            DocumentValue.Delete();
 
         Clear(Word);
 
-        // Get Position of caption
-        if CurrField."Field Position" = CurrField."Field Position"::StandardLine then
+        // Get valid range depended of search direction
+        // 1. above the standard recognized line: range is between standard standard line and previous line
+        // 2. below the standard recognized line: range is between standard standard line and next line
+        if (CurrField."Field value position" = CurrField."Field value position"::AboveStandardLine) then
             GetRangeToPrevLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos)
         else
             GetRangeToNextLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
 
-        for i := FromTopPage to ToBottomPage do begin
-            CurrPage.Get(TempDocLine."Document No.", i);
+        if (FromTopPage > 0) and (ToBottomPage > 0) then   //there are some situations where the system couldn't find the range
+            for i := FromTopPage to ToBottomPage do begin
+                if not CurrPage.Get(TempDocLine."Document No.", i) then
+                    exit;
 
-            CurrField."Caption Offset X" := CurrField."ALR Value Caption Offset X";
-            CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
-            CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
+                CurrField."Caption Offset X" := CurrField."ALR Value Caption Offset X";
+                CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
+                CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
 
-            //UseBufferWordsEvent := TRUE;
-            if i < ToBottomPage then begin
-                LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, CurrPage."Bottom Word Pos.")
-            end else begin
-                if (i > FromTopPage) and (i < ToBottomPage) then begin
-                    LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, CurrPage."Bottom Word Pos.")
-                end else begin
-                    if FromTopPos > ToBottomPos then begin
-                        LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, ToBottomPos)
-                    end else begin
-                        LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, ToBottomPos);
-                    end;
-                end;
+                if i < ToBottomPage then
+                    LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, CurrPage."Bottom Word Pos.")
+                else
+                    if (i > FromTopPage) and (i < ToBottomPage) then
+                        LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, CurrPage."Bottom Word Pos.")
+                    else
+                        if FromTopPos > ToBottomPos then
+                            LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, ToBottomPos)
+                        else
+                            LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, ToBottomPos);
             end;
 
-            Word := CaptureEngine.CaptureField(Document, CurrPage."Page No.", CurrField, false);
+        Word := CaptureEngine.CaptureField(Document, CurrPage."Page No.", CurrField, false);
 
-            if Word <> '' then begin
-                if (DocumentValue.Get(Document."No.", true, CurrField.Code, 0)) then begin
-                    DocumentValueCopy := DocumentValue;
-                    DocumentValueCopy."Line No." := TempDocLine."Line No.";
-                    DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
-                    DocumentValueCopy.Insert;
-                    DocumentValue.Delete;
-                end;
-                CaptureMgt.UpdateFieldValue(Document."No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, Word, false, false);
-
-                exit(true);
+        if Word <> '' then begin
+            if (DocumentValue.Get(Document."No.", true, CurrField.Code, 0)) then begin
+                DocumentValueCopy := DocumentValue;
+                DocumentValueCopy."Line No." := TempDocLine."Line No.";
+                DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
+                DocumentValueCopy.Insert();
+                DocumentValue.Delete();
             end;
+            CaptureMgt.UpdateFieldValue(Document."No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, Word, false, false);
+
+            exit(true);
         end;
     end;
 
     local procedure FindFieldByColumnHeading(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document")
     var
-        Template: Record "CDC Template";
         DocumentValue: Record "CDC Document Value";
-        DocumentValueBuffer: Record "CDC Document Value" temporary;
+        TempDocumentValue: Record "CDC Document Value" temporary;
         DocumentValueNew: Record "CDC Document Value";
         CaptionStartWord: array[100] of Record "CDC Document Word";
         CaptionEndWord: array[100] of Record "CDC Document Word";
@@ -209,16 +207,20 @@ codeunit 61001 "ALR Advanced Line Capture"
         FieldWidth: Integer;
         LastFoundLineNo: Integer;
     begin
+        // We cannot proceed if there is no line field in the template defined as required=true
+        if TempMandatoryField.Count = 0 then
+            error(NoMandatoryFieldsFoundLbl, CurrField."Advanced Line Recognition Type");
+
         //This function will capture the field value based on a column heading, actualy like the default line recognition but filtered on the area between the prev. and next line
         if not Document.Get(TempDocLine."Document No.") then
             exit;
 
-        if not Template.Get(TempDocLine."Template No.") then
+        if not CDCTemplate.Get(TempDocLine."Template No.") then
             exit;
 
         // Delete old values
         if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, TempDocLine."Line No.") then
-            DocumentValue.Delete;
+            DocumentValue.Delete();
 
         // Find the Caption position on current or previous pages
         CaptionPageNo := TempDocLine."Page No.";
@@ -231,11 +233,13 @@ codeunit 61001 "ALR Advanced Line Capture"
         if (not CaptionFound) then
             exit;
 
-        CaptionPage.Get(TempDocLine."Document No.", CaptionPageNo);
+        if not CaptionPage.Get(TempDocLine."Document No.", CaptionPageNo) then
+            exit;
+
         GetPositionOfCaption(CaptionPage, CurrField, CaptionStartWord[1], CaptionEndWord[1], CaptionValue, FieldLeft, FieldWidth, Bottom, Top);
 
         // Get position of next or previous line
-        if CurrField."Field Position" = CurrField."Field Position"::StandardLine then begin
+        if (CurrField."Field value position" = CurrField."Field value position"::AboveStandardLine) then begin
             GetRangeToPrevLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
             if FromTopPos > Top then
                 Top := FromTopPos;
@@ -252,28 +256,31 @@ codeunit 61001 "ALR Advanced Line Capture"
         Bottom := Top + LineHeight;
 
         PageStop := false;
-        CurrPage.Get(TempDocLine."Document No.", FromTopPage);
+        if not CurrPage.Get(TempDocLine."Document No.", FromTopPage) then
+            exit;
         repeat
             LineNo += 1;
             Right := FieldLeft + FieldWidth;
-            NewBottom := CaptureTableCell(Template, Document, CurrPage, CurrField, LineNo, Top, FieldLeft, Bottom, Right);
+            NewBottom := CaptureTableCell(CDCTemplate, CurrPage, CurrField, LineNo, Top, FieldLeft, Bottom, Right);
             if NewBottom > 0 then begin
                 if NewBottom > Bottom then
                     Bottom := NewBottom;
 
                 if not IsFieldValid(CurrField, Document, LineNo) then begin
-                    DocumentValue.Reset;
+                    DocumentValue.Reset();
+                    ;
                     DocumentValue.SetRange("Document No.", Document."No.");
                     DocumentValue.SetRange("Line No.", LineNo);
                     DocumentValue.DeleteAll(true);
                 end else begin
-                    //PageStop := TRUE;
+
                     LastFoundLineNo := LineNo;
-                    PageStop := CurrField."Field Position" = CurrField."Field Position"::StandardLine;
+                    // Stop search, when search direction is upwards from standard line
+                    PageStop := (CurrField."Field value search direction" = CurrField."Field value search direction"::Downwards);
                     if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, LastFoundLineNo) then begin
-                        DocumentValueBuffer := DocumentValue;
-                        DocumentValueBuffer.Insert;
-                        DocumentValue.Delete;
+                        TempDocumentValue := DocumentValue;
+                        TempDocumentValue.Insert();
+                        DocumentValue.Delete();
                     end;
                 end;
             end;
@@ -289,9 +296,8 @@ codeunit 61001 "ALR Advanced Line Capture"
                     LineNo := 1000 * CurrPage."Page No.";
                     if GetStartAndEndCaption(CaptionStartWord, CaptionEndWord, CurrField, TempDocLine."Document No.", CaptionPageNo) then begin
                         CaptionPage.Get(TempDocLine."Document No.", CurrPage."Page No.");
-                        if GetPositionOfCaption(CaptionPage, CurrField, CaptionStartWord[1], CaptionEndWord[1], CaptionValue, FieldLeft, FieldWidth, Bottom, Top) then begin
+                        if GetPositionOfCaption(CaptionPage, CurrField, CaptionStartWord[1], CaptionEndWord[1], CaptionValue, FieldLeft, FieldWidth, Bottom, Top) then
                             Bottom := Top + LineHeight;
-                        end;
 
                     end;
                 end else
@@ -301,58 +307,72 @@ codeunit 61001 "ALR Advanced Line Capture"
         until PageStop;
 
         //Zeilennr. speichern
-        if DocumentValueBuffer.Get(TempDocLine."Document No.", true, CurrField.Code, LastFoundLineNo) then begin
-            DocumentValueNew := DocumentValueBuffer;
+        if TempDocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, LastFoundLineNo) then begin
+            DocumentValueNew := TempDocumentValue;
             DocumentValueNew."Line No." := TempDocLine."Line No.";
-            DocumentValueNew.Insert;
-            DocumentValueBuffer.Delete;
+            DocumentValueNew.Insert();
+            TempDocumentValue.Delete();
             CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, DocumentValueNew."Value (Text)", false, false);
         end;
     end;
 
-    local procedure FindSubstitutionFieldValue(var TempDocLine: Record "CDC Temp. Document Line" temporary)
+    local procedure FindReplacementFieldValue(var TempDocLine: Record "CDC Temp. Document Line" temporary)
     var
-        TemplateField: Record "CDC Template Field";
+        CDCTemplateField: Record "CDC Template Field";
         DocumentValue: Record "CDC Document Value";
         SubstitutionDocumentValue: Record "CDC Document Value";
         SubstitutionField: Record "CDC Template Field";
+        TempLineNo: Integer;
     begin
         // Function goes through all field, setted up with substitution fields.
         // It checks if the value of the current field is empty and updates the value with the value of the substitution field (if exists).
-        TemplateField.SetRange("Template No.", TempDocLine."Template No.");
-        TemplateField.SetFilter("Substitution Field", '<>%1', '');
-        if TemplateField.FindSet then
-            repeat
-                if not DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No.") then
-                    if SubstitutionField.Get(TempDocLine."Template No.", SubstitutionField.Type::Line, TemplateField."Substitution Field") then
-                        if SubstitutionDocumentValue.Get(TempDocLine."Document No.", true, SubstitutionField.Code, TempDocLine."Line No.") then begin
-                            CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", TemplateField, SubstitutionDocumentValue."Value (Text)", false, false);
-                            if DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No.") then begin
-                                DocumentValue.Top := SubstitutionDocumentValue.Top;
-                                DocumentValue.Bottom := SubstitutionDocumentValue.Bottom;
-                                DocumentValue.Left := SubstitutionDocumentValue.Left;
-                                DocumentValue.Right := SubstitutionDocumentValue.Right;
-                                DocumentValue.Modify;
-                            end;
+        CDCTemplateField.SetRange("Template No.", TempDocLine."Template No.");
+        CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
+#pragma warning disable AA0210
+        CDCTemplateField.SetFilter("Replacement Field", '<>%1', '');
+#pragma warning restore AA0210
+        if CDCTemplateField.IsEmpty then
+            exit;
+
+        CDCTemplateField.FindSet();
+        repeat
+            if not DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No.") then
+                if SubstitutionField.Get(TempDocLine."Template No.", CDCTemplateField."Replacement Field Type", CDCTemplateField."Replacement Field") then begin
+                    // Header fields have line no = 0
+                    if CDCTemplateField."Replacement Field Type" = CDCTemplateField."Replacement Field Type"::Header then
+                        TempLineNo := 0
+                    else
+                        TempLineNo := TempDocLine."Line No.";
+
+                    if SubstitutionDocumentValue.Get(TempDocLine."Document No.", true, SubstitutionField.Code, TempLineNo) then begin
+                        CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CDCTemplateField, SubstitutionDocumentValue."Value (Text)", false, false);
+                        if DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No.") then begin
+                            DocumentValue.Top := SubstitutionDocumentValue.Top;
+                            DocumentValue.Bottom := SubstitutionDocumentValue.Bottom;
+                            DocumentValue.Left := SubstitutionDocumentValue.Left;
+                            DocumentValue.Right := SubstitutionDocumentValue.Right;
+                            DocumentValue.Modify();
                         end;
-            until TemplateField.Next = 0;
+                    end;
+                end;
+        until CDCTemplateField.Next() = 0;
     end;
 
     local procedure GetValueFromPreviousValue(var TempDocLine: Record "CDC Temp. Document Line" temporary)
     var
-        TemplateField: Record "CDC Template Field";
+        CDCTemplateField: Record "CDC Template Field";
         DocumentValue: Record "CDC Document Value";
     begin
         // Function goes through all field, setted up with substitution fields.
         // It checks if the value of the current field is empty and updates the value with the value of the substitution field (if exists).
-        TemplateField.SetRange("Template No.", TempDocLine."Template No.");
-        TemplateField.SetRange("Get Value from Previous Value", true);
-        if TemplateField.FindSet then
+        CDCTemplateField.SetRange("Template No.", TempDocLine."Template No.");
+        CDCTemplateField.SetRange("Copy Value from Previous Value", true);
+        if CDCTemplateField.FindSet() then
             repeat
-                if not DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No.") then
-                    if DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No." - 1) then
-                        CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", TemplateField, DocumentValue."Value (Text)", false, false);
-            until TemplateField.Next = 0;
+                if not DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No.") then
+                    if DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No." - 1) then
+                        CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CDCTemplateField, DocumentValue."Value (Text)", false, false);
+            until CDCTemplateField.Next() = 0;
     end;
 
     local procedure GetRangeToNextLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
@@ -376,19 +396,19 @@ codeunit 61001 "ALR Advanced Line Capture"
         GetCurrLinePosition(DocumentValue, TempDocLine."Line No.", SearchFromPage, SearchFromPos, SearchToPage, SearchToPos);
         // Filter for next line
         DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." + 1);
-        if DocumentValue.FindSet then begin
+        if DocumentValue.FindSet() then
             repeat
                 if (SearchToPage < DocumentValue."Page No.") or (SearchToPage = 0) then begin
                     SearchToPage := DocumentValue."Page No.";
                     SearchToPos := 0;
                 end;
 
-                if SearchToPage = DocumentValue."Page No." then begin
+                if SearchToPage = DocumentValue."Page No." then
                     if (SearchToPos < DocumentValue.Bottom) or (SearchToPos = 0) then
                         SearchToPos := DocumentValue.Bottom;
-                end;
-            until DocumentValue.Next = 0;
-        end else begin
+
+            until DocumentValue.Next() = 0
+        else begin
             // As there is no next line, calculate to next header value or bottom of current page
             DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
             DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
@@ -398,35 +418,34 @@ codeunit 61001 "ALR Advanced Line Capture"
             DocumentValue.SetFilter(DocumentValue.Top, '>%1', SearchToPos);
             DocumentValue.SetRange(DocumentValue."Line No.", 0);
             if DocumentValue.FindSet(false, false) then begin
-                if DocumentValue."Page No." > SearchToPage then begin
+                if DocumentValue."Page No." > SearchToPage then
                     SearchToPage := DocumentValue."Page No.";
-                end;
+
                 SearchToPos := DocumentValue.Top
             end else begin
                 DocumentValue.SetFilter(DocumentValue."Page No.", '>%1', SearchToPage);
                 DocumentValue.SetRange(DocumentValue.Top);
-                if DocumentValue.FindSet(false, false) then begin
-                    if DocumentValue."Page No." > SearchToPage then begin
+                if DocumentValue.FindFirst() then begin
+                    if DocumentValue."Page No." > SearchToPage then
                         SearchToPage := DocumentValue."Page No.";
-                    end;
+
                     SearchToPos := DocumentValue.Top
                 end else begin
                     CurrPage.Get(Document."No.", SearchToPage);
                     SearchToPos := CurrPage."Bottom Word Pos.";
                 end;
             end;
+
+
+            GetStopLineRecognitionPositions(StopPos, SearchToPage, Document);
+            if (StopPos[SearchToPage] > 0) and (StopPos[SearchToPage] <= SearchToPos) then
+                SearchToPos := StopPos[SearchToPage];
         end;
-
-
-        GetStopLineRecognitionPositions(StopPos, SearchToPage, SearchToPos, Document);
-        if (StopPos[SearchToPage] > 0) and (StopPos[SearchToPage] <= SearchToPos) then
-            SearchToPos := StopPos[SearchToPage];
     end;
 
     local procedure GetRangeToPrevLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var RangeTopPage: Integer; var RangeTopPos: Integer; var RangeBottomPage: Integer; var RangeBottomPos: Integer)
     var
         DocumentValue: Record "CDC Document Value";
-        CurrPage: Record "CDC Document Page";
         CurrLineTopPage: Integer;
         CurrLineTopPos: Integer;
         CurrLineBottomPage: Integer;
@@ -451,7 +470,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         GetCurrLinePosition(DocumentValue, TempDocLine."Line No.", CurrLineTopPage, CurrLineTopPos, CurrLineBottomPage, CurrLineBottomPos);
         // Filter for Prev line
         DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." - 1);
-        if DocumentValue.FindSet then begin
+        if DocumentValue.FindSet() then
             repeat
                 if (DocumentValue."Page No." < PrevLineTopPage) or (PrevLineTopPage = 0) then begin
                     PrevLineTopPage := DocumentValue."Page No.";
@@ -470,8 +489,8 @@ codeunit 61001 "ALR Advanced Line Capture"
                 if PrevLineBottomPage = DocumentValue."Page No." then
                     if (DocumentValue.Bottom > PrevLineBottomPos) or (PrevLineBottomPos = 0) then
                         PrevLineBottomPos := DocumentValue.Bottom;
-            until DocumentValue.Next = 0;
-        end else begin
+            until DocumentValue.Next() = 0
+        else begin
             // As there is no Prev line, calculate to Prev header value or bottom of current page
             DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
             DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
@@ -479,7 +498,7 @@ codeunit 61001 "ALR Advanced Line Capture"
             DocumentValue.SetRange(DocumentValue.Type, DocumentValue.Type::Header);
             DocumentValue.SetFilter(DocumentValue."Page No.", '<=%1', DocumentValue."Page No.");
             DocumentValue.SetFilter(DocumentValue.Top, '<%1', CurrLineTopPos);
-            if DocumentValue.FindSet(false, false) then begin
+            if DocumentValue.FindFirst() then begin
                 PrevLineBottomPos := DocumentValue.Bottom;
                 PrevLineBottomPage := DocumentValue."Page No.";
             end else begin
@@ -500,9 +519,9 @@ codeunit 61001 "ALR Advanced Line Capture"
     begin
         // Filter for current line
         DocumentValue.SetRange(DocumentValue."Line No.", LineNo);
-        if DocumentValue.FindSet then
+        if DocumentValue.FindSet() then
             repeat
-                if MandatoryFieldBuffer.Get(DocumentValue.GetFilter("Document No."), DocumentValue.Code) then begin
+                if TempMandatoryField.Get(DocumentValue.GetFilter("Document No."), DocumentValue.Code) then begin
                     if (DocumentValue."Page No." < CurrLineTopPage) or (CurrLineTopPage = 0) then begin
                         CurrLineTopPage := DocumentValue."Page No.";
                         Clear(CurrLineTopPos);
@@ -521,75 +540,73 @@ codeunit 61001 "ALR Advanced Line Capture"
                         if (DocumentValue.Bottom > CurrLineBottomPos) or (CurrLineBottomPos = 0) then
                             CurrLineBottomPos := DocumentValue.Bottom;
                 end;
-            until DocumentValue.Next = 0;
+            until DocumentValue.Next() = 0;
 
     end;
 
-    local procedure GetLinePositions(DocumentNo: Code[20]; LineNo: Integer; var CurrLineTopPage: Integer; var CurrLineTopPos: Integer; var CurrLineBottomPage: Integer; var CurrLineBottomPos: Integer; IsValue: Boolean)
-    var
-        DocumentValue: Record "CDC Document Value";
-    begin
-        //Find next lines top position
-        DocumentValue.SetCurrentKey("Document No.", "Is Value", Code, "Line No.");
-        DocumentValue.SetRange("Document No.", DocumentNo);
-        DocumentValue.SetRange("Is Value", IsValue);
-        DocumentValue.SetRange(Type, DocumentValue.Type::Line);
-        if not IsValue then begin
-            DocumentValue.SetRange("Line No.", 0);
-            DocumentValue.SetRange("Page No.", 1);
-        end else
-            DocumentValue.SetRange("Line No.", LineNo);
+    // local procedure GetLinePositions(DocumentNo: Code[20]; LineNo: Integer; var CurrLineTopPage: Integer; var CurrLineTopPos: Integer; var CurrLineBottomPage: Integer; var CurrLineBottomPos: Integer; IsValue: Boolean)
+    // var
+    //     DocumentValue: Record "CDC Document Value";
+    // begin
+    //     //Find next lines top position
+    //     DocumentValue.SetCurrentKey("Document No.", "Is Value", Code, "Line No.");
+    //     DocumentValue.SetRange("Document No.", DocumentNo);
+    //     DocumentValue.SetRange("Is Value", IsValue);
+    //     DocumentValue.SetRange(Type, DocumentValue.Type::Line);
+    //     if not IsValue then begin
+    //         DocumentValue.SetRange("Line No.", 0);
+    //         DocumentValue.SetRange("Page No.", 1);
+    //     end else
+    //         DocumentValue.SetRange("Line No.", LineNo);
 
-        DocumentValue.SetFilter(Top, '>0');
+    //     DocumentValue.SetFilter(Top, '>0');
 
-        // Identify current lines outer positions
-        if DocumentValue.FindSet then
-            repeat
-                if (CurrLineTopPage > DocumentValue."Page No.") or (CurrLineTopPage = 0) then
-                    CurrLineTopPage := DocumentValue."Page No.";
-                Clear(CurrLineTopPos);
+    //     // Identify current lines outer positions
+    //     if DocumentValue.FindSet() then
+    //         repeat
+    //             if (CurrLineTopPage > DocumentValue."Page No.") or (CurrLineTopPage = 0) then
+    //                 CurrLineTopPage := DocumentValue."Page No.";
+    //             Clear(CurrLineTopPos);
 
-                if (CurrLineBottomPage < DocumentValue."Page No.") or (CurrLineBottomPage = 0) then begin
-                    CurrLineBottomPage := DocumentValue."Page No.";
-                    Clear(CurrLineBottomPos);
-                end;
+    //             if (CurrLineBottomPage < DocumentValue."Page No.") or (CurrLineBottomPage = 0) then begin
+    //                 CurrLineBottomPage := DocumentValue."Page No.";
+    //                 Clear(CurrLineBottomPos);
+    //             end;
 
-                if CurrLineTopPage = DocumentValue."Page No." then
-                    if (CurrLineTopPos > DocumentValue.Top) or (CurrLineTopPos = 0) then
-                        CurrLineTopPos := DocumentValue.Top;
+    //             if CurrLineTopPage = DocumentValue."Page No." then
+    //                 if (CurrLineTopPos > DocumentValue.Top) or (CurrLineTopPos = 0) then
+    //                     CurrLineTopPos := DocumentValue.Top;
 
-                if CurrLineBottomPage = DocumentValue."Page No." then
-                    if (CurrLineBottomPos < DocumentValue.Bottom) or (CurrLineBottomPos = 0) then
-                        CurrLineBottomPos := DocumentValue.Bottom;
-            //END;
-            until DocumentValue.Next = 0;
-    end;
+    //             if CurrLineBottomPage = DocumentValue."Page No." then
+    //                 if (CurrLineBottomPos < DocumentValue.Bottom) or (CurrLineBottomPos = 0) then
+    //                     CurrLineBottomPos := DocumentValue.Bottom;
+    //         //END;
+    //         until DocumentValue.Next() = 0;
+    // end;
 
     local procedure GetStartAndEndCaption(var CaptionStartWord: array[100] of Record "CDC Document Word" temporary; var CaptionEndWord: array[100] of Record "CDC Document Word" temporary; "Field": Record "CDC Template Field"; DocNo: Code[20]; PageNo: Integer): Boolean
     var
-        TemplateFieldCaption: Record "CDC Template Field Caption";
+        CDCTemplateFieldCaption: Record "CDC Template Field Caption";
         CaptureEngine: Codeunit "CDC Capture Engine";
-        PrevCaptionStartWord: Record "CDC Document Word";
     begin
         Clear(CaptionStartWord);
         Clear(CaptionEndWord);
 
-        TemplateFieldCaption.SetRange("Template No.", Field."Template No.");
-        TemplateFieldCaption.SetRange(Type, Field.Type);
-        TemplateFieldCaption.SetRange(Code, Field.Code);
-        if TemplateFieldCaption.FindSet then
+        CDCTemplateFieldCaption.SetRange("Template No.", Field."Template No.");
+        CDCTemplateFieldCaption.SetRange(Type, Field.Type);
+        CDCTemplateFieldCaption.SetRange(Code, Field.Code);
+        if CDCTemplateFieldCaption.FindSet() then
             repeat
-                if CaptureEngine.FindCaption(DocNo, PageNo, Field, TemplateFieldCaption, CaptionStartWord, CaptionEndWord) then
+                if CaptureEngine.FindCaption(DocNo, PageNo, Field, CDCTemplateFieldCaption, CaptionStartWord, CaptionEndWord) then
                     exit(true);
-            until (TemplateFieldCaption.Next = 0) or ((CaptionStartWord[1].Word <> '') and (CaptionEndWord[1].Word <> ''));
+            until (CDCTemplateFieldCaption.Next() = 0) or ((CaptionStartWord[1].Word <> '') and (CaptionEndWord[1].Word <> ''));
     end;
 
     local procedure GetPositionOfCaption(CurrPage: Record "CDC Document Page"; CaptionTemplateField: Record "CDC Template Field"; CaptionStartWord: Record "CDC Document Word"; CaptionEndWord: Record "CDC Document Word"; DocumentValue: Record "CDC Document Value"; var FieldLeft: Integer; var FieldWidth: Integer; var Bottom: Integer; var Top: Integer) CaptionValueFound: Boolean
     var
-        Template: Record "CDC Template";
         CaptureEngine: Codeunit "CDC Capture Engine";
     begin
-        Template.Get(CaptionTemplateField."Template No.");
+        CDCTemplate.Get(CaptionTemplateField."Template No.");
 
         //Hole Positionen der caption
         CaptionValueFound := CaptureMgt.CaptureFromPos(CurrPage, CaptionTemplateField, 0, false, CaptionStartWord.Top, CaptionStartWord.Left,
@@ -599,7 +616,7 @@ codeunit 61001 "ALR Advanced Line Capture"
             FieldLeft := CaptionStartWord.Left +
             Round(CaptionTemplateField."Caption Offset X" * CaptureEngine.GetDPIFactor(CaptionTemplateField."Offset DPI", CurrPage."TIFF Image Resolution"), 1);
 
-            if not Template."First Table Line Has Captions" then
+            if not CDCTemplate."First Table Line Has Captions" then
                 Bottom := CaptionStartWord.Top
             else
                 if CaptionStartWord.Bottom > Bottom then
@@ -612,7 +629,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         end;
     end;
 
-    local procedure CaptureTableCell(var Template: Record "CDC Template"; var Document: Record "CDC Document"; var "Page": Record "CDC Document Page"; var "Field": Record "CDC Template Field"; LineNo: Integer; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer): Integer
+    local procedure CaptureTableCell(var CDCTemplate: Record "CDC Template"; var "Page": Record "CDC Document Page"; var "Field": Record "CDC Template Field"; LineNo: Integer; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer): Integer
     var
         Value: Record "CDC Document Value";
     begin
@@ -622,19 +639,19 @@ codeunit 61001 "ALR Advanced Line Capture"
         CaptureMgt.CaptureFromPos(Page, Field, LineNo, true, Top, Left, Bottom, Right, Value);
         Value.Find('=');
 
-        if (Value.IsBlank) or TableCellAlreadyCaptured(Template, Page, Value) then
-            Value.Delete
+        if (Value.IsBlank()) or TableCellAlreadyCaptured(CDCTemplate, Page, Value) then
+            Value.Delete()
         else
             exit(Value.Bottom);
     end;
 
-    local procedure TableCellAlreadyCaptured(var Template: Record "CDC Template"; var "Page": Record "CDC Document Page"; var Value: Record "CDC Document Value"): Boolean
+    local procedure TableCellAlreadyCaptured(var CDCTemplate: Record "CDC Template"; var "Page": Record "CDC Document Page"; var Value: Record "CDC Document Value"): Boolean
     var
         Value2: Record "CDC Document Value";
         CaptureEngine: Codeunit "CDC Capture Engine";
     begin
         Value2.SetCurrentKey("Document No.", "Is Value", Type, "Page No.");
-        if not Template."First Table Line Has Captions" then
+        if not CDCTemplate."First Table Line Has Captions" then
             Value2.SetRange("Is Value", true);
         Value2.SetRange("Document No.", Page."Document No.");
         Value2.SetRange(Type, Value2.Type::Line);
@@ -648,7 +665,7 @@ codeunit 61001 "ALR Advanced Line Capture"
                 if (not ((Value2.Code = Value.Code) and (Value2."Line No." = Value."Line No."))) then
                     if CaptureEngine.IntersectsWith(Value, Value2) then
                         exit(true);
-            until Value2.Next = 0;
+            until Value2.Next() = 0;
     end;
 
     local procedure IsFieldValid(var CaptionField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean
@@ -658,21 +675,15 @@ codeunit 61001 "ALR Advanced Line Capture"
     begin
         case CaptionField."Data Type" of
             Field."Data Type"::Number:
-                begin
-                    if (not CaptionField.Required) then begin
-                        if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then begin
-                            if not Value."Is Valid" then begin
-                                exit;
-                            end else begin
-                                exit(CaptureMgt.ParseNumber(Field, Value."Value (Text)", Value."Value (Decimal)"));
-                            end;
-                        end;
-                    end;
-                end;
+                if (not CaptionField.Required) then
+                    if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
+                        if not Value."Is Valid" then
+                            exit
+                        else
+                            exit(CaptureMgt.ParseNumber(Field, Value."Value (Text)", Value."Value (Decimal)"));
             Field."Data Type"::Text:
-                if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then begin
+                if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
                     exit(IsValidText(CaptionField, Value."Value (Text)", Document."No."));
-                end;
             Field."Data Type"::Date:
                 if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
                     exit(IsValidDate(CaptionField, Value."Value (Date)"));
@@ -685,43 +696,44 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure FillSortedFieldBuffer(var TempSortedDocumentField: Record "CDC Temp. Document Field"; var MandatoryField: Record "CDC Temp. Document Field"; TempDocLine: Record "CDC Temp. Document Line" temporary)
     var
-        TemplateField: Record "CDC Template Field";
+        CDCTemplateField: Record "CDC Template Field";
     begin
-        TemplateField.SetRange(TemplateField."Template No.", TempDocLine."Template No.");
-        TemplateField.SetRange(TemplateField.Type, TemplateField.Type::Line);
-        if TemplateField.FindSet then
+        CDCTemplateField.SetRange(CDCTemplateField."Template No.", TempDocLine."Template No.");
+        CDCTemplateField.SetRange(CDCTemplateField.Type, CDCTemplateField.Type::Line);
+        if CDCTemplateField.FindSet() then
             repeat
-                if (TemplateField."Advanced Line Recognition Type" <> TemplateField."Advanced Line Recognition Type"::Default) and
-                   (StrLen(TemplateField.Formula) = 0) and (StrLen(TemplateField.GetFixedValue) = 0) then begin
+                if (CDCTemplateField."Advanced Line Recognition Type" <> CDCTemplateField."Advanced Line Recognition Type"::Default) and
+                   (StrLen(CDCTemplateField.Formula) = 0) and (StrLen(CDCTemplateField.GetFixedValue()) = 0) then begin
                     TempSortedDocumentField."Document No." := TempDocLine."Document No.";
-                    TempSortedDocumentField."Sort Order" := TemplateField.Sorting;
-                    TempSortedDocumentField."Field Code" := TemplateField.Code;
-                    TempSortedDocumentField.Insert;
-                end else begin
-                    if TemplateField.Required then begin
+                    TempSortedDocumentField."Sort Order" := CDCTemplateField.Sorting;
+                    TempSortedDocumentField."Field Code" := CDCTemplateField.Code;
+                    TempSortedDocumentField.Insert();
+                end else
+                    if CDCTemplateField.Required then begin
                         MandatoryField."Document No." := TempDocLine."Document No.";
-                        MandatoryField."Sort Order" := TemplateField.Sorting;
-                        MandatoryField."Field Code" := TemplateField.Code;
-                        MandatoryField.Insert;
+                        MandatoryField."Sort Order" := CDCTemplateField.Sorting;
+                        MandatoryField."Field Code" := CDCTemplateField.Code;
+                        MandatoryField.Insert();
                     end;
-                end;
-            until TemplateField.Next = 0;
+            until CDCTemplateField.Next() = 0;
 
     end;
 
-    local procedure GetStopLineRecognitionPositions(var StopPos: array[100] of Integer; CurrPageNo: Integer; Bottom: Integer; Document: Record "CDC Document")
+    local procedure GetStopLineRecognitionPositions(var StopPos: array[100] of Integer; CurrPageNo: Integer; Document: Record "CDC Document")
     var
         "Field": Record "CDC Template Field";
         Value: Record "CDC Document Value";
     begin
-        Field.Reset;
+        Field.Reset();
+        ;
         Field.SetCurrentKey("Template No.", Type, "Sort Order");
         Field.SetRange("Template No.", Document."Template No.");
         Field.SetRange(Type, Field.Type::Header);
         Field.SetFilter("Stop Lines Recognition", '>%1', Field."Stop Lines Recognition"::" ");
-        if Field.FindSet then
+        if Field.Find() then
             repeat
-                Value.Reset;
+                Value.Reset();
+                ;
                 Value.SetRange("Document No.", Document."No.");
                 Value.SetRange(Type, Field.Type);
                 Value.SetRange(Code, Field.Code);
@@ -740,12 +752,11 @@ codeunit 61001 "ALR Advanced Line Capture"
                 end;
 
                 Value.SetFilter(Top, '>%1', 0);
-                if Value.FindFirst then begin
+                if Value.FindFirst() then
                     if (StopPos[Value."Page No."] = 0) or (StopPos[Value."Page No."] > Value.Top) then
                         if (not (Value.Left = Value.Right) and (Value.Bottom = Value.Top)) then
                             StopPos[Value."Page No."] := Value.Top;
-                end;
-            until Field.Next = 0;
+            until Field.Next() = 0;
     end;
 
     local procedure CleanupPrevValues(Document: Record "CDC Document")
@@ -754,7 +765,8 @@ codeunit 61001 "ALR Advanced Line Capture"
     begin
         DocumentValue.SetRange("Document No.", Document."No.");
         DocumentValue.SetRange(Type, DocumentValue.Type::Line);
-        DocumentValue.DeleteAll;
+        DocumentValue.DeleteAll();
+        ;
     end;
 
     local procedure CleanupTempValues(Document: Record "CDC Document")
@@ -765,41 +777,41 @@ codeunit 61001 "ALR Advanced Line Capture"
         DocumentValue.SetRange("Document No.", Document."No.");
         DocumentValue.SetRange(Type, DocumentValue.Type::Line);
         DocumentValue.SetFilter("Line No.", '1000..');
-        DocumentValue.DeleteAll;
+        DocumentValue.DeleteAll();
+        ;
     end;
 
-    local procedure "--CopiesFromCaptureManagement--"()
-    begin
-        // The following functions are a copy of the same functions in the Capture Management Codeunit, where they are defined as "local"
-    end;
+    // The following functions are a copy of the same functions in the Capture Management Codeunit, where they are defined as "local"
 
-    local procedure IsValidNumber(var "Field": Record "CDC Template Field"; Number: Decimal): Boolean
-    var
-        FieldRule: Record "CDC Template Field Rule";
-        TempTemplateField: Record "CDC Template Field" temporary;
-    begin
-        if Field."Codeunit ID: Capture Value" <> 0 then
-            exit(TestCaptureValue(Field, FieldRule, Format(Number)));
 
-        if (Number = 0) and Field.Required then
-            exit(false);
 
-        CaptureMgt.FilterRule(Field, FieldRule);
+    // local procedure IsValidNumber(var "Field": Record "CDC Template Field"; Number: Decimal): Boolean
+    // var
+    //     FieldRule: Record "CDC Template Field Rule";
+    //     TempTemplateField: Record "CDC Template Field" temporary;
+    // begin
+    //     if Field."Codeunit ID: Capture Value" <> 0 then
+    //         exit(TestCaptureValue(Field, FieldRule, Format(Number)));
 
-        TempTemplateField."Fixed Value (Decimal)" := Number;
-        TempTemplateField.Insert;
+    //     if (Number = 0) and Field.Required then
+    //         exit(false);
 
-        if FieldRule.FindSet then
-            repeat
-                if FieldRule.Rule <> '' then begin
-                    TempTemplateField.SetFilter("Fixed Value (Decimal)", FieldRule.Rule);
-                    if TempTemplateField.IsEmpty then
-                        exit(false);
-                end;
-            until FieldRule.Next = 0;
+    //     CaptureMgt.FilterRule(Field, FieldRule);
 
-        exit(true);
-    end;
+    //     TempTemplateField."Fixed Value (Decimal)" := Number;
+    //     TempTemplateField.Insert;
+
+    //     if FieldRule.FindSet() then
+    //         repeat
+    //             if FieldRule.Rule <> '' then begin
+    //                 TempTemplateField.SetFilter("Fixed Value (Decimal)", FieldRule.Rule);
+    //                 if TempTemplateField.IsEmpty then
+    //                     exit(false);
+    //             end;
+    //         until FieldRule.Next() = 0;
+
+    //     exit(true);
+    // end;
 
     local procedure IsValidDate(var "Field": Record "CDC Template Field"; Date: Date): Boolean
     var
@@ -839,14 +851,14 @@ codeunit 61001 "ALR Advanced Line Capture"
                 exit(true);
 
         CaptureMgt.FilterRule(Field, FieldRule);
-        if not FieldRule.FindFirst then
+        if not FieldRule.FindFirst() then
             exit((Text <> '') or (not Field.Required));
 
         if Text = '' then
             exit(not Field.Required);
 
         TempValue."Value (Text)" := Text;
-        TempValue.Insert;
+        TempValue.Insert();
 
         repeat
             FieldRule.Rule := UpperCase(FieldRule.Rule);
@@ -859,28 +871,25 @@ codeunit 61001 "ALR Advanced Line Capture"
                 TempValue.SetFilter("Value (Text)", FieldRule.Rule);
                 IsValid := not TempValue.IsEmpty;
             end else begin
-                if RegEx.IsMatch(Text, FieldRule.Rule) then begin
+                if RegEx.IsMatch(Text, FieldRule.Rule) then
                     if Field."Codeunit ID: Capture Value" <> 0 then
                         IsValid := TestCaptureValue(Field, FieldRule, Text)
                     else
                         IsValid := true;
 
-                    if IsValid and Field."Enable Rule Generation" then begin
-                        ClearFldRuleCreatedFromMaster(FieldRule, DocumentNo);
+                if IsValid and Field."Enable Rule Generation" then begin
+                    ClearFldRuleCreatedFromMaster(FieldRule, DocumentNo);
 
-                        // Several rules could have been copied from the master template. Delete these when a rule matches the found value
-                        DelFldRulesCreatedFromMaster(FieldRule."Entry No.");
-                    end;
+                    // Several rules could have been copied from the master template. Delete these when a rule matches the found value
+                    DelFldRulesCreatedFromMaster(FieldRule."Entry No.");
                 end;
             end;
-        until (FieldRule.Next = 0) or (IsValid);
+        until (FieldRule.Next() = 0) or (IsValid);
 
         exit(IsValid);
     end;
 
     local procedure IsValidLookup("Field": Record "CDC Template Field"; Value: Text[250]; DocumentNo: Code[20]): Boolean
-    var
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
     begin
         exit(IsValidText(Field, Value, DocumentNo));
     end;
@@ -892,7 +901,8 @@ codeunit 61001 "ALR Advanced Line Capture"
     begin
         if not Value.Get(DocumentNo, true, Field.Code, LineNo) then begin
             if Field.Code = 'GLACCOUNTNO' then begin
-                DocComment.Reset;
+                DocComment.Reset();
+                ;
                 DocComment.SetRange("Field Code", Field.Code);
                 DocComment.SetRange("Document No.", DocumentNo);
                 DocComment.SetRange("Line No.", LineNo);
@@ -908,22 +918,22 @@ codeunit 61001 "ALR Advanced Line Capture"
         exit(Value."Is Valid");
     end;
 
-    local procedure IsValidBoolean(var "Field": Record "CDC Template Field"; Boolean: Boolean): Boolean
-    begin
-        exit(true);
-    end;
+    // local procedure IsValidBoolean(var "Field": Record "CDC Template Field"; Boolean: Boolean): Boolean
+    // begin
+    //     exit(true);
+    // end;
 
     local procedure TestCaptureValue("Field": Record "CDC Template Field"; Rule: Record "CDC Template Field Rule"; Value: Text[1024]): Boolean
     var
-        TempCaptureFieldVal: Record "CDC Temp. Capture Field Valid.";
+        CDCTempCaptureFieldVal: Record "CDC Temp. Capture Field Valid.";
     begin
-        TempCaptureFieldVal."Field Type" := Field.Type;
-        TempCaptureFieldVal."Field Code" := Field.Code;
-        TempCaptureFieldVal."File Rule Entry No." := Rule."Entry No.";
-        TempCaptureFieldVal.Rule := Rule.Rule;
-        TempCaptureFieldVal.Value := Value;
-        CODEUNIT.Run(Field."Codeunit ID: Capture Value", TempCaptureFieldVal);
-        exit(TempCaptureFieldVal."Is Valid");
+        CDCTempCaptureFieldVal."Field Type" := Field.Type;
+        CDCTempCaptureFieldVal."Field Code" := Field.Code;
+        CDCTempCaptureFieldVal."File Rule Entry No." := Rule."Entry No.";
+        CDCTempCaptureFieldVal.Rule := Rule.Rule;
+        CDCTempCaptureFieldVal.Value := CopyStr(Value, 1, MaxStrLen(CDCTempCaptureFieldVal.Value));
+        CODEUNIT.Run(Field."Codeunit ID: Capture Value", CDCTempCaptureFieldVal);
+        exit(CDCTempCaptureFieldVal."Is Valid");
     end;
 
     local procedure ClearFldRuleCreatedFromMaster(var FieldRule: Record "CDC Template Field Rule"; DocumentNo: Code[20])
