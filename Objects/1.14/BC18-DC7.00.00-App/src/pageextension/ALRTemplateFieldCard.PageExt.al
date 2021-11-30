@@ -11,7 +11,7 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                 field("ALRAdvanced Line Recognition Type"; Rec."Advanced Line Recognition Type")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies how the field value is to be found. With Standard, the field is searched for using the standard row recognition.';
+                    ToolTip = 'Specifies how the field value is to be found. With Standard, the field is searched for using the standard line recognition.';
                     trigger OnValidate()
                     begin
                         UpdateALRFields();
@@ -115,6 +115,13 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                         Importance = Additional;
                         ToolTip = 'Specifies the expected field width of the field.';
                     }
+                }
+                field("Data version"; Rec."Data version")
+                {
+                    ApplicationArea = All;
+                    Importance = Additional;
+                    Visible = false;
+                    ToolTip = 'Displays the data version of the current field record.';
                 }
             }
         }

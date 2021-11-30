@@ -21,9 +21,9 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         FieldIsCapturedByColumnHeading: Label 'The field "%1" will now be searched via the column heading "%2".', Comment = '%1 = field description | %2 = caption of column heading';
         FieldIsCapturedByCaption: Label 'The value of field "%1" will now been searched via the caption in the current line.', Comment = '%1 = field description';
         NoRequiredFieldFound: Label 'No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.', Comment = '%1 = line no.';
-        ALRVersionNoText: Label 'ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)', Comment = '%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build';
+        ALRVersionNoText: Label 'ALR objects: %1 (Data: %2) | Business Central version:%3 (Build %4)', Comment = '%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build';
         NoALRFieldsForReset: Label 'There are not fields configured for advanced line recognition, that can be reset.';
-        YouAreUsingALRVersion: Label 'You are using version advanced line recognition version:\%1', Comment = '%1 Displays the current version of the Advanced line recognition to the user including the build';
+        YouAreUsingALRVersion: Label 'You are using version advanced line recognition version: %1', Comment = '%1 Displays the current version of the Advanced line recognition to the user including the build';
 
 
     procedure SetToAnchorLinkedField(var TempDocumentLine: Record "CDC Temp. Document Line")
@@ -35,7 +35,8 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     begin
         // Get the anchor field that defines the position
         Message(SelectOffsetSourceFieldFirst);
-        SelectField(AnchorField, TempDocumentLine."Template No.", '', false);
+        if (not SelectField(AnchorField, TempDocumentLine."Template No.", '', false)) then
+            exit;
 
         // Get document value of the anchor field => is mandatory
         AnchorFieldDocumentValue.SetRange("Document No.", TempDocumentLine."Document No.");

@@ -328,7 +328,9 @@ codeunit 61001 "ALR Advanced Line Capture"
         // It checks if the value of the current field is empty and updates the value with the value of the substitution field (if exists).
         CDCTemplateField.SetRange("Template No.", TempDocLine."Template No.");
         CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
+#pragma warning disable AA0210
         CDCTemplateField.SetFilter("Replacement Field", '<>%1', '');
+#pragma warning restore AA0210
         if CDCTemplateField.IsEmpty then
             exit;
 

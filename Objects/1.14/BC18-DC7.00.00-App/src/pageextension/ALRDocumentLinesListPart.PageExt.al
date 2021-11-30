@@ -78,7 +78,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                 action(EnableFieldRecognition)
                 {
                     ApplicationArea = All;
-                    Caption = 'Felderkennung aktivieren';
+                    Caption = 'Enable field detection';
                     Image = SelectField;
                     ToolTip = 'Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.';
                     Visible = not ShowFieldRecognition;
@@ -91,7 +91,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                 action(DisableFieldRecognition)
                 {
                     ApplicationArea = All;
-                    Caption = 'Felderkennung deaktivieren';
+                    Caption = 'Disable field detection';
                     Image = SelectField;
                     ToolTip = 'Disables the automatic field detection.';
                     Visible = ShowFieldRecognition;

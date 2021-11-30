@@ -3,10 +3,11 @@ codeunit 61004 "ALR Install Management"
     Subtype = Install;
 
     var
-        ALRDataVersionLbl: Label 'ALRDataVersion';
+        ALRDataVersionLbl: Label 'ALRDataVersion', Locked = true;
         IsolatedStorageValue: Text;
         ALRVersion: Integer;
 
+    // procedure is executed in every existing company, when the app is installed
     trigger OnInstallAppPerCompany()
     begin
         GetDataVersion();
@@ -14,6 +15,13 @@ codeunit 61004 "ALR Install Management"
         SetReplacementFieldTypeToLine();
 
         UpdateDataVersion();
+    end;
+
+    // event is executed, when a new company is created and initialized
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Company-Initialize", 'OnCompanyInitialize', '', false, false)]
+    local procedure CompanyInitialize()
+    begin
+
     end;
 
     local procedure SetReplacementFieldTypeToLine()
@@ -26,6 +34,7 @@ codeunit 61004 "ALR Install Management"
             if CDCTemplateField.IsEmpty then
                 exit;
             CDCTemplateField.ModifyAll("Replacement Field Type", CDCTemplateField."Replacement Field Type"::Line);
+            CDCTemplateField.ModifyAll("Data version", 14);
         end;
     end;
 

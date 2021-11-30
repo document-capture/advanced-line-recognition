@@ -1,10 +1,11 @@
+#pragma warning  disable AA0072
 tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 {
     fields
     {
         field(50001; "Replacement Field"; Code[20])
         {
-            Caption = 'Use replacement line field';
+            Caption = 'Replacement field';
             DataClassification = CustomerContent;
             TableRelation = "CDC Template Field".Code WHERE("Template No." = FIELD("Template No."),
                                                              Type = Field("Replacement Field Type"));
@@ -74,6 +75,7 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
         {
             Caption = 'ALR Data version';
             DataClassification = CustomerContent;
+            Editable = false;
         }
 
         field(50011; "Advanced Line Recognition Type"; Option)
@@ -120,5 +122,11 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
             DecimalPlaces = 0 : 5;
         }
     }
-}
+    trigger OnModify()
+    var
+        InstallMgt: Codeunit "ALR Install Management";
+    begin
+        Rec."Data version" := InstallMgt.GetDataVersion();
 
+    end;
+}
