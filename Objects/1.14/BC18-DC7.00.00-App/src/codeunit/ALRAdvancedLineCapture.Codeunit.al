@@ -725,7 +725,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         Value: Record "CDC Document Value";
     begin
         Field.Reset();
-        ;
         Field.SetCurrentKey("Template No.", Type, "Sort Order");
         Field.SetRange("Template No.", Document."Template No.");
         Field.SetRange(Type, Field.Type::Header);
@@ -733,7 +732,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         if Field.Find() then
             repeat
                 Value.Reset();
-                ;
                 Value.SetRange("Document No.", Document."No.");
                 Value.SetRange(Type, Field.Type);
                 Value.SetRange(Code, Field.Code);
@@ -892,30 +890,6 @@ codeunit 61001 "ALR Advanced Line Capture"
     local procedure IsValidLookup("Field": Record "CDC Template Field"; Value: Text[250]; DocumentNo: Code[20]): Boolean
     begin
         exit(IsValidText(Field, Value, DocumentNo));
-    end;
-
-    procedure IsValidValue(var "Field": Record "CDC Template Field"; DocumentNo: Code[20]; LineNo: Integer): Boolean
-    var
-        Value: Record "CDC Document Value";
-        DocComment: Record "CDC Document Comment";
-    begin
-        if not Value.Get(DocumentNo, true, Field.Code, LineNo) then begin
-            if Field.Code = 'GLACCOUNTNO' then begin
-                DocComment.Reset();
-                ;
-                DocComment.SetRange("Field Code", Field.Code);
-                DocComment.SetRange("Document No.", DocumentNo);
-                DocComment.SetRange("Line No.", LineNo);
-                DocComment.SetRange("Template No.", Field."Template No.");
-                DocComment.SetRange(Area, DocComment.Area::Validation);
-                DocComment.SetRange("Comment Type", DocComment."Comment Type"::Error);
-                if not DocComment.IsEmpty then
-                    exit(false);
-            end;
-            exit(not Field.Required);
-        end;
-
-        exit(Value."Is Valid");
     end;
 
     // local procedure IsValidBoolean(var "Field": Record "CDC Template Field"; Boolean: Boolean): Boolean

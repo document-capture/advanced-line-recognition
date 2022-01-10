@@ -125,6 +125,10 @@ codeunit 61001 "Adv. Purch/Sales Line Capture"
         else
             GetRangeToNextLine(TempDocLine, lFromTopPage, lFromTopPos, lToBottomPage, lToBottomPos);
 
+
+
+
+
         for i := lFromTopPage to lToBottomPage do begin
             lCurrPage.Get(Document."No.", i);
 

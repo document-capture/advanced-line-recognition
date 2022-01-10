@@ -36,7 +36,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         // Get the anchor field that defines the position
         Message(SelectOffsetSourceFieldFirst);
         if (not SelectField(AnchorField, TempDocumentLine."Template No.", '', false)) then
-            exit;
+            error(FieldSetupCanceled);
 
         // Get document value of the anchor field => is mandatory
         AnchorFieldDocumentValue.SetRange("Document No.", TempDocumentLine."Document No.");
