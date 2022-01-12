@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="de-CH" original="Advanced Line Recognition">
     <body>
@@ -24,10 +24,10 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Purch. - Line Valid. - NamedType WarningTxt</note>
         <target state="final">WARNUNG: %1</target></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
-          <source>ALR version: %1\Data version: %2\Business Central version:%3 (Build %4)</source>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build</note>
+          <source>%1 | Business Central version:%2 (Build %3)</source>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
-        <target state="final">ALR Version: %1\Datenversion: %2\Business Central Version:%3 (Build %4)</target></trans-unit>
+        <target state="final">%1 | Business Central Version:%2 (Build %3)</target></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Error during field setup.</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -87,7 +87,7 @@
           <source>Please select first the source field on the basis of which position the value should be found. </source>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectOffsetSourceFieldFirst</note>
-        <target state="final">Bitte wählen Sie zuerst das Herkunftsfeld aus, an Hand dessen Position der Wert ermittelt werden soll. </target></trans-unit>
+        <target state="final">Bitte wählen Sie das Herkunftsfeld aus, an Hand dessen Position der Wert ermittelt werden soll. </target></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3750022258" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Please choose the field, which should be linked with the source field "%1".</source>
           <note from="Developer" annotates="general" priority="2"> %1 = field description of source field</note>
@@ -99,10 +99,10 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType TrainCaptionFirstForField</note>
         <target state="final">Es wurde kein Suchtext für Feld "%1" konfiguriert. Sie müssen zuerst den Suchtext konfigurieren.</target></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
-          <source>You are using version advanced line recognition version:\%1</source>
+          <source>You are using version advanced line recognition version: %1</source>
           <note from="Developer" annotates="general" priority="2">%1 Displays the current version of the Advanced line recognition to the user including the build</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType YouAreUsingALRVersion</note>
-        <target state="final">Sie verwenden die Erweiterte Zeilenerkennung Version:\%1</target></trans-unit>
+        <target state="final">Sie verwenden die Erweiterte Zeilenerkennung Version: %1</target></trans-unit>
         <trans-unit id="Codeunit 28597237 - NamedType 2796480165" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!</source>
           <note from="Developer" annotates="general" priority="2">Show when the template does not have at least one line field marked as required. %1 = selected ALR option</note>
@@ -188,6 +188,21 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control ALR Line Validation Type - Property ToolTip</note>
         <target state="final">Wählen Sie aus, ob Sie die Zeilenvalidierung durch die an der Vorlage hinterlegte Codeunit durchführen wollen oder die Validierung der erweiterte Zeilenerkennung verwenden möchten.</target></trans-unit>
+        <trans-unit id="PageExtension 2558081933 - Control 1381794906 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
+          <source>Select if you want to use validate the line totals against the net amount of the document</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control ALRValidateLineTotals - Property ToolTip</note>
+        <target state="final">Wählen Sie aus, wenn Sie die Zeilensummen mit dem Nettobetrag des Dokuments abgleichen möchten.</target></trans-unit>
+        <trans-unit id="PageExtension 2558081933 - Control 1643358770 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
+          <source>Enables the automatic search for purchase order numbers.</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control Auto PO search - Property ToolTip</note>
+        <target state="final">Aktiviert die automatische Suche nach Bestellnummern.</target></trans-unit>
+        <trans-unit id="PageExtension 2558081933 - Control 1496491442 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
+          <source>Filter string that is used during automatic search for PO numbers.</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control Auto PO search filter - Property ToolTip</note>
+        <target state="final">Filter-Zeichenfolge, die bei der automatischen Suche nach Bestellnummern verwendet werden soll.</target></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Advanced Line Recognition</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -278,11 +293,11 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control ALRSorting - Property ToolTip</note>
         <target state="final">Gibt die Stelle der Reihenfolge an, in der das Feld verarbeitet wird.</target></trans-unit>
-        <trans-unit id="PageExtension 2749515459 - Control 1342876022 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
-          <source>Displays the data version of the current field record.</source>
+        <trans-unit id="PageExtension 2749515459 - Control 373707502 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
+          <source>Change the sign of the number value.</source>
           <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Data version - Property ToolTip</note>
-        <target state="final">Zeigt die Datenversion des aktuellen Feld Datensatzes.</target></trans-unit>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control ALRChangeSign - Property ToolTip</note>
+        <target state="final">Ändern des Vorzeichen, nachdem der Wert gefunden wurde.</target></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 940755310 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
           <source>Line validation type</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -293,6 +308,26 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field ALR Line Validation Type - Property OptionCaption</note>
         <target state="final">Codeunit in Vorlage (Standard),Erweiterte Zeilenerkennung</target></trans-unit>
+        <trans-unit id="TableExtension 62246305 - Field 1643358770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
+          <source>Automatic PO search</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field Auto PO search - Property Caption</note>
+        <target state="final">Auto. Suche nach Bestellnummern</target></trans-unit>
+        <trans-unit id="TableExtension 62246305 - Field 1496491442 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
+          <source>Automatic PO search filter</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field Auto PO search filter - Property Caption</note>
+        <target state="final">Filter für auto. Suche nach Bestellnr.</target></trans-unit>
+        <trans-unit id="TableExtension 62246305 - Field 1496491442 - Method 1213635141 - NamedType 3762595250" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 62246305" approved="yes">
+          <source>Do you want to overwrite the existing filter with a new automatically build filter?</source>
+          <note from="Developer" annotates="general" priority="2">Ask user to overwrite existingfilter string for automatic PO number filtering.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field Auto PO search filter - Method OnLookup - NamedType OverWriteExistingPONumberFilterLbl</note>
+        <target state="final">Möchten Sie den vorhandenen Filter mit einem neuen Filter überschreiben?</target></trans-unit>
+        <trans-unit id="TableExtension 62246305 - Field 1496491442 - Method 1213635141 - NamedType 691856742" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 62246305" approved="yes">
+          <source>Do you want the system to automatically find a PO number filter?</source>
+          <note from="Developer" annotates="general" priority="2">Ask user to use automatic PO number filtering.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field Auto PO search filter - Method OnLookup - NamedType NewPONumberFilterLbl</note>
+        <target state="final">Soll das System automatisch im Beleg nach gültigen Bestellnummern suchen?</target></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3024729169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Advanced Line Recognition Type</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -323,11 +358,6 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Copy Value from Previous Value - Property Caption</note>
         <target state="final">Wert vom vorherigen Wert kopieren</target></trans-unit>
-        <trans-unit id="TableExtension 1325761703 - Field 1342876022 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
-          <source>ALR Data version</source>
-          <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Data version - Property Caption</note>
-        <target state="final">Datenversion</target></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3800550788 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Value position</source>
           <note from="Developer" annotates="general" priority="2">Defines if the value should be searched above or below the standard line.</note>
