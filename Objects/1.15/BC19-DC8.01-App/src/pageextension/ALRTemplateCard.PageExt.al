@@ -10,8 +10,15 @@ pageextension 61002 "ALR Template Card" extends "CDC Template Card"
                 ApplicationArea = All;
                 ToolTip = 'Select if you want to use the default line validation from the template codeunit or the Adv. line recognition validation';
             }
+            field(ALRValidateLineTotals; Rec."Validate Line Totals")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Select if you want to use validate the line totals against the net amount of the document';
+                ObsoleteState = Pending;
+                ObsoleteReason = 'Will be removed once the field is available in standard of Document Capture.';
+            }
         }
-        addafter("Use Vendor/Customer Item Nos.")
+        addafter("Purch. Validate VAT Calc.")
         {
             field("Auto PO search"; Rec."Auto PO search")
             {

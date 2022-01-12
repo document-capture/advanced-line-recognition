@@ -24,8 +24,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Purch. - Line Valid. - NamedType WarningTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>ALR objects: %1 (Data: %2) | Business Central version:%3 (Build %4)</source>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build</note>
+          <source>%1 | Business Central version:%2 (Build %3)</source>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
@@ -188,6 +188,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control ALR Line Validation Type - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="PageExtension 2558081933 - Control 1381794906 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644">
+          <source>Select if you want to use validate the line totals against the net amount of the document</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control ALRValidateLineTotals - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 1643358770 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644">
           <source>Enables the automatic search for purchase order numbers.</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -288,10 +293,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control ALRSorting - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 2749515459 - Control 2440610119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+        <trans-unit id="PageExtension 2749515459 - Control 373707502 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Change the sign of the number value.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Change Sign - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control ALRChangeSign - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 940755310 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928">
           <source>Line validation type</source>

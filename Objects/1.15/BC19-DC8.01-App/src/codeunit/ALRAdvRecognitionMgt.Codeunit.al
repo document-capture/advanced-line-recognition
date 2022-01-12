@@ -21,7 +21,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         FieldIsCapturedByColumnHeading: Label 'The field "%1" will now be searched via the column heading "%2".', Comment = '%1 = field description | %2 = caption of column heading';
         FieldIsCapturedByCaption: Label 'The value of field "%1" will now been searched via the caption in the current line.', Comment = '%1 = field description';
         NoRequiredFieldFound: Label 'No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.', Comment = '%1 = line no.';
-        ALRVersionNoText: Label 'ALR objects: %1 (Data: %2) | Business Central version:%3 (Build %4)', Comment = '%1 = ALR object version | %2 = ALR data version | %3 = BC version | %4 = BC build';
+        ALRVersionNoText: Label '%1 | Business Central version:%2 (Build %3)', Comment = '%1 = ALR object version | %2 = BC version | %3 = BC build';
         NoALRFieldsForReset: Label 'There are not fields configured for advanced line recognition, that can be reset.';
         YouAreUsingALRVersion: Label 'You are using version advanced line recognition version: %1', Comment = '%1 Displays the current version of the Advanced line recognition to the user including the build';
 
@@ -327,7 +327,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     begin
         VersionTriggers.GetApplicationVersion(ApplicationVersion);
         VersionTriggers.GetApplicationBuild(ApplicationBuild);
-        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, '14', InstallMgt.GetDataVersion(), ApplicationVersion, ApplicationBuild));
+        Message(YouAreUsingALRVersion, StrSubstNo(ALRVersionNoText, InstallMgt.GetDataVersion(), ApplicationVersion, ApplicationBuild));
     end;
 }
 #pragma warning restore

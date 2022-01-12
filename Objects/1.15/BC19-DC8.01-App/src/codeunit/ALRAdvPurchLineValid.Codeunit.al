@@ -145,6 +145,9 @@ codeunit 61002 "ALR Adv. Purch. - Line Valid."
         if CDCTemplate."ALR Line Validation Type" <> CDCTemplate."ALR Line Validation Type"::AdvancedLineRecognition then
             exit;
 
+        ALRLineValidation(TempDocumentLine);
+
+        Handled := true;
     end;
 
     var

@@ -129,7 +129,7 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
 
         addafter("Blank Zero")
         {
-            field("Change Sign"; Rec."Change Sign")
+            field(ALRChangeSign; Rec."Change Sign")
             {
                 ApplicationArea = All;
                 ToolTip = 'Change the sign of the number value.';

@@ -157,6 +157,7 @@ codeunit 61001 "ALR Advanced Line Capture"
                 CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
                 CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
 
+                // set the line region
                 if i < ToBottomPage then
                     LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, CurrPage."Bottom Word Pos.")
                 else
@@ -167,22 +168,27 @@ codeunit 61001 "ALR Advanced Line Capture"
                             LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, ToBottomPos)
                         else
                             LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, ToBottomPos);
+
+                // Find value in predefined line region
+                Word := CaptureEngine.CaptureField(Document, CurrPage."Page No.", CurrField, false);
+
+                if Word <> '' then begin
+                    if (DocumentValue.Get(Document."No.", true, CurrField.Code, 0)) then begin
+                        DocumentValueCopy := DocumentValue;
+                        DocumentValueCopy."Line No." := TempDocLine."Line No.";
+                        DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
+                        DocumentValueCopy.Insert();
+                        DocumentValue.Delete();
+                    end;
+                    CaptureMgt.UpdateFieldValue(Document."No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, Word, false, false);
+
+                    exit(true);
+                end;
             end;
 
-        Word := CaptureEngine.CaptureField(Document, CurrPage."Page No.", CurrField, false);
 
-        if Word <> '' then begin
-            if (DocumentValue.Get(Document."No.", true, CurrField.Code, 0)) then begin
-                DocumentValueCopy := DocumentValue;
-                DocumentValueCopy."Line No." := TempDocLine."Line No.";
-                DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
-                DocumentValueCopy.Insert();
-                DocumentValue.Delete();
-            end;
-            CaptureMgt.UpdateFieldValue(Document."No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, Word, false, false);
 
-            exit(true);
-        end;
+
     end;
 
     local procedure FindFieldByColumnHeading(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document")
@@ -399,7 +405,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         if not Template.GET(Document."Template No.") then
             exit;
 
-        if (Template."Auto PO search" OR (StrLen(Template."Auto PO search filter") < 2)) then
+        if ((NOT Template."Auto PO search") OR (StrLen(Template."Auto PO search filter") < 2)) then
             exit;
 
         // Get order no. field first.
