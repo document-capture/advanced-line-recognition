@@ -1,3 +1,6 @@
 Objects/Latest/BC18-DC7.00.00-App/github.comdocument-capture_Advanced Line Recognition_1.13.0.4.app
 *.bak
-*.app
+.alpackages/*.app
+Objects/*/*/.alpackages/*.app
+Objects/*/*/.vscode/launch.json
+Objects/*/*/.vscode/rad.json
