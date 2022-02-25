@@ -1,5 +1,5 @@
 ﻿#This script creates the DELTA files from the ORIGINAL BC Objects (step 1) and the ALR objects (step 2)
-param([string]$WorkDirectory)
+param([parameter(Mandatory=$true)][string]$WorkDirectory)
 
 #Create directory for DELTA files
 New-Item -ItemType Directory -Force -Path $(Join-Path $WorkDirectory "DELTA")
