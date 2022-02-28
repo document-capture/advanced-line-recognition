@@ -3,3 +3,4 @@
 Objects/*/*/.alpackages/*.app
 Objects/*/*/.vscode/launch.json
 Objects/*/*/.vscode/rad.json
+Objects/*/*/.vscode/.alcache/*
