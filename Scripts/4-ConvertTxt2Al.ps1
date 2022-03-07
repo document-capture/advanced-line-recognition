@@ -1,5 +1,5 @@
 #This script converts the DELTA files to AL files
-param([string]$WorkDirectory)
+param([parameter(Mandatory=$true)][string]$WorkDirectory)
 
 $DeltaPath = $(Join-Path $WorkDirectory "DELTA")
 $ALPath = $(Join-Path $WorkDirectory "AL")

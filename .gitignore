@@ -1,6 +1,14 @@
 *.bak
+<<<<<<< HEAD
 *launch.json
 Objects/*/*/.vscode/launch.json
 Objects/*/*/.vscode/settings.json
 Objects/*/*/.alpackages/*.app
 Objects/*/*/github.comdocument*.app
+=======
+.alpackages/*.app
+Objects/*/*/.alpackages/*.app
+Objects/*/*/.vscode/launch.json
+Objects/*/*/.vscode/rad.json
+Objects/*/*/.vscode/.alcache/*
+>>>>>>> 464ec51fa57d67fe243956f6c90b92d57b38626d
