@@ -6,7 +6,14 @@
         {
             "label": "Offline Build with rename",
             "type": "shell",
-            "command": "C:\\Users\\${env:USERNAME}\\.vscode\\extensions\\ms-dynamics-smb.al-8.4.586670\\bin\\alc.exe /project:\"${workspaceFolder}\" /out:advanced_line_recognition.1.15.0.2.app /packagecachepath:\"${workspaceFolder}\\.alpackages\""
+            "command": "C:\\Users\\${env:USERNAME}\\.vscode\\extensions\\ms-dynamics-smb.al-8.4.586670\\bin\\alc.exe /project:\"${workspaceFolder}\" /out:advanced_line_recognition.${input:AppVersion}.app /packagecachepath:\"${workspaceFolder}\\.alpackages\""
+        }
+    ],
+    "inputs": [
+        {
+          "id": "AppVersion",
+          "type":"command",
+          "command": "powershell (Get-Content -Path ${workspaceFolder}\\app.json | ConvertFrom-Json).version.ToString()"
         }
     ]
 }
