@@ -38,5 +38,5 @@
   "runtime": "6.0",
   "target": "Cloud",
   "features": [ "TranslationFile"],
-  "supportedLocales": ["en-US","de-DE","de-AT","de-CH"]
+  "supportedLocales": ["en-US","de-DE","de-AT","de-CH","es-ES","es-ES_tradnl"]
 }
