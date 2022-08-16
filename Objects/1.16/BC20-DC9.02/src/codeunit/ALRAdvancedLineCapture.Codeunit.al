@@ -29,8 +29,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         FindAllPONumbersInDocument(Document);
     end;
 
-
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Management", 'OnAfterApplyTranslationToWord', '', true, true)]
     local procedure CDCCaptureManagement_OnBeforeApplyTranslationToWord(var Field: Record "CDC Template Field"; var Word: Text[1024])
     begin
@@ -61,25 +59,25 @@ codeunit 61001 "ALR Advanced Line Capture"
 
         if TempDocLine.FindSet() then begin
             FillSortedFieldBuffer(TempSortedDocumentField, TempMandatoryField, TempDocLine);
-                                          repeat
-                                              TempSortedDocumentField.SetCurrentKey("Document No.", "Sort Order");
-                                              if TempSortedDocumentField.FindSet() then
-                                                      repeat
-                                                          CDCTemplateField.Get(TempDocLine."Template No.", CDCTemplateField.Type::Line, TempSortedDocumentField."Field Code");
-                                                          case CDCTemplateField."Advanced Line Recognition Type" of
-                                                              CDCTemplateField."Advanced Line Recognition Type"::LinkedToAnchorField:
-                                                                  FindValueFromOffsetField(TempDocLine, CDCTemplateField);
-                                                              CDCTemplateField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition:
-                                                                  FindValueByCaptionInPosition(TempDocLine, CDCTemplateField, Document);
-                                                              CDCTemplateField."Advanced Line Recognition Type"::FindFieldByColumnHeading:
-                                                                  FindFieldByColumnHeading(TempDocLine, CDCTemplateField, Document);
-                                                          end;
-                                                      until TempSortedDocumentField.Next() = 0;
+            repeat
+                TempSortedDocumentField.SetCurrentKey("Document No.", "Sort Order");
+                if TempSortedDocumentField.FindSet() then
+                    repeat
+                        CDCTemplateField.Get(TempDocLine."Template No.", CDCTemplateField.Type::Line, TempSortedDocumentField."Field Code");
+                        case CDCTemplateField."Advanced Line Recognition Type" of
+                            CDCTemplateField."Advanced Line Recognition Type"::LinkedToAnchorField:
+                                FindValueFromOffsetField(TempDocLine, CDCTemplateField);
+                            CDCTemplateField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition:
+                                FindValueByCaptionInPosition(TempDocLine, CDCTemplateField, Document);
+                            CDCTemplateField."Advanced Line Recognition Type"::FindFieldByColumnHeading:
+                                FindFieldByColumnHeading(TempDocLine, CDCTemplateField, Document);
+                        end;
+                    until TempSortedDocumentField.Next() = 0;
 
-                                              FindReplacementFieldValue(TempDocLine);
+                FindReplacementFieldValue(TempDocLine);
 
-                                              GetValueFromPreviousValue(TempDocLine);
-                                          until TempDocLine.Next() = 0;
+                GetValueFromPreviousValue(TempDocLine);
+            until TempDocLine.Next() = 0;
             CleanupTempValues(Document);
         end;
 
@@ -388,9 +386,9 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCTemplateField.SetRange("Copy Value from Previous Value", true);
         if CDCTemplateField.FindSet() then
             repeat
-                    if not DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No.") then
-                        if DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No." - 1) then
-                            CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CDCTemplateField, DocumentValue."Value (Text)", false, false);
+                if not DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No.") then
+                    if DocumentValue.Get(TempDocLine."Document No.", true, CDCTemplateField.Code, TempDocLine."Line No." - 1) then
+                        CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CDCTemplateField, DocumentValue."Value (Text)", false, false);
             until CDCTemplateField.Next() = 0;
     end;
 
@@ -407,7 +405,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCModuleLicense: Codeunit "CDC Module License";
         FoundPurchaseOrders: text;
     begin
-        if not CDCModuleLicense.IsMatchingActivated(TRUE) then
+        if not CDCModuleLicense.IsMatchingActivated(false) then
             exit;
 
         if not Template.GET(Document."Template No.") then
@@ -425,24 +423,24 @@ codeunit 61001 "ALR Advanced Line Capture"
         // Iterate through Document Word table and filter for our PO number filter string
         DocumentWord.SetFilter(Word, Template."Auto PO search filter");
         if DocumentWord.FindSet() then
-                repeat
-                    // Check if there is a PO in the system with the matched word
-                    IF PurchaseHeader.GET(PurchaseHeader."Document Type"::Order, CopyStr(UPPERCASE(DocumentWord.Word), 1, MAXSTRLEN(PurchaseHeader."No."))) THEN
-                        // Check if the number exists in the temp. PO buffer
-                        if not TempPurchaseHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.") then begin
-                            TempPurchaseHeader := PurchaseHeader;
-                            TempPurchaseHeader.Insert();
-                        end;
-                until DocumentWord.Next() = 0;
+            repeat
+                // Check if there is a PO in the system with the matched word
+                IF PurchaseHeader.GET(PurchaseHeader."Document Type"::Order, CopyStr(UPPERCASE(DocumentWord.Word), 1, MAXSTRLEN(PurchaseHeader."No."))) THEN
+                    // Check if the number exists in the temp. PO buffer
+                    if not TempPurchaseHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.") then begin
+                        TempPurchaseHeader := PurchaseHeader;
+                        TempPurchaseHeader.Insert();
+                    end;
+            until DocumentWord.Next() = 0;
 
         // Iterate through all found PO's and create the string, that can be used for order matching
         if TempPurchaseHeader.FindSet() then
             repeat
-                    if (STRLEN(FoundPurchaseOrders) + STRLEN(TempPurchaseHeader."No.") + 1) <= MAXSTRLEN(DocumentValue."Value (Text)") then begin
-                        if (STRLEN(FoundPurchaseOrders) > 0) then
-                            FoundPurchaseOrders += ',';
-                        FoundPurchaseOrders += TempPurchaseHeader."No.";
-                    END;
+                if (STRLEN(FoundPurchaseOrders) + STRLEN(TempPurchaseHeader."No.") + 1) <= MAXSTRLEN(DocumentValue."Value (Text)") then begin
+                    if (STRLEN(FoundPurchaseOrders) > 0) then
+                        FoundPurchaseOrders += ',';
+                    FoundPurchaseOrders += TempPurchaseHeader."No.";
+                END;
             until TempPurchaseHeader.Next() = 0;
 
         TemplateField.GET(Document."Template No.", TemplateField.Type::Header, 'OURDOCNO');
@@ -496,17 +494,17 @@ codeunit 61001 "ALR Advanced Line Capture"
         // Filter for next line
         DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." + 1);
         if DocumentValue.FindSet() then
-                repeat
-                    if (SearchToPage < DocumentValue."Page No.") or (SearchToPage = 0) then begin
-                        SearchToPage := DocumentValue."Page No.";
-                        SearchToPos := 0;
-                    end;
+            repeat
+                if (SearchToPage < DocumentValue."Page No.") or (SearchToPage = 0) then begin
+                    SearchToPage := DocumentValue."Page No.";
+                    SearchToPos := 0;
+                end;
 
-                    if SearchToPage = DocumentValue."Page No." then
-                        if (SearchToPos < DocumentValue.Bottom) or (SearchToPos = 0) then
-                            SearchToPos := DocumentValue.Bottom;
+                if SearchToPage = DocumentValue."Page No." then
+                    if (SearchToPos < DocumentValue.Bottom) or (SearchToPos = 0) then
+                        SearchToPos := DocumentValue.Bottom;
 
-                until DocumentValue.Next() = 0
+            until DocumentValue.Next() = 0
         else begin
             // As there is no next line, calculate to next header value or bottom of current page
             DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
@@ -571,10 +569,10 @@ codeunit 61001 "ALR Advanced Line Capture"
         DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." - 1);
         if DocumentValue.FindSet() then
             repeat
-                    if (DocumentValue."Page No." < PrevLineTopPage) or (PrevLineTopPage = 0) then begin
-                        PrevLineTopPage := DocumentValue."Page No.";
-                        Clear(PrevLineTopPos);
-                    end;
+                if (DocumentValue."Page No." < PrevLineTopPage) or (PrevLineTopPage = 0) then begin
+                    PrevLineTopPage := DocumentValue."Page No.";
+                    Clear(PrevLineTopPos);
+                end;
 
                 if (DocumentValue."Page No." > PrevLineBottomPage) or (PrevLineBottomPage = 0) then begin
                     PrevLineBottomPage := DocumentValue."Page No.";
@@ -620,25 +618,25 @@ codeunit 61001 "ALR Advanced Line Capture"
         DocumentValue.SetRange(DocumentValue."Line No.", LineNo);
         if DocumentValue.FindSet() then
             repeat
-                    if TempMandatoryField.Get(DocumentValue.GetFilter("Document No."), DocumentValue.Code) then begin
-                        if (DocumentValue."Page No." < CurrLineTopPage) or (CurrLineTopPage = 0) then begin
-                            CurrLineTopPage := DocumentValue."Page No.";
-                            Clear(CurrLineTopPos);
-                        end;
-
-                        if (DocumentValue."Page No." > CurrLineBottomPage) or (CurrLineBottomPage = 0) then begin
-                            CurrLineBottomPage := DocumentValue."Page No.";
-                            Clear(CurrLineBottomPos);
-                        end;
-
-                        if CurrLineTopPage = DocumentValue."Page No." then
-                            if (DocumentValue.Top < CurrLineTopPos) or (CurrLineTopPos = 0) then
-                                CurrLineTopPos := DocumentValue.Top;
-
-                        if CurrLineBottomPage = DocumentValue."Page No." then
-                            if (DocumentValue.Bottom > CurrLineBottomPos) or (CurrLineBottomPos = 0) then
-                                CurrLineBottomPos := DocumentValue.Bottom;
+                if TempMandatoryField.Get(DocumentValue.GetFilter("Document No."), DocumentValue.Code) then begin
+                    if (DocumentValue."Page No." < CurrLineTopPage) or (CurrLineTopPage = 0) then begin
+                        CurrLineTopPage := DocumentValue."Page No.";
+                        Clear(CurrLineTopPos);
                     end;
+
+                    if (DocumentValue."Page No." > CurrLineBottomPage) or (CurrLineBottomPage = 0) then begin
+                        CurrLineBottomPage := DocumentValue."Page No.";
+                        Clear(CurrLineBottomPos);
+                    end;
+
+                    if CurrLineTopPage = DocumentValue."Page No." then
+                        if (DocumentValue.Top < CurrLineTopPos) or (CurrLineTopPos = 0) then
+                            CurrLineTopPos := DocumentValue.Top;
+
+                    if CurrLineBottomPage = DocumentValue."Page No." then
+                        if (DocumentValue.Bottom > CurrLineBottomPos) or (CurrLineBottomPos = 0) then
+                            CurrLineBottomPos := DocumentValue.Bottom;
+                end;
             until DocumentValue.Next() = 0;
 
     end;
@@ -696,8 +694,8 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCTemplateFieldCaption.SetRange(Code, Field.Code);
         if CDCTemplateFieldCaption.FindSet() then
             repeat
-                    if CaptureEngine.FindCaption(DocNo, PageNo, Field, CDCTemplateFieldCaption, CaptionStartWord, CaptionEndWord) then
-                        exit(true);
+                if CaptureEngine.FindCaption(DocNo, PageNo, Field, CDCTemplateFieldCaption, CaptionStartWord, CaptionEndWord) then
+                    exit(true);
             until (CDCTemplateFieldCaption.Next() = 0) or ((CaptionStartWord[1].Word <> '') and (CaptionEndWord[1].Word <> ''));
     end;
 
@@ -760,11 +758,11 @@ codeunit 61001 "ALR Advanced Line Capture"
         Value.Left := Value.Left + 3;
 
         if Value2.FindSet(false, false) then
-                repeat
-                    if (not ((Value2.Code = Value.Code) and (Value2."Line No." = Value."Line No."))) then
-                        if CaptureEngine.IntersectsWith(Value, Value2) then
-                            exit(true);
-                until Value2.Next() = 0;
+            repeat
+                if (not ((Value2.Code = Value.Code) and (Value2."Line No." = Value."Line No."))) then
+                    if CaptureEngine.IntersectsWith(Value, Value2) then
+                        exit(true);
+            until Value2.Next() = 0;
     end;
 
     local procedure IsFieldValid(var CaptionField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean
@@ -800,21 +798,21 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCTemplateField.SetRange(CDCTemplateField."Template No.", TempDocLine."Template No.");
         CDCTemplateField.SetRange(CDCTemplateField.Type, CDCTemplateField.Type::Line);
         if CDCTemplateField.FindSet() then
-                repeat
-                    if (CDCTemplateField."Advanced Line Recognition Type" <> CDCTemplateField."Advanced Line Recognition Type"::Default) and
-                       (StrLen(CDCTemplateField.Formula) = 0) and (StrLen(CDCTemplateField.GetFixedValue()) = 0) then begin
-                        TempSortedDocumentField."Document No." := TempDocLine."Document No.";
-                        TempSortedDocumentField."Sort Order" := CDCTemplateField.Sorting;
-                        TempSortedDocumentField."Field Code" := CDCTemplateField.Code;
-                        TempSortedDocumentField.Insert();
-                    end else
-                        if CDCTemplateField.Required then begin
-                            MandatoryField."Document No." := TempDocLine."Document No.";
-                            MandatoryField."Sort Order" := CDCTemplateField.Sorting;
-                            MandatoryField."Field Code" := CDCTemplateField.Code;
-                            MandatoryField.Insert();
-                        end;
-                until CDCTemplateField.Next() = 0;
+            repeat
+                if (CDCTemplateField."Advanced Line Recognition Type" <> CDCTemplateField."Advanced Line Recognition Type"::Default) and
+                   (StrLen(CDCTemplateField.Formula) = 0) and (StrLen(CDCTemplateField.GetFixedValue()) = 0) then begin
+                    TempSortedDocumentField."Document No." := TempDocLine."Document No.";
+                    TempSortedDocumentField."Sort Order" := CDCTemplateField.Sorting;
+                    TempSortedDocumentField."Field Code" := CDCTemplateField.Code;
+                    TempSortedDocumentField.Insert();
+                end else
+                    if CDCTemplateField.Required then begin
+                        MandatoryField."Document No." := TempDocLine."Document No.";
+                        MandatoryField."Sort Order" := CDCTemplateField.Sorting;
+                        MandatoryField."Field Code" := CDCTemplateField.Code;
+                        MandatoryField.Insert();
+                    end;
+            until CDCTemplateField.Next() = 0;
 
     end;
 
@@ -829,31 +827,31 @@ codeunit 61001 "ALR Advanced Line Capture"
         Field.SetRange(Type, Field.Type::Header);
         Field.SetFilter("Stop Lines Recognition", '>%1', Field."Stop Lines Recognition"::" ");
         if Field.Find() then
-                repeat
-                    Value.Reset();
-                    Value.SetRange("Document No.", Document."No.");
-                    Value.SetRange(Type, Field.Type);
-                    Value.SetRange(Code, Field.Code);
-                    Value.SetRange("Page No.", CurrPageNo);
+            repeat
+                Value.Reset();
+                Value.SetRange("Document No.", Document."No.");
+                Value.SetRange(Type, Field.Type);
+                Value.SetRange(Code, Field.Code);
+                Value.SetRange("Page No.", CurrPageNo);
 
-                    case Field."Stop Lines Recognition" of
-                        Field."Stop Lines Recognition"::"If Caption is on same line",
-                      Field."Stop Lines Recognition"::"If Caption is on same line (continue on next page)":
-                            Value.SetRange("Is Value", false);
-                        Field."Stop Lines Recognition"::"If Value is on same line",
-                      Field."Stop Lines Recognition"::"If Value is on same line (continue on next page)":
-                            Value.SetRange("Is Value", true);
-                        Field."Stop Lines Recognition"::"If Caption or Value is on same line",
-                      Field."Stop Lines Recognition"::"If Caption or Value is on same line (continue on next page)":
-                            Value.SetRange("Is Value");
-                    end;
+                case Field."Stop Lines Recognition" of
+                    Field."Stop Lines Recognition"::"If Caption is on same line",
+                  Field."Stop Lines Recognition"::"If Caption is on same line (continue on next page)":
+                        Value.SetRange("Is Value", false);
+                    Field."Stop Lines Recognition"::"If Value is on same line",
+                  Field."Stop Lines Recognition"::"If Value is on same line (continue on next page)":
+                        Value.SetRange("Is Value", true);
+                    Field."Stop Lines Recognition"::"If Caption or Value is on same line",
+                  Field."Stop Lines Recognition"::"If Caption or Value is on same line (continue on next page)":
+                        Value.SetRange("Is Value");
+                end;
 
-                    Value.SetFilter(Top, '>%1', 0);
-                    if Value.FindFirst() then
-                        if (StopPos[Value."Page No."] = 0) or (StopPos[Value."Page No."] > Value.Top) then
-                            if (not (Value.Left = Value.Right) and (Value.Bottom = Value.Top)) then
-                                StopPos[Value."Page No."] := Value.Top;
-                until Field.Next() = 0;
+                Value.SetFilter(Top, '>%1', 0);
+                if Value.FindFirst() then
+                    if (StopPos[Value."Page No."] = 0) or (StopPos[Value."Page No."] > Value.Top) then
+                        if (not (Value.Left = Value.Right) and (Value.Bottom = Value.Top)) then
+                            StopPos[Value."Page No."] := Value.Top;
+            until Field.Next() = 0;
     end;
 
     local procedure CleanupPrevValues(Document: Record "CDC Document")
