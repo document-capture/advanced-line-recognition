@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en-US" target-language="da" original="Advanced Line Recognition">
+  <file datatype="xml" source-language="en-US" target-language="da-DK" original="Advanced Line Recognition">
     <body>
       <group id="body">
         <trans-unit id="Codeunit 1295984445 - NamedType 1490299369" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
