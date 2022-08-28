@@ -1,523 +1,523 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en-US" target-language="fr-CH" original="Advanced Line Recognition">
+  <file datatype="xml" source-language="en-US" target-language="es-ES" original="Advanced Line Recognition">
     <body>
       <group id="body">
         <trans-unit id="Codeunit 1295984445 - NamedType 1490299369" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount % (%4) to calculate Discount Amount (%5) on line %1.</source>
           
           
-        <target state="final">Le montant de la ligne capturée (%2) est différent du montant de la ligne calculé (%3) à l'aide du % remise (%4) capturé pour calculer le montant de la remise (%5) à la ligne %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount in % | %5 = calculated discount</note></trans-unit>
+        <target state="final">El importe de línea capturado (%2) es diferente del importe de línea calculado (%3) usando el % de descuento capturado (%4) para calcular el importe de descuento (%5) de la línea %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount in % | %5 = calculated discount</note></trans-unit>
         <trans-unit id="Codeunit 1295984445 - NamedType 1496561452" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) using captured Discount Amount (%4) on line %1.</source>
           
           
-        <target state="final">Le montant de la ligne capturée (%2) est différent du montant de la ligne calculé (%3) à l'aide du montant de remise (%4) capturé à la ligne %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount</note></trans-unit>
+        <target state="final">El importe de línea capturado (%2) es diferente del importe de línea calculado (%3) usando el importe de descuento campturado (%4) en la línea %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated amount | %4 = captured discount</note></trans-unit>
         <trans-unit id="Codeunit 1295984445 - NamedType 4175384441" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Line Amount captured (%2) is different from Line Amount calculated (%3) on line %1.</source>
           
           
-        <target state="final">Le montant de la ligne capturée (%2) est différent du montant de ligne calculé (%3) à la ligne %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated line amount | %4 = captured discount | %5 = calculated discount</note></trans-unit>
+        <target state="final">Importe línea capturado (%2) es diferente del importe de línea calculado (%3) en la línea %1.</target><note>%1 = line no. | %2 = captured line amount | %3 = calculated line amount | %4 = captured discount | %5 = calculated discount</note></trans-unit>
         <trans-unit id="Codeunit 1295984445 - NamedType 3492639454" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>WARNING: %1</source>
           
           
-        <target state="final">ATTENTION : %1</target><note>%1 is the warning message</note></trans-unit>
+        <target state="final">ATENCIÓN: %1</target><note>%1 is the warning message</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>%1 | Business Central version:%2 (Build %3)</source>
           
           
-        <target state="final">%1 | Version Business Central: %2 (Build %3)</target><note>%1 = ALR object version | %2 = BC version | %3 = BC build</note></trans-unit>
+        <target state="final">%1 | Business Central versión:%2 (Build %3)</target><note>%1 = ALR object version | %2 = BC version | %3 = BC build</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Error during field setup.</source>
           
           
-        <target state="final">Erreur lors de la configuration du champ.</target><note/></trans-unit>
+        <target state="final">Error durante la configuración del campo.</target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3356558191" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>The value of field "%1" will now been searched via the caption in the current line.</source>
           
           
-        <target state="final">La valeur du champ "%1" sera maintenant recherchée via la légende dans la ligne actuelle.</target><note>%1 = field description</note></trans-unit>
+        <target state="final">El valor del campo "%1" se buscará ahora a través del título de la línea actual.</target><note>%1 = field description</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3812887959" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>The field "%1" will now be searched via the column heading "%2".</source>
           
           
-        <target state="final">Le champ "%1" sera maintenant recherché via l'en-tête de colonne "%2".</target><note>%1 = field description | %2 = caption of column heading</note></trans-unit>
+        <target state="final">El campo "%1" se buscará ahora a través del encabezamiento de la columna "%2".</target><note>%1 = field description | %2 = caption of column heading</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 325433647" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>The field "%1" is now linked to field "%2"!</source>
           
           
-        <target state="final">Le champ "%1" est maintenant lié au champ "%2 " !</target><note>%1 = field description of selected field | %2 = field description of linked field</note></trans-unit>
+        <target state="final">El campo "%1" está ahora vinculado al campo "%2"!</target><note>%1 = field description of selected field | %2 = field description of linked field</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 2155055126" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Field setup aborted because no field was selected!</source>
           
           
-        <target state="final">La configuration du champ a été interrompue car aucun champ n'a été sélectionné !</target><note/></trans-unit>
+        <target state="final">La configuración del campo se ha cancelado porque no se ha seleccionado ningún campo.</target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 2294241521" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>The value for for %1 (%2) in line %3 is missing! Please train this value first!</source>
           
           
-        <target state="final">La valeur de %1 (%2) à la ligne %3 est manquante! Veuillez d'abord entraîner cette valeur !</target><note>Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.</note></trans-unit>
+        <target state="final">Falta el valor para %1 (%2) en la línea %3 . ¡Por favor, configure este valor primero!</target><note>Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 105322588" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>The value for source field "%1" in line %2 is missing! Please train this value first!</source>
           
           
-        <target state="final">La valeur du champ source "%1" à la ligne %2 est manquante! Veuillez d'abord entraîner cette valeur.</target><note>%1 = source field description | %2 = line no</note></trans-unit>
+        <target state="final">Falta el valor del campo fuente "%1" en la línea %2 . ¡Por favor, configure este valor primero!</target><note>%1 = source field description | %2 = line no</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 153526915" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>There are not fields configured for advanced line recognition, that can be reset.</source>
           
           
-        <target state="final">Il n'y a pas de champs configurés pour la reconnaissance de ligne avancée, qui peuvent être réinitialisés.</target><note/></trans-unit>
+        <target state="final">No hay campos configurados para el reconocimiento avanzado de líneas que puedan ser restablecidos.</target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3368211824" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.</source>
           
           
-        <target state="final">Aucun champ obligatoire avec l'option "Requis" n'a été trouvé à la ligne %1! Configurez d'abord un champ obligatoire.</target><note>%1 = line no.</note></trans-unit>
+        <target state="final">¡No se ha encontrado ningún campo obligatorio con la opción "Obligatorio" en la línea %1! Configure primero un campo obligatorio.</target><note>%1 = line no.</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3995791139" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Choose the field whose value should be found by the caption in the current line.</source>
           
           
-        <target state="final">Choisir le champ dont la valeur doit être trouvée par la légende de la ligne actuelle.</target><note/></trans-unit>
+        <target state="final">Elija el campo cuyo valor se debe encontrar usando el título en la línea actual.</target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1880864858" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Select the field that should be found by the column heading.</source>
           
           
-        <target state="final">Sélectionnez le champ qui doit être trouvé par l'en-tête de colonne.</target><note/></trans-unit>
+        <target state="final">Seleccione el campo que debe ser encontrado por la cabecera de la columna.</target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1660936068" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Please select first the source field on the basis of which position the value should be found. </source>
           
           
-        <target state="final">Veuillez d'abord sélectionner le champ source sur base duquel la position de la valeur doit être trouvée. </target><note/></trans-unit>
+        <target state="final">Por favor, seleccione primero el campo fuente en base al cual se debe encontrar el valor. </target><note/></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3750022258" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Please choose the field, which should be linked with the source field "%1".</source>
           
           
-        <target state="final">Veuillez choisir le champ qui doit être lié au champ source "%1".</target><note> %1 = field description of source field</note></trans-unit>
+        <target state="final">Por favor, elija el campo que debe ser vinculado con el campo fuente "%1".</target><note> %1 = field description of source field</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3935478471" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>No caption has been configured for field "%1". You must configure the caption first.</source>
           
           
-        <target state="final">Aucune légende n'a été configurée pour le champ "%1". Vous devez d'abord configurer la légende.</target><note> %1 = field description</note></trans-unit>
+        <target state="final">No se ha configurado ningún título para el campo "%1". Debe configurar primero el título.</target><note> %1 = field description</note></trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>You are using version advanced line recognition version: %1</source>
           
           
-        <target state="final">Vous utilisez la version avancée de la reconnaissance de ligne : %1</target><note>%1 Displays the current version of the Advanced line recognition to the user including the build</note></trans-unit>
+        <target state="final">Está utilizando la versión de reconocimiento avanzado de líneas: %1</target><note>%1 Displays the current version of the Advanced line recognition to the user including the build</note></trans-unit>
         <trans-unit id="Codeunit 28597237 - NamedType 2796480165" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!</source>
           
           
-        <target state="final">Vous ne pouvez pas utiliser l'option de reconnaissance de ligne avancée %1 lorsque le modèle n'a pas au moins un champ de ligne marqué comme requis!</target><note>Show when the template does not have at least one line field marked as required. %1 = selected ALR option</note></trans-unit>
+        <target state="final">No puede utilizar la opción de reconocimiento avanzado de líneas %1 cuando la plantilla no tiene al menos un campo de línea marcado como obligatorio.</target><note>Show when the template does not have at least one line field marked as required. %1 = selected ALR option</note></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Adv. line recognition</source>
           
           
-        <target state="final">Reconnaissance av. de ligne</target><note/></trans-unit>
+        <target state="final">Reconocimieno avanzado de líneas</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2973788643 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Disables the automatic field detection.</source>
           
           
-        <target state="final">Désactive la détection automatique des champs.</target><note/></trans-unit>
+        <target state="final">Desactiva la detección automática de campos.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2973788643 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Disable field detection</source>
           
           
-        <target state="final">Désactiver la détection des champs</target><note/></trans-unit>
+        <target state="final">Desactivar detección de campos</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2359910080 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.</source>
           
           
-        <target state="final">Activer la détection automatique du champ. Le système utilisera le dernier champ capturé lors de la configuration de la reconnaissance avancée de la ligne.</target><note/></trans-unit>
+        <target state="final">Habilita la detección automática de campos. El sistema usará el último campo capturado durante la configuración del reconocimiento avanzado de líneas.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2359910080 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Enable field detection</source>
           
           
-        <target state="final">Activer la détection des champs</target><note/></trans-unit>
+        <target state="final">Habilitar detección de campos</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 1687192353 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>The advanced line recognition settings are reset for the desired field.</source>
           
           
-        <target state="final">Les paramètres de reconnaissance avancés de ligne sont réinitialisés pour le champ désiré.</target><note/></trans-unit>
+        <target state="final">La configuración del reconocimiento avanzado de líneas se restablece para el campo deseado.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 1687192353 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Reset field</source>
           
           
-        <target state="final">Réinitialiser le champ</target><note/></trans-unit>
+        <target state="final">Restablecer campo</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 122988749 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>The desired field is searched for using a previously trained search text/caption in the area of the current position.</source>
           
           
-        <target state="final">Le champ désiré est recherché en utilisant un texte/légende de recherche préalablement entraîné dans la zone de la position courante.</target><note/></trans-unit>
+        <target state="final">El campo deseado se busca mediante un texto/título de búsqueda previamente configurado en el área de la posición actual.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 122988749 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Find value by caption</source>
           
           
-        <target state="final">Trouver valeur par légende</target><note/></trans-unit>
+        <target state="final">Encontrar valor por etiqueta</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 1993352181 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>The desired field is searched for using a previously trained column heading in the range of the current position.</source>
           
           
-        <target state="final">Le champ désiré est recherché en utilisant un texte/légende de recherche préalablement entraîné dans la zone de la position courante.</target><note/></trans-unit>
+        <target state="final">El campo deseado se busca mediante un texto/etiqueta de búsqueda previamente configurado en el área de la posición actual.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 1993352181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Find value by column heading</source>
           
           
-        <target state="final">Rechercher valeur par en-tête de colonne</target><note/></trans-unit>
+        <target state="final">Buscar valor por cabecera de columna</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 786213122 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>The desired field is found via a fixed offset (distance) from another field.</source>
           
           
-        <target state="final">Le champ désiré est trouvé via un décalage fixe (distance) à partir d'un autre champ.</target><note/></trans-unit>
+        <target state="final">El campo deseado se encuentra a través de un desplazamiento fijo (distancia) de otro campo.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 786213122 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Find value by linked field</source>
           
           
-        <target state="final">Trouver valeur par champ lié</target><note/></trans-unit>
+        <target state="final">Buscar valor por campo vinculado</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 266822292 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Displays the currently used version of the advanced line detection.</source>
           
           
-        <target state="final">Affiche la version actuellement utilisée de la détection avancée de ligne.</target><note/></trans-unit>
+        <target state="final">Muestra la versión actual del reconocimiento avanzado de líneas.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 266822292 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037" approved="yes">
           <source>Version</source>
           
           
-        <target state="final">Version</target><note/></trans-unit>
+        <target state="final">Versión</target><note/></trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 940755310 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
           <source>Select if you want to use the default line validation from the template codeunit or the Adv. line recognition validation</source>
           
           
-        <target state="final">Sélectionnez si vous souhaitez utiliser la validation par défaut de la ligne à partir de Codeunit du modèle ou la validation de la reconnaissance avancée de ligne</target><note/></trans-unit>
+        <target state="final">Seleccione si desea utilizar la validación de líneas por defecto de la codeunit de la plantilla o la validación de reconocimiento avanzado de líneas</target><note/></trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 1381794906 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
           <source>Select if you want to use validate the line totals against the net amount of the document</source>
           
           
-        <target state="final">Sélectionnez si vous souhaitez utiliser la validation des totaux de la ligne par rapport au montant net du document</target><note/></trans-unit>
+        <target state="final">Seleccione si desea utilizar la validación de los totales de las líneas comparado con el importe total del documento</target><note/></trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 1643358770 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
           <source>Enables the automatic search for purchase order numbers.</source>
           
           
-        <target state="final">Active la recherche automatique des numéros de bon de commande.</target><note/></trans-unit>
+        <target state="final">Activa la búsqueda automática de números de pedido de compra.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 1496491442 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644" approved="yes">
           <source>Filter string that is used during automatic search for PO numbers.</source>
           
           
-        <target state="final">Chaîne de filtre utilisée lors de la recherche automatique de numéros de commande.</target><note/></trans-unit>
+        <target state="final">Filtro que se utiliza durante la búsqueda automática de números de pedido de compra.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Advanced Line Recognition</source>
           
           
-        <target state="final">Reconnaissance avancée de ligne</target><note/></trans-unit>
+        <target state="final">Reconocimieno avanzado de líneas</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 2242850252 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies how the field value is to be found. With Standard, the field is searched for using the standard line recognition.</source>
           
           
-        <target state="final">Spécifie comment la valeur du champ doit être trouvée. Avec Standard, le champ est recherché en utilisant la reconnaissance de ligne standard.</target><note/></trans-unit>
+        <target state="final">Especifica cómo se debe encontrar el valor del campo. Con Estándar, el campo se busca utilizando el reconocimiento de líneas estándar.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 4029575849 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies whether the searched field is searched above or below the line in which the values of the standard line recognition were found.</source>
           
           
-        <target state="final">Spécifie si le champ recherché est recherché au-dessus ou en dessous de la ligne dans laquelle les valeurs de la reconnaissance de ligne standard ont été trouvées.</target><note/></trans-unit>
+        <target state="final">Especifica si el campo buscado se busca por encima o por debajo de la línea en la que se encontraron los valores del reconocimiento de línea estándar.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3761957527 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the search direction from the standard line that is used to find the field value.</source>
           
           
-        <target state="final">Spécifie la direction de recherche depuis la ligne standard utilisée pour trouver la valeur du champ.</target><note/></trans-unit>
+        <target state="final">Especifica la dirección de búsqueda desde la línea estándar que se utiliza para encontrar el valor del campo.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3426312336 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the source field used to calculate the field value via distances/offsets.</source>
           
           
-        <target state="final">Spécifie le champ source utilisé pour calculer la valeur du champ via des distances/décalages.</target><note/></trans-unit>
+        <target state="final">Especifica el campo fuente utilizado para calcular el valor del campo a través de las distancias/desplazamientos.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 608525509 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>When value is empty</source>
           
           
-        <target state="final">Quand la valeur est vide</target><note/></trans-unit>
+        <target state="final">Cuando el valor está vacío</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 760805135 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.</source>
           
           
-        <target state="final">Si la valeur du champ actuel n'est pas trouvée, la valeur est copiée dans la ligne actuelle à partir du même champ de la ligne précédente.</target><note/></trans-unit>
+        <target state="final">Si no se encuentra el valor del campo actual, el valor se copia en la línea actual desde el mismo campo de la línea anterior.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3561839456 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies if the selected field is a header or line field (Default = line)</source>
           
           
-        <target state="final">Spécifie si le champ sélectionné est un en-tête ou un champ de ligne (par défaut = ligne)</target><note/></trans-unit>
+        <target state="final">Especifica si el campo seleccionado es un campo de cabecera o de línea (Por defecto = línea)</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1282584007 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the line field whose content will be used as value if the value of the current field cannot be found.</source>
           
           
-        <target state="final">Spécifie le champ de ligne dont le contenu sera utilisé comme valeur si la valeur du champ actuel est introuvable.</target><note/></trans-unit>
+        <target state="final">Especifica el campo de la línea cuyo contenido se utilizará como valor si no se encuentra el valor del campo actual.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3242722715 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Offsets</source>
           
           
-        <target state="final">Décalages</target><note/></trans-unit>
+        <target state="final">Desplazamientos</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3500245166 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the expected field width of the field.</source>
           
           
-        <target state="final">Spécifie la largeur attendue du champ.</target><note/></trans-unit>
+        <target state="final">Especifica el ancho esperado del campo.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 911104209 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the search text/caption on the X axis.</source>
           
           
-        <target state="final">Spécifie la distance avec le texte/légende de la recherche sur l'axe X.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia al texto de búsqueda/etiqueta en el eje X.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1548800826 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the search text/caption on the Y axis.</source>
           
           
-        <target state="final">Spécifie la distance avec le texte/légende de la recherche sur l'axe Y.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia al texto de búsqueda/etiqueta en el eje Y.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 101378087 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the bottom.</source>
           
           
-        <target state="final">Spécifie la distance par rapport au bas.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia al fondo.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1915176867 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the left.</source>
           
           
-        <target state="final">Spécifie la distance par rapport à la gauche.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia a la izquierda.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 2178543078 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the right.</source>
           
           
-        <target state="final">Spécifie la distance par rapport à la droite.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia a la derecha.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3987080467 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the distance to the top.</source>
           
           
-        <target state="final">Spécifie la distance par rapport au haut.</target><note/></trans-unit>
+        <target state="final">Especifica la distancia a la parte superior.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3406244935 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the position of the sequence in which the field is processed.</source>
           
           
-        <target state="final">Spécifie la position de la séquence dans laquelle le champ est traité.</target><note/></trans-unit>
+        <target state="final">Especifica la posición de la secuencia en la que se procesa el campo.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 426820614 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Text manipulations</source>
           
           
-        <target state="final">Manipulations de texte</target><note/></trans-unit>
+        <target state="final">Manipulaciones texto</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 3761811404 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Extract string</source>
           
           
-        <target state="final">Extraire une chaîne</target><note/></trans-unit>
+        <target state="final">Extraer cadena</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 2413733976 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the length of the string that has to be extracted. If the length is omitted, all characters up to the end of the string are used.</source>
           
           
-        <target state="final">Spécifie la longueur de la chaîne de caractères qui doit être extraite. Si la longueur est omise, tous les caractères jusqu'à la fin de la chaîne sont utilisés.</target><note/></trans-unit>
+        <target state="final">Especifica la longitud de la cadena que debe extraerse. Si se omite la longitud, se utilizan todos los caracteres hasta el final de la cadena.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 965432584 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the start position of the string that has to be extracted.</source>
           
           
-        <target state="final">Spécifie la position de départ de la chaîne de caractères qui doit être extraite.</target><note/></trans-unit>
+        <target state="final">Especifica la posición inicial de la cadena que debe ser extraída.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1292229197 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Returns a part of the recognized value. It starts at "Position" and has a specified length.</source>
           
           
-        <target state="final">Renvoie une partie de la valeur reconnue. Elle commence à "Position" et a une longueur spécifiée.</target><note/></trans-unit>
+        <target state="final">Devuelve una parte del valor reconocido. Comienza en la "Posición" y tiene una longitud especificada.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1292229197 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Extract string from value</source>
           
           
-        <target state="final">Extraire une chaîne de caractères de la valeur</target><note/></trans-unit>
+        <target state="final">Extraer cadena del valor</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1860429792 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Delete characters</source>
           
           
-        <target state="final">Supprimer des caractères</target><note/></trans-unit>
+        <target state="final">Borrar caracteres</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1392960252 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the character or string to be removed. The default value is the space character.</source>
           
           
-        <target state="final">Spécifie le caractère ou la chaîne à supprimer. La valeur par défaut est le caractère espace.</target><note/></trans-unit>
+        <target state="final">Especifica el carácter o la cadena que se va a eliminar. El valor por defecto es el carácter espacio.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 540692363 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Specifies the position where the original string is to be shortened.</source>
           
           
-        <target state="final">Spécifie la position où la chaîne originale doit être raccourcie.</target><note/></trans-unit>
+        <target state="final">Especifica la posición en la que se debe acortar la cadena original.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1334315591 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>If enabled the system can delete characters from the value.</source>
           
           
-        <target state="final">Si cette option est activée, le système peut supprimer des caractères de la valeur.</target><note/></trans-unit>
+        <target state="final">Si se activa, el sistema puede eliminar caracteres del valor.</target><note/></trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1334315591 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958" approved="yes">
           <source>Delete characters from value</source>
           
           
-        <target state="final">Supprimer les caractères de la valeur</target><note/></trans-unit>
+        <target state="final">Borrar caracteres del valor</target><note/></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 940755310 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
           <source>Line validation type</source>
           
           
-        <target state="final">Type de validation de ligne</target><note/></trans-unit>
+        <target state="final">Tipo validación de línea</target><note/></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 940755310 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
           <source>Default template codeunit,Advanced Line Recognition</source>
           
           
-        <target state="final">Codeunit par défaut,Reconnaissance avancée de la ligne</target><note/></trans-unit>
+        <target state="final">Codeunit por defecto de la plantilla,Reconocimiento avanzado de líneas</target><note/></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 1643358770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
           <source>Automatic PO search</source>
           
           
-        <target state="final">Recherche automatique du numéro de commande</target><note/></trans-unit>
+        <target state="final">Búsqueda auto. pedidos compra</target><note/></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 1496491442 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928" approved="yes">
           <source>Automatic PO search filter</source>
           
           
-        <target state="final">Filtre de recherche automatique du numéro de commande</target><note/></trans-unit>
+        <target state="final">Filtro auto. búsqueda pedidos compra</target><note/></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 1496491442 - Method 1213635141 - NamedType 3762595250" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 62246305" approved="yes">
           <source>Do you want to overwrite the existing filter with a new automatically build filter?</source>
           
           
-        <target state="final">Voulez-vous remplacer le filtre existant par un nouveau filtre de compilation automatique?</target><note>Ask user to overwrite existingfilter string for automatic PO number filtering.</note></trans-unit>
+        <target state="final">¿Desea sobrescribir el filtro existente con un nuevo filtro generado de forma automática?</target><note>Ask user to overwrite existingfilter string for automatic PO number filtering.</note></trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 1496491442 - Method 1213635141 - NamedType 691856742" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 62246305" approved="yes">
           <source>Do you want the system to automatically find a PO number filter?</source>
           
           
-        <target state="final">Voulez-vous que le système trouve automatiquement un filtre de numéro de bon de commande?</target><note>Ask user to use automatic PO number filtering.</note></trans-unit>
+        <target state="final">¿Quiere que el sistema encuentre automáticamente un filtro de número de pedidos de compra?</target><note>Ask user to use automatic PO number filtering.</note></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3024729169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Advanced Line Recognition Type</source>
           
           
-        <target state="final">Type de reconnaissance avancée de ligne</target><note/></trans-unit>
+        <target state="final">Tipo reconocimiento avanzado de líneas</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3024729169 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Standard,Anchor linked field,Field search with caption,Field search with column heading</source>
           
           
-        <target state="final">Standard,Champ lié aux ancrages,Recherche de champ avec légende,Recherche de champ avec en-tête de colonne</target><note/></trans-unit>
+        <target state="final">Estándar,Campo vinculado,Búsqueda de campo con título,Búsqueda de campo con encabezamiento de columna</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3500245166 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Field Width</source>
           
           
-        <target state="final">Largeur de champ</target><note/></trans-unit>
+        <target state="final">Anchura campo</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 911104209 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Caption Offset X</source>
           
           
-        <target state="final">Décalage de légende X</target><note/></trans-unit>
+        <target state="final">Desplazamiento del título X</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1548800826 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Caption Offset Y</source>
           
           
-        <target state="final">Décalage de légende Y</target><note/></trans-unit>
+        <target state="final">Desplazamiento del título Y</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1392960252 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Character(s) to delete</source>
           
           
-        <target state="final">Caractère(s) à supprimer</target><note/></trans-unit>
+        <target state="final">Caracter(es) a eliminar</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3090058030 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Copy value from previous value</source>
           
           
-        <target state="final">Copier la valeur depuis la valeur précédente</target><note/></trans-unit>
+        <target state="final">Copiar el valor del valor anterior</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 2413733976 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Length of string</source>
           
           
-        <target state="final">Longueur de la chaîne</target><note/></trans-unit>
+        <target state="final">Longitud de la cadena</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 965432584 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Start of string</source>
           
           
-        <target state="final">Début de la chaîne de caractères</target><note/></trans-unit>
+        <target state="final">Inicio de la cadena</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1334315591 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Delete characters from string</source>
           
           
-        <target state="final">Supprimer les caractères d'une chaîne de caractères</target><note/></trans-unit>
+        <target state="final">Borrar caracteres de la cadena</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1292229197 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Extract string</source>
           
           
-        <target state="final">Extraire une chaîne</target><note/></trans-unit>
+        <target state="final">Extraer cadena</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3800550788 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Value position</source>
           
           
-        <target state="final">Position de la valeur</target><note>Defines if the value should be searched above or below the standard line.</note></trans-unit>
+        <target state="final">Posición valor</target><note>Defines if the value should be searched above or below the standard line.</note></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3800550788 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source> ,Above standard line,Below standard line</source>
           
           
-        <target state="final"> ,Au-dessus de la ligne standard, en-dessous de la ligne standard</target><note/></trans-unit>
+        <target state="final"> ,Por encima de la línea estándar,por debajo de la línea estándar</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1831634694 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Value search direction</source>
           
           
-        <target state="final">Direction de la recherche de valeur</target><note>Defines the search direction to find the value</note></trans-unit>
+        <target state="final">Dirección búsqueda valores</target><note>Defines the search direction to find the value</note></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 1831634694 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Downwards,Upwards</source>
           
           
-        <target state="final">Vers le bas,Vers le haut</target><note/></trans-unit>
+        <target state="final">Hacia abajo, hacia arriba</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3878945789 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Linked to field</source>
           
           
-        <target state="final">Lié au champ</target><note/></trans-unit>
+        <target state="final">Vinculado al campo</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3134861838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Offset Height</source>
           
           
-        <target state="final">Hauteur de décalage</target><note/></trans-unit>
+        <target state="final">Altura desplazamiento</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 170820834 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Offset Left</source>
           
           
-        <target state="final">Décalage gauche</target><note/></trans-unit>
+        <target state="final">Desplazamiento a la izquierda</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 2719260903 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Offset Width</source>
           
           
-        <target state="final">Largeur de décalage</target><note/></trans-unit>
+        <target state="final">Anchura desplazamiento</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3315964426 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Offset Top</source>
           
           
-        <target state="final">Hauteur de décalage</target><note/></trans-unit>
+        <target state="final">Desplazamiento superior</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 540692363 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Deleted characters position</source>
           
           
-        <target state="final">Position des caractères supprimés</target><note/></trans-unit>
+        <target state="final">Posición caracteres borrados</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3200689824 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Replacement field</source>
           
           
-        <target state="final">Champ de remplacement</target><note/></trans-unit>
+        <target state="final">Campo sustitución</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3015600400 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Replacement field type</source>
           
           
-        <target state="final">Type de champ de remplacement</target><note/></trans-unit>
+        <target state="final">Tipo campo sustitución</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3015600400 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Header,Line</source>
           
           
-        <target state="final">En-tête, Ligne</target><note/></trans-unit>
+        <target state="final">Cabecera,Línea</target><note/></trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3299771246 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410" approved="yes">
           <source>Sorting</source>
           
           
-        <target state="final">Tri</target><note>Position in the sort order in which the field will be processed</note></trans-unit>
+        <target state="final">Ordenación</target><note>Position in the sort order in which the field will be processed</note></trans-unit>
         <trans-unit id="Enum 2166596951 - EnumValue 3703598467 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Characters in complete string</source>
           
           
-        <target state="final">Caractères de la chaîne complète</target><note/></trans-unit>
+        <target state="final">Caracteres de la cadena completa</target><note/></trans-unit>
         <trans-unit id="Enum 2166596951 - EnumValue 4261199896 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Leading characters</source>
           
           
-        <target state="final">Personnages principaux</target><note/></trans-unit>
+        <target state="final">Caracteres iniciales</target><note/></trans-unit>
         <trans-unit id="Enum 2166596951 - EnumValue 3692485694 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" approved="yes">
           <source>Trailing characters</source>
           
           
-        <target state="final">Caractères de fin de ligne</target><note/></trans-unit>
+        <target state="final">Caracteres finales</target><note/></trans-unit>
       </group>
     </body>
   </file>
