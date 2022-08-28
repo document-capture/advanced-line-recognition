@@ -145,6 +145,7 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
         {
             Caption = 'Start of string';
             DataClassification = CustomerContent;
+            InitValue = 1;
         }
 
         field(61035; "CopyStr Length"; Integer)

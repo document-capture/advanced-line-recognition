@@ -465,7 +465,7 @@ codeunit 61001 "ALR Advanced Line Capture"
             end;
         end;
 
-        if Field."Extract string by CopyStr" then
+        if (Field."Extract string by CopyStr") and (Field."CopyStr Pos" > 0) then
             if Field."CopyStr Length" = 0 then
                 Word := CopyStr(Word, Field."CopyStr Pos", MaxStrLen(Word))
             else
