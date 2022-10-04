@@ -1,10 +1,14 @@
 ## Important notice ##
-Please choose allways the latest release/version of the advanced line recognition.
+Please choose allways the latest release/version of the advanced line recognition if possible.
+
+Currently we will <ins>not add new functionality into BC14 and older</ins> version but maintain the existing ones to be compatible with new versions of Document Capture.
+
 
 If you cannot find an object set with the correct combination of your desired Document Capture and Business Central/NAV version, you have to downgrade/merge it **by yourself** or with the help of your partner.
+Usually you can allways try to e.g. compile against an older BC application and DC version as the ALR doesn't have too many dependencies to the standard DC objects.
 
 ## Old(er) NAV and Document Capture Versions ##
-If you need to implement the Advanced Line Recognition for older NAV or DC Versions you have to make minor modifications to the application.
+If you need to implement the Advanced Line Recognition for older NAV or DC Versions <ins>without Event options (NAV2015 and older)</ins> you have to make minor modifications to the application.
 
 1. Codeunit 6085575
 * First of all you have to add a new global function SetLineRegion() 
