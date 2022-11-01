@@ -1,0 +1,107 @@
+{
+  "id": "c3e5c32c-513a-47ed-a749-9f9e5ee20342",
+  "name": "Advanced Line Recognition",
+  "publisher": "github.com/document-capture",
+  "version": "1.15.0.3",
+  "brief": "Extension for Continia Document Capture for advanced recognition, especially lines",
+  "description": "Advanced line recognition extension enhances Continia Document Capture with a few usefull options that will enable you to process most likely 99% of all documents.",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "https://github.com/document-capture/advanced-line-recognition/wiki/",
+  "url": "https://github.com/document-capture/advanced-line-recognition/tree/master/Objects",
+  
+  "dependencies": [
+    {
+      "id": "63ca2fa4-4f03-4f2b-a480-172fef340d3f",
+      "publisher": "Microsoft",
+      "name": "System Application",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "publisher": "Microsoft",
+      "name": "Base Application",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "e3907796-b6d8-445b-b701-b734363c0190",
+      "publisher": "acadon AG",
+      "name": "Timber",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "66b8ce90-9239-409a-95f3-11862ca73473",
+      "publisher": "acadon AG",
+      "name": "acadon_job",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "6eeb7693-fd33-4df0-9fb6-cf975ed7f279",
+      "publisher": "NVision Commerce Solutions B.V.",
+      "name": "Commerce 365 for Magento",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "4f35d04f-2e02-41dc-8d58-081d77f3a61d",
+      "publisher": "acadon AG",
+      "name": "Foreco Code",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "995d3dbf-f267-413d-963e-ad579c8d02d2",
+      "publisher": "acadon AG",
+      "name": "acadon_doc.box",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "b0539a8a-139a-41b3-bc9c-ac1d3280b1f8",
+      "publisher": "acadon AG",
+      "name": "acadon_ADDM",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "deddde22-e256-46bc-8d0b-ac69c28e3a0e",
+      "publisher": "acadon AG",
+      "name": "acadon_edi",
+      "version": "19.0.0.0"
+    },
+    {
+      "id": "6da8dd2f-e698-461f-9147-8e404244dd85",
+      "publisher": "Continia Software",
+      "name": "Continia Document Capture 365",
+      "version": "8.1.0.0"
+    },
+    {
+      "id": "8c972578-fe72-4aa5-ae51-cc5575fef2ea",
+      "publisher": "Microsoft",
+      "name": "Send To Email Printer",
+      "version": "19.1.31886.32186"
+    },
+    {
+      "id": "655ba81d-1e08-4301-9d74-feafe94274a5",
+      "name": "AWMS WMS Light",
+      "publisher": "acadon AG",
+      "version": "19.0.0.0"     
+    },
+    {
+      "id": "04ce4b18-1897-495c-bd43-fc53bdd0bbc0",
+      "name": "acadonWMSLight",
+      "publisher": "acadon AG",
+      "version": "19.0.0.0"     
+    }     
+  ],
+  "screenshots": [],
+  "platform": "19.0.0.0",
+  "application": "19.0.0.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 80000
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://ALProject2.com/help/",
+  "showMyCode": true,
+  "runtime": "7.1",
+  "target": "OnPrem",
+  "features": ["TranslationFile"]
+}
