@@ -114,7 +114,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 4231034024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
-          <source>Copy Doc. config to Master</source>
+          <source>Copy field config to Master</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property Caption</note>
         </trans-unit>
@@ -239,7 +239,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopyValueFrom - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 594590350 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
-          <source>Specifies the field in the header table where to transfer the value when registering documents.</source>
+          <source>Specifies the field in the source table whose value is to be used as field value.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
         </trans-unit>
@@ -609,7 +609,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue FixedValue - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3164589616 - EnumValue 785863684 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ignorieren</source>
+          <source>Ignore</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue Ignore - Property Caption</note>
         </trans-unit>

@@ -39,7 +39,7 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
             action(CopySettingToMaster)
             {
                 ApplicationArea = All;
-                Caption = 'Copy Doc. config to Master';
+                Caption = 'Copy field config to Master';
                 Description = 'Copies the documents XML configuration to the Master template';
                 Image = Copy;
                 Promoted = true;

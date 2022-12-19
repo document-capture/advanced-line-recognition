@@ -2,7 +2,7 @@ enum 61001 "ALR Empty Field Value Handling"
 {
     value(0; Ignore)
     {
-        Caption = 'Ignorieren';
+        Caption = 'Ignore';
     }
     value(1; DeleteLine)
     {

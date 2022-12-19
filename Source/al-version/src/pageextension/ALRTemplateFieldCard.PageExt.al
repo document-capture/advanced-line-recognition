@@ -7,12 +7,14 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         {
             group(CopyValueFrom)
             {
+                Visible = not IsLineField;
                 Caption = 'Copy value from';
+
                 field(CopySourceField; CopySourceField)
                 {
                     ApplicationArea = All;
                     CaptionClass = Rec.GetSourceFieldCaption();
-                    ToolTip = 'Specifies the field in the header table where to transfer the value when registering documents.';
+                    ToolTip = 'Specifies the field in the source table whose value is to be used as field value.';
 
                     trigger OnLookup(var Text: Text): Boolean
                     var
@@ -99,31 +101,11 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                             UpdateALRFields();
                         end;
                     }
-                    // field("ALRCopy Value from Previous Value"; Rec."Copy Value from Previous Value")
-                    // {
-                    //     ApplicationArea = All;
-                    //     ToolTip = 'If the value of the current field is not found, the value is copied to the current line from the same field from the previous line.';
-                    //     trigger OnValidate()
-                    //     begin
-                    //         UpdateALRFields();
-                    //     end;
-                    // }
+
                     group(ReplacementTypeGroup)
                     {
                         ShowCaption = false;
                         Visible = IsFieldReplacement;
-
-
-                        // field("ALRReplacement Header Field";
-                        // Rec."Replacement Field Type")
-                        // {
-                        //     ApplicationArea = All;
-                        //     ToolTip = 'Specifies if the selected field is a header or line field (Default = line)';
-                        //     trigger OnValidate()
-                        //     begin
-                        //         UpdateALRFields();
-                        //     end;
-                        // }
 
                         field("ALRReplacement Line Field"; Rec."Replacement Field")
                         {
@@ -287,14 +269,12 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
     trigger OnAfterGetCurrRecord()
     begin
         UpdateALRFields();
-        //CurrPage.Update(false);
     end;
 
 
     trigger OnAfterGetRecord()
     begin
         UpdateALRFields();
-        //CurrPage.Update(false);
     end;
 
 
