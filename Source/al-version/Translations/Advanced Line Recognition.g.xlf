@@ -24,8 +24,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Purch. - Line Valid. - NamedType WarningTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 | Business Central version:%2 (Build %3)</source>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
+          <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">

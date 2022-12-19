@@ -28,10 +28,11 @@
           <note from="Developer" annotates="general" priority="2">%1 is the warning message</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 | Business Central version:%2 (Build %3)</source>
-          <target>%1 | Business Central versie: %2 (Build %3)</target>
+          <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
+          <target>%1 (Data %2) | Business Central version:%3 (Build %4)</target>
           <note from="Xliff Generator" annotates="general" priority="0">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">The placeholder "%4" was found in source, but not in target.</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error during field setup.</source>
@@ -133,7 +134,6 @@
           <source>Copy field config to Master</source>
           <target>Copy field config to Master</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
@@ -265,7 +265,6 @@
           <source>Specifies the field in the source table whose value is to be used as field value.</source>
           <target>Specifies the field in the source table whose value is to be used as field value.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
@@ -593,13 +592,11 @@
           <source>Replacement type</source>
           <target>Replacement typeVervanging veldtype</target>
           <note from="Xliff Generator" annotates="general" priority="0"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3015600400 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Header Field,Line Field,Fixed Value</source>
           <target>Header Field,Line Field,Fixed Value</target>
           <note from="Xliff Generator" annotates="general" priority="0"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3299771246 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Sorting</source>
@@ -656,7 +653,6 @@
           <source>Ignore</source>
           <target>Ignore</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue Ignore - Property Caption</note>
         </trans-unit>
       </group>

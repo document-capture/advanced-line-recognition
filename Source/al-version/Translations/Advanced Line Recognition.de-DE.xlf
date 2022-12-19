@@ -28,10 +28,10 @@
           <note from="Developer" annotates="general" priority="2">%1 is the warning message</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 | Business Central version:%2 (Build %3)</source>
-          <target>%1 | Business Central Version:%2 (Build %3)</target>
+          <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
+          <target>%1 (Daten %2) | Business Central Version:%3 (Build %4)</target>
           <note from="Xliff Generator" annotates="general" priority="0">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error during field setup.</source>
@@ -652,7 +652,6 @@
           <source>Ignore</source>
           <target> </target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue Ignore - Property Caption</note>
         </trans-unit>
       </group>

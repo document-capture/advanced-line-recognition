@@ -57,21 +57,34 @@ codeunit 61004 "ALR Install Management"
     local procedure UpdateEmptyValueReplacementOptions()
     var
         TemplateField: Record "CDC Template Field";
+        ModifyField: Boolean;
     begin
-        if TemplateField.FindSet() then
+        if TemplateField.FindSet(true, false) then
             repeat
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Header) and (TemplateField."Replacement Field" <> '') then
+                Clear(ModifyField);
+                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Header) and (TemplateField."Replacement Field" <> '') then begin
                     TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyHeaderFieldValue;
+                    ModifyField := true;
+                end;
 
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Line) and (TemplateField."Replacement Field" <> '') then
+
+                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Line) and (TemplateField."Replacement Field" <> '') then begin
                     TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyLineFieldValue;
+                    ModifyField := true;
+                end;
 
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::FixedValue) and (TemplateField."Fixed Replacement Value" <> '') then
+                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::FixedValue) and (TemplateField."Fixed Replacement Value" <> '') then begin
                     TemplateField."Empty value handling" := TemplateField."Empty value handling"::FixedValue;
+                    ModifyField := true;
+                end;
 
-                if TemplateField."Copy Value from Previous Value" then
+                if TemplateField."Copy Value from Previous Value" then begin
                     TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyPrevLineValue;
-                TemplateField.Modify();
+                    ModifyField := true;
+                end;
+
+                if ModifyField then
+                    TemplateField.Modify();
             until TemplateField.Next() = 0;
     end;
 }

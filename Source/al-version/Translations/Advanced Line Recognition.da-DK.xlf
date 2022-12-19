@@ -28,10 +28,10 @@
           <note from="Developer" annotates="general" priority="2">%1 is the warning message</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 | Business Central version:%2 (Build %3)</source>
-          <target>%1 | Business Central version:%2 (Build %3)</target>
+          <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
+          <target>%1 (Daten %2) | Business Central Version:%3 (Build %4)</target>
           <note from="Xliff Generator" annotates="general" priority="0">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
-          <note from="Developer" annotates="general" priority="2">%1 = ALR object version | %2 = BC version | %3 = BC build</note>
+          <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error during field setup.</source>
@@ -131,9 +131,8 @@
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 4231034024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Copy field config to Master</source>
-          <target>[NAB: REVIEW]Kopier Doc. config til Master</target>
+          <target>Kopier Doc. config til Master</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
@@ -263,9 +262,8 @@
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 594590350 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the field in the source table whose value is to be used as field value.</source>
-          <target>[NAB: REVIEW]Angiver det felt i overskriftstabellen, hvor værdien skal overføres ved registrering af dokumenter</target>
+          <target>Angiver det felt i overskriftstabellen, hvor værdien skal overføres ved registrering af dokumenter</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
@@ -654,7 +652,6 @@
           <source>Ignore</source>
           <target>Ignorer</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue Ignore - Property Caption</note>
         </trans-unit>
       </group>
