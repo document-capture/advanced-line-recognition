@@ -1,6 +1,7 @@
 #pragma warning disable AA0072
 pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines ListPart"
 {
+    ContextSensitiveHelpPage = 'document-card';
     actions
     {
         addafter(Line)

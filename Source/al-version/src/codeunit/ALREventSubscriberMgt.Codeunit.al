@@ -2,7 +2,6 @@ codeunit 61005 "ALR Event Subscriber Mgt."
 {
     var
         ALRCapture: Codeunit "ALR Advanced Line Capture";
-        ALRConstantFieldMgt: Codeunit "ALR Constant Field Mgt.";
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Management", 'OnAfterApplyTranslationToWord', '', true, true)]
     local procedure CDCCaptureManagement_OnBeforeApplyTranslationToWord(var Field: Record "CDC Template Field"; var Word: Text[1024])

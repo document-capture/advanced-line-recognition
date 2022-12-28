@@ -49,7 +49,6 @@ codeunit 61007 "ALR Template Helper"
         Rec.TestField("XML Master Template No.");
         if Template.Get(Rec."Template No.") then begin
             TemplateField.SetRange("Template No.", Rec."Template No.");
-            TemplateField.SetRange("Type", Template.Type);
             TemplateField.SetFilter("XML Path", '<>%1', '');
             if TemplateField.FindSet() then
                 repeat
@@ -59,5 +58,35 @@ codeunit 61007 "ALR Template Helper"
                     end;
                 until TemplateField.Next() = 0;
         end;
+    end;
+
+    internal procedure OpenDocumentCategoryCard(DocumentCategory: Code[10])
+    var
+        DocCat: Record "CDC Document Category";
+        DocCatCard: Page "CDC Document Category Card";
+    begin
+        if DocCat.Get(DocumentCategory) then begin
+            DocCatCard.SetRecord(DocCat);
+            DocCatCard.Run();
+        end
+    end;
+
+    internal procedure OpenMasterTemplateField(TemplateField: Record "CDC Template Field")
+    var
+        Template: Record "CDC Template";
+        MasterTemplateField: Record "CDC Template Field";
+        TemplateFieldCard: page "CDC Template Field Card";
+    begin
+        if not Template.Get(TemplateField."Template No.") then
+            exit;
+
+        Template.TestField(Type, Template.Type::" ");
+
+        // Accept to raise an error, if master template doesn't exist anymore
+        MasterTemplateField.Get(Template."Master Template No.", TemplateField.Type, TemplateField.Code);
+
+        TemplateFieldCard.SetRecord(MasterTemplateField);
+        TemplateFieldCard.Caption := 'Master Template Field Card';
+        TemplateFieldCard.RunModal();
     end;
 }

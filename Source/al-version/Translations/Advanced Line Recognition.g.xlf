@@ -118,6 +118,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1363719420 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>Open document category card</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action DocCategory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1363719420 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>Document Category</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action DocCategory - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Open identification template of current selected Document</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -137,6 +147,46 @@
           <source>Master Template</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action MasterTemplate - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 4231034024 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Copies the documents XML configuration to the Master template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action CopySettingToMaster - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 4231034024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Copy field config to Master</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action CopySettingToMaster - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 1363719420 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open document category card</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action DocCategory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 1363719420 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Document Category</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action DocCategory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open identification template of current selected Document</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action IdentificationTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 2930493894 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Ident. Template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action IdentificationTemplate - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 952220120 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open master template of current selected Document</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action MasterTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 952220120 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Master Template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action MasterTemplate - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Adv. line recognition</source>
@@ -232,6 +282,16 @@
           <source>Filter string that is used during automatic search for PO numbers.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control Auto PO search filter - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Action 1897569658 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Open master template of current selected Document</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Action MasterTemplateField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Action 1897569658 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Master Template Field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Action MasterTemplateField - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 2490862908 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Copy value from</source>

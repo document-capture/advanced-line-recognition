@@ -1,6 +1,6 @@
 pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
 {
-    ContextSensitiveHelpPage = 'field-description';
+    ContextSensitiveHelpPage = 'template-field-card';
     layout
     {
         addbefore("Advanced Recognition Settings")
@@ -261,6 +261,31 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                     }
                 }
             }
+
+        }
+    }
+    actions
+    {
+        addafter(Codeunits)
+        {
+            action(MasterTemplateField)
+            {
+                ApplicationArea = All;
+                Caption = 'Master Template Field';
+                Description = 'Open master template of current selected Document';
+                Image = Open;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Open master template of current selected Document';
+                Visible = IsNormalField;
+
+                trigger OnAction()
+                var
+                    TemplateHelper: Codeunit "ALR Template Helper";
+                begin
+                    TemplateHelper.OpenMasterTemplateField(Rec);
+                end;
+            }
         }
     }
 
@@ -295,6 +320,8 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         if Template.Get(Rec."Template No.") then
             if DocCat.Get(Template."Category Code") then
                 CopySourceField := RecIDMgt.GetFieldCaption(DocCat."Source Table No.", Rec."Get value from source field");
+
+        IsNormalField := (Template.Type = Template.Type::" ");
     end;
 
     internal procedure RecIdMgt_GetFieldID(TableNo: Integer; Text: Text[250]) FieldNo: Integer
@@ -329,6 +356,8 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         IsFieldReplacement: Boolean;
         [InDataSet]
         IsCopyFromPrevField: Boolean;
+        [InDataSet]
+        IsNormalField: Boolean;
         CopySourceField: Text[250];
         RecIDMgt: Codeunit "CDC Record ID Mgt.";
 }

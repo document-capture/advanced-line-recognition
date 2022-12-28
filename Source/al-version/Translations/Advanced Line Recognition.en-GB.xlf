@@ -31,7 +31,6 @@
           <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
           <target>%1 (Data %2) | Business Central version:%3 (Build %4)</target>
           <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">The placeholder "%4" was found in source, but not in target.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
         </trans-unit>
         <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
@@ -138,10 +137,21 @@
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 4231034024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Copy field config to Master</source>
-          <target>[NAB: REVIEW]</target>
+          <target>Copy field config to Master</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action CopySettingToMaster - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1363719420 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>Open document category card</source>
+          <target>Open document category card</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action DocCategory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1363719420 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>Document Category</source>
+          <target>Document Category</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action DocCategory - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Open identification template of current selected Document</source>
@@ -166,6 +176,54 @@
           <target>Master Template</target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action MasterTemplate - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 4231034024 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Copies the documents XML configuration to the Master template</source>
+          <target>Copies the documents XML configuration to the Master template</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action CopySettingToMaster - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 4231034024 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Copy field config to Master</source>
+          <target>Copy field config to Master</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action CopySettingToMaster - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 1363719420 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open document category card</source>
+          <target>Open document category card</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action DocCategory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 1363719420 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Document Category</source>
+          <target>Document Category</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action DocCategory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 2930493894 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open identification template of current selected Document</source>
+          <target>Open identification template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action IdentificationTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 2930493894 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Ident. Template</source>
+          <target>Ident. Template</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action IdentificationTemplate - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 952220120 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Open master template of current selected Document</source>
+          <target>Open master template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action MasterTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1106015432 - Action 952220120 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 906369673">
+          <source>Master Template</source>
+          <target>Master Template</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Card - Action MasterTemplate - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 2236155193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Adv. line recognition</source>
@@ -253,9 +311,8 @@
         </trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 266822292 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>Version</source>
-          <target>[NAB: SUGGESTION]Version</target>
+          <target>Version</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action ShowVersionNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 940755310 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644">
@@ -282,6 +339,18 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Card - Control Auto PO search filter - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Action 1897569658 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Open master template of current selected Document</source>
+          <target>Open master template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Action MasterTemplateField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Action 1897569658 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Master Template Field</source>
+          <target>Master Template Field</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Action MasterTemplateField - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 2490862908 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Copy value from</source>
           <target>Copy value from</target>
@@ -290,9 +359,8 @@
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 594590350 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Specifies the field in the source table whose value is to be used as field value.</source>
-          <target>[NAB: REVIEW]</target>
+          <target>Specifies the field in the source table whose value is to be used as field value.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
@@ -669,16 +737,14 @@
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3015600400 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Replacement type</source>
-          <target>[NAB: REVIEW]</target>
+          <target>Replacement type</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Replacement Field Type - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3015600400 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Header Field,Line Field,Fixed Value</source>
-          <target>[NAB: REVIEW]</target>
+          <target>Header Field,Line Field,Fixed Value</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Replacement Field Type - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3299771246 - Property 2879900210" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
@@ -737,9 +803,8 @@
         </trans-unit>
         <trans-unit id="Enum 3164589616 - EnumValue 785863684 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ignore</source>
-          <target>[NAB: REVIEW]Ignorieren</target>
+          <target>Ignore</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Source has been modified.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ALR Empty Field Value Handling - EnumValue Ignore - Property Caption</note>
         </trans-unit>
       </group>

@@ -1,6 +1,6 @@
-pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
+pageextension 61004 "ALR Document Card" extends "CDC Document Card"
 {
-    ContextSensitiveHelpPage = 'document-list';
+    ContextSensitiveHelpPage = 'document-card';
     actions
     {
         addafter("Remove Template Field")
@@ -14,7 +14,6 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
                 Promoted = true;
                 PromotedCategory = Category6;
                 ToolTip = 'Open master template of current selected Document';
-                Enabled = IsDocument;
 
                 trigger OnAction()
                 begin
@@ -31,11 +30,11 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
                 Promoted = true;
                 PromotedCategory = Category6;
                 ToolTip = 'Open identification template of current selected Document';
-                Enabled = IsDocument;
 
                 trigger OnAction()
                 begin
                     TemplateHelper.OpenIdentificationTemplate(Rec, IsXMLTemplate);
+
                 end;
             }
             action(DocCategory)
@@ -47,7 +46,6 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
                 Promoted = true;
                 PromotedCategory = Category6;
                 ToolTip = 'Open document category card';
-                Enabled = IsDocument;
 
                 trigger OnAction()
                 begin
@@ -78,17 +76,13 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
             }
         }
     }
-
     var
         [InDataSet]
         IsXMLTemplate: Boolean;
-        [InDataSet]
-        IsDocument: Boolean;
         TemplateHelper: Codeunit "ALR Template Helper";
 
     trigger OnAfterGetCurrRecord()
     begin
         IsXMLTemplate := Rec."File Type" = Rec."File Type"::XML;
-        IsDocument := Rec."No." <> '';
     end;
 }

@@ -128,17 +128,12 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
         {
             Caption = 'Empty value handling';
             DataClassification = CustomerContent;
+            InitValue = "Ignore";
         }
         field(61001; "Fixed Replacement Value"; Text[200])
         {
             Caption = 'Fixed replacement value';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            var
-                ConstantMgt: Codeunit "ALR Constant Field Mgt.";
-            begin
-                ConstantMgt.ConvertToConstant("Fixed Replacement Value");
-            end;
         }
         field(61003; "Get value from source field"; Integer)
         {

@@ -1,6 +1,6 @@
 codeunit 61000 "ALR Adv. Recognition Mgt."
 {
-#pragma warning disable AA0072
+    //#pragma warning disable AA0072
 #pragma warning disable AA0074
     trigger OnRun()
     begin
@@ -322,7 +322,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
     procedure ShowVersionNo(): Text
     var
         VersionTriggers: Codeunit "Version Triggers";
-        InstallMgt: Codeunit "ALR Install Management";
+        InstallMgt: Codeunit "ALR Upgrade Management";
         ModInfo: ModuleInfo;
         ApplicationVersion: Text[248];
         ApplicationBuild: Text[80];

@@ -1,5 +1,6 @@
 enum 61001 "ALR Empty Field Value Handling"
 {
+    Extensible = true;
     value(0; Ignore)
     {
         Caption = 'Ignore';

@@ -1,6 +1,6 @@
 pageextension 61002 "ALR Template Card" extends "CDC Template Card"
 {
-    ContextSensitiveHelpPage = 'template-card-options';
+    ContextSensitiveHelpPage = 'template-card';
     layout
     {
         addafter("Purch. Validate VAT Calc.")

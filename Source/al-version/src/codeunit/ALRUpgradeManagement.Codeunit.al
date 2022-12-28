@@ -1,6 +1,6 @@
-codeunit 61004 "ALR Install Management"
+codeunit 61004 "ALR Upgrade Management"
 {
-    Subtype = Install;
+    Subtype = Upgrade;
 
     var
         ALRDataVersionLbl: Label 'ALRDataVersion', Locked = true;
@@ -8,14 +8,14 @@ codeunit 61004 "ALR Install Management"
         ALRVersion: Integer;
 
     // procedure is executed in every existing company, when the app is installed
-    trigger OnInstallAppPerCompany()
+    trigger OnUpgradePerCompany()
     begin
         GetDataVersion();
 
         if ALRVersion < 15 then
             SetReplacementFieldTypeToLine();
 
-        if ALRVersion < 16 then
+        if ALRVersion < 17 then
             UpdateEmptyValueReplacementOptions();
 
         UpdateDataVersion();
@@ -51,7 +51,7 @@ codeunit 61004 "ALR Install Management"
     // Function to update the dataversion to prevent record modifications on next app install/update
     local procedure UpdateDataVersion()
     begin
-        IsolatedStorage.Set(ALRDataVersionLbl, FORMAT(16), DataScope::Module);
+        IsolatedStorage.Set(ALRDataVersionLbl, FORMAT(17), DataScope::Module);
     end;
 
     local procedure UpdateEmptyValueReplacementOptions()
@@ -59,23 +59,19 @@ codeunit 61004 "ALR Install Management"
         TemplateField: Record "CDC Template Field";
         ModifyField: Boolean;
     begin
+        TemplateField.ModifyAll("Empty value handling", TemplateField."Empty value handling"::Ignore);
         if TemplateField.FindSet(true, false) then
             repeat
-                Clear(ModifyField);
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Header) and (TemplateField."Replacement Field" <> '') then begin
-                    TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyHeaderFieldValue;
+                if TemplateField."Replacement Field" <> '' then begin
                     ModifyField := true;
-                end;
-
-
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::Line) and (TemplateField."Replacement Field" <> '') then begin
-                    TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyLineFieldValue;
-                    ModifyField := true;
-                end;
-
-                if (TemplateField."Replacement Field Type" = TemplateField."Replacement Field Type"::FixedValue) and (TemplateField."Fixed Replacement Value" <> '') then begin
-                    TemplateField."Empty value handling" := TemplateField."Empty value handling"::FixedValue;
-                    ModifyField := true;
+                    case TemplateField."Replacement Field Type" of
+                        TemplateField."Replacement Field Type"::Header:
+                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyHeaderFieldValue;
+                        TemplateField."Replacement Field Type"::Line:
+                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyLineFieldValue;
+                        TemplateField."Replacement Field Type"::FixedValue:
+                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::FixedValue;
+                    end;
                 end;
 
                 if TemplateField."Copy Value from Previous Value" then begin
@@ -85,6 +81,7 @@ codeunit 61004 "ALR Install Management"
 
                 if ModifyField then
                     TemplateField.Modify();
+
             until TemplateField.Next() = 0;
     end;
 }
