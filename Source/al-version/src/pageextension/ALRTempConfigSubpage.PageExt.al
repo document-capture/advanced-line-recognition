@@ -15,46 +15,47 @@ pageextension 61006 "ALR Temp. Config Subpage" extends "CDC Continia Config. Sub
         }
     }
 
-    actions
-    {
-        addlast(Processing)
-        {
-            action(IncludeAll)
-            {
-                ApplicationArea = All;
-                Caption = 'Include all';
-                Description = 'Toogles the configuration selection';
-                Image = AllLines;
+    // actions
+    // {
+    //     addlast(Processing)
+    //     {
+    //         action(IncludeAll)
+    //         {
+    //             ApplicationArea = All;
+    //             Caption = 'Include all';
+    //             Description = 'Toogles the configuration selection';
+    //             Image = AllLines;
 
-                ToolTip = 'Open master template of current selected Document';
+    //             ToolTip = 'Open master template of current selected Document';
 
-                trigger OnAction()
-                var
-                    TemplateHelper: Codeunit "ALR Template Helper";
-                begin
-                    ToggleAll(true);
-                    CurrPage.Update(false);
-                end;
-            }
-            action(ExcludeAll)
-            {
-                ApplicationArea = All;
-                Caption = 'Exclude all';
-                Description = 'Excludes all configuration selection';
-                Image = Line;
+    //             trigger OnAction()
+    //             var
+    //                 TemplateHelper: Codeunit "ALR Template Helper";
+    //             begin
+    //                 ToggleAll(true);
+    //                 CurrPage.Update(false);
+    //             end;
+    //         }
+    //         action(ExcludeAll)
+    //         {
+    //             ApplicationArea = All;
+    //             Caption = 'Exclude all';
+    //             Description = 'Excludes all configuration selection';
+    //             Image = Line;
 
-                ToolTip = 'Open master template of current selected Document';
+    //             ToolTip = 'Open master template of current selected Document';
 
-                trigger OnAction()
-                var
-                    TemplateHelper: Codeunit "ALR Template Helper";
-                begin
-                    ToggleAll(false);
-                    CurrPage.Update(false);
-                end;
-            }
-        }
-    }
+    //             trigger OnAction()
+    //             var
+    //                 TemplateHelper: Codeunit "ALR Template Helper";
+    //             begin
+    //                 ToggleAll(false);
+
+    //                 CurrPage.Update(false);
+    //             end;
+    //         }
+    //     }
+    //}
 
     var
         TemplateName: Text;
@@ -74,15 +75,12 @@ pageextension 61006 "ALR Temp. Config Subpage" extends "CDC Continia Config. Sub
             end;
     end;
 
-
-
-
-    local procedure ToggleAll(Include: Boolean)
-    begin
-        if Rec.FindFirst() then
-            repeat
-                Rec.Include := Include;
-                Rec.Modify();
-            until Rec.Next() = 0;
-    end;
+    // local procedure ToggleAll(Include: Boolean)
+    // begin
+    //     if Rec.FindFirst() then
+    //         repeat
+    //             Rec.Include := Include;
+    //             Rec.Modify();
+    //         until Rec.Next() = 0;
+    // end;
 }

@@ -263,26 +263,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action ShowVersionNo - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Open master template of current selected Document</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Exclude all</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Open master template of current selected Document</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Include all</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 3933725828 - Control 2558506169 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
           <source>Specifies the record being imported or exported. Expand to view the subordinate records.</source>
           <note from="Developer" annotates="general" priority="2"></note>
