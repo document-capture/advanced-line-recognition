@@ -89,4 +89,29 @@ codeunit 61007 "ALR Template Helper"
         TemplateFieldCard.Caption := 'Master Template Field Card';
         TemplateFieldCard.RunModal();
     end;
+
+    internal procedure CopyTemplateField(SourceField: Record "CDC Template Field")
+    var
+        Template: Record "CDC Template";
+        TargetField: Record "CDC Template Field";
+        TemplateList: Page "CDC Template List";
+        TemplateCard: Page "CDC Template Card";
+    begin
+        Template.SetCurrentKey("Category Code", "Source Record ID Tree ID");
+        TemplateList.SetTableView(Template);
+        TemplateList.LookupMode := true;
+        if TemplateList.RunModal() = Action::LookupOK then begin
+            TemplateList.GetRecord(Template);
+            TargetField.Init();
+            TargetField.TransferFields(SourceField, true);
+            TargetField."Template No." := Template."No.";
+            TargetField.Insert(true);
+            if Confirm('The field has been successfully copied. Click yes to open the template card of %1 (%2)', false, Template.Description, Template."No.") then begin
+                TemplateCard.SetRecord(Template);
+                TemplateCard.Run();
+            end;
+        end;
+
+
+    end;
 }

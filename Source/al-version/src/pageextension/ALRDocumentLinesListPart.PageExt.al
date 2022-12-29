@@ -71,19 +71,6 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                         AdvLineRecognitionMgt.ShowVersionNo();
                     end;
                 }
-                action(EnableFieldRecognition)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Enable field detection';
-                    Image = SelectField;
-                    ToolTip = 'Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.';
-                    Visible = not ShowFieldRecognition;
-                    trigger OnAction()
-                    begin
-                        ALRMgtSI.FlipAutoFieldRecognition();
-                        ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
-                    end;
-                }
                 action(DisableFieldRecognition)
                 {
                     ApplicationArea = All;
@@ -94,6 +81,19 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                     trigger OnAction()
                     begin
 
+                        ALRMgtSI.FlipAutoFieldRecognition();
+                        ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
+                    end;
+                }
+                action(EnableFieldRecognition)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Enable field detection';
+                    Image = SelectField;
+                    ToolTip = 'Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.';
+                    Visible = not ShowFieldRecognition;
+                    trigger OnAction()
+                    begin
                         ALRMgtSI.FlipAutoFieldRecognition();
                         ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
                     end;

@@ -315,6 +315,42 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action ShowVersionNo - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Open master template of current selected Document</source>
+          <target>Open master template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Exclude all</source>
+          <target>Exclude all</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Open master template of current selected Document</source>
+          <target>Open master template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Include all</source>
+          <target>Include all</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Control 2558506169 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Specifies the record being imported or exported. Expand to view the subordinate records.</source>
+          <target>Specifies the record being imported or exported. Expand to view the subordinate records.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Control TemplateName - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3933725828 - Control 2558506169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
+          <source>Template Name (Type)</source>
+          <target>Template Name (Type)</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Control TemplateName - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2558081933 - Control 940755310 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2699767644">
           <source>Select if you want to use the default line validation from the template codeunit or the Adv. line recognition validation</source>
           <target>Select if you want to use the default line validation from the template codeunit or the Adv. line recognition validation</target>
@@ -536,6 +572,18 @@
           <target>Delete characters from value</target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Enable DelChr - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1899429676 - Action 1906811348 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3187756933">
+          <source>Open master template of current selected Document</source>
+          <target>Open master template of current selected Document</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Subpage - Action CopyFieldToOtherTemplate - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1899429676 - Action 1906811348 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3187756933">
+          <source>Copy Field to Template</source>
+          <target>Copy Field to Template</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Subpage - Action CopyFieldToOtherTemplate - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 62246305 - Field 940755310 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2871401928">
           <source>Line validation type</source>
