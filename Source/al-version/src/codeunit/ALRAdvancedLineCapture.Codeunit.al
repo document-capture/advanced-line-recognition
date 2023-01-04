@@ -6,7 +6,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         TempMandatoryCDCTempDocumentField: Record "CDC Temp. Document Field" temporary;
         CDCTemplate: Record "CDC Template";
         CDCCaptureManagement: Codeunit "CDC Capture Management";
-        CDCCaptureEngine: Codeunit "CDC Capture Engine";
         ALRSingleInstanceMGt: Codeunit "ALR Single Instance Mgt.";
         NoMandatoryFieldsFoundLbl: Label 'You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!', Comment = 'Show when the template does not have at least one line field marked as required. %1 = selected ALR option', MaxLength = 999, Locked = false;
 
@@ -121,6 +120,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         CurrCDCDocumentPage: Record "CDC Document Page";
         CDCDocumentValue: Record "CDC Document Value";
         CDCDocumentValueCopy: Record "CDC Document Value";
+        CDCCaptureEngine: Codeunit "CDC Capture Engine";
         FromTopPage: Integer;
         FromTopPos: Integer;
         i: Integer;
@@ -132,15 +132,13 @@ codeunit 61001 "ALR Advanced Line Capture"
         if TempMandatoryCDCTempDocumentField.Count = 0 then
             error(NoMandatoryFieldsFoundLbl, CurrCDCTemplateField."Advanced Line Recognition Type");
 
-        //This function will capture the field value based on the caption(s) in the area between the previous and next
+
         if not CDCDocument.Get(CDCTempDocumentLine."Document No.") then
             exit;
 
         //Delete current value
         if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CurrCDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
             CDCDocumentValue.Delete();
-
-        Clear(Word);
 
         // Get valid range depended of search direction
         // 1. above the standard recognized line: range is between standard standard line and previous line
@@ -198,7 +196,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCDocumentValueNew: Record "CDC Document Value";
         TempCDCDocumentValue: Record "CDC Document Value" temporary;
         CaptionEndCDCDocumentWord: array[100] of Record "CDC Document Word";
-        CaptionStartWord: array[100] of Record "CDC Document Word";
+        CaptionStartCDCDocumentWord: array[100] of Record "CDC Document Word";
         CaptionFound: Boolean;
         PageStop: Boolean;
         Bottom: Integer;
@@ -234,7 +232,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         // Find the Caption position on current or previous pages
         CaptionPageNo := CDCTempDocumentLine."Page No.";
         repeat
-            CaptionFound := GetStartAndEndCaption(CaptionStartWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo);
+            CaptionFound := GetStartAndEndCaption(CaptionStartCDCDocumentWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo);
             if not CaptionFound then
                 CaptionPageNo -= 1;
         until (CaptionPageNo = 0) or CaptionFound;
@@ -245,7 +243,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         if not CaptionCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", CaptionPageNo) then
             exit;
 
-        GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top);
+        GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartCDCDocumentWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top);
 
         // Get position of next or previous line
         if (CurrCDCTemplateField."Field value position" = CurrCDCTemplateField."Field value position"::AboveStandardLine) then begin
@@ -277,7 +275,6 @@ codeunit 61001 "ALR Advanced Line Capture"
 
                 if not IsFieldValid(CurrCDCTemplateField, CDCDocument, LineNo) then begin
                     CDCDocumentValue.Reset();
-                    ;
                     CDCDocumentValue.SetRange("Document No.", CDCDocument."No.");
                     CDCDocumentValue.SetRange("Line No.", LineNo);
                     CDCDocumentValue.DeleteAll(true);
@@ -303,9 +300,9 @@ codeunit 61001 "ALR Advanced Line Capture"
                     CurrCDCDocumentPage.Get(CurrCDCDocumentPage."Document No.", CurrCDCDocumentPage."Page No." + 1);
                     CaptionPageNo := CurrCDCDocumentPage."Page No.";
                     LineNo := 1000 * CurrCDCDocumentPage."Page No.";
-                    if GetStartAndEndCaption(CaptionStartWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo) then begin
+                    if GetStartAndEndCaption(CaptionStartCDCDocumentWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo) then begin
                         CaptionCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", CurrCDCDocumentPage."Page No.");
-                        if GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top) then
+                        if GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartCDCDocumentWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top) then
                             Bottom := Top + LineHeight;
 
                     end;
@@ -627,8 +624,8 @@ codeunit 61001 "ALR Advanced Line Capture"
                 end;
 
                 if SearchToPage = CDCDocumentValue."Page No." then
-                    if (SearchToPos < CDCDocumentValue.Bottom) or (SearchToPos = 0) then
-                        SearchToPos := CDCDocumentValue.Bottom;
+                    if (SearchToPos < CDCDocumentValue.Top) or (SearchToPos = 0) then
+                        SearchToPos := CDCDocumentValue.Top;
 
             until CDCDocumentValue.Next() = 0
         else begin
@@ -770,7 +767,7 @@ codeunit 61001 "ALR Advanced Line Capture"
     local procedure GetStartAndEndCaption(var CaptionStartCDCDocumentWord: array[100] of Record "CDC Document Word" temporary; var CaptionEndCDCDocumentWord: array[100] of Record "CDC Document Word" temporary; CDCTemplateField: Record "CDC Template Field"; DocNo: Code[20]; PageNo: Integer): Boolean
     var
         CDCTemplateFieldCaption: Record "CDC Template Field Caption";
-
+        CDCCaptureEngine: Codeunit "CDC Capture Engine";
     begin
         Clear(CaptionStartCDCDocumentWord);
         Clear(CaptionEndCDCDocumentWord);
@@ -786,6 +783,8 @@ codeunit 61001 "ALR Advanced Line Capture"
     end;
 
     local procedure GetPositionOfCaption(CurrCDCDocumentPage: Record "CDC Document Page"; CaptionCDCTemplateField: Record "CDC Template Field"; CaptionStartCDCDocumentWord: Record "CDC Document Word"; CaptionEndCDCDocumentWord: Record "CDC Document Word"; CDCDocumentValue: Record "CDC Document Value"; var FieldLeft: Integer; var FieldWidth: Integer; var Bottom: Integer; var Top: Integer) CaptionValueFound: Boolean
+    var
+        CDCCaptureEngine: Codeunit "CDC Capture Engine";
     begin
         CDCTemplate.Get(CaptionCDCTemplateField."Template No.");
 
@@ -829,6 +828,7 @@ codeunit 61001 "ALR Advanced Line Capture"
     local procedure TableCellAlreadyCaptured(var CDCTemplateParam: Record "CDC Template"; var CDCDocumentPage: Record "CDC Document Page"; var CDCDocumentValue: Record "CDC Document Value"): Boolean
     var
         CDCDocumentValue2: Record "CDC Document Value";
+        CDCCaptureEngine: Codeunit "CDC Capture Engine";
     begin
         CDCDocumentValue2.SetCurrentKey("Document No.", "Is Value", Type, "Page No.");
         if not CDCTemplateParam."First Table Line Has Captions" then
