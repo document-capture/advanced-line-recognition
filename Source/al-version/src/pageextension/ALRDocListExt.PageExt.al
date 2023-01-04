@@ -3,59 +3,6 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
     ContextSensitiveHelpPage = 'document-list';
     actions
     {
-        addafter(RegisterBatch)
-        {
-            action(TestLookupFieldValue)
-            {
-                ApplicationArea = All;
-                Caption = 'Get Lookup Field Value';
-                Description = 'TODO';
-                Image = Open;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'TODO';
-                Enabled = IsDocument;
-
-                trigger OnAction()
-                var
-                    TableFilterField: Record "CDC Table Filter Field";
-                    TemplateField: Record "CDC Template Field";
-                    recref: RecordRef;
-                    fldref: FieldRef;
-                    LookupRecID: Record "CDC Temp. Lookup Record ID" temporary;
-                    recidmgt: Codeunit "CDC Record ID Mgt.";
-                    alr: Codeunit "ALR Advanced Line Capture";
-                    handled: Boolean;
-                begin
-                    alr.GetLookupFieldValue(Rec, 0);
-                    //                     if not TemplateField.Get(Rec."Template No.", TemplateField.Type::Header, 'OURDOCNO') then
-                    //                         exit;
-
-                    //                     TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
-                    //                     if TableFilterField.IsEmpty then
-                    //                         exit;
-
-                    //                     //LookupRecID."Table No." := Category."Source Table No.";
-
-                    //                     /* IF Text <> '' THEN
-                    //                          LookupRecID."Record ID Tree ID" :=
-                    //                            recidmgt.GetRecIDTreeID2(LookupRecID."Table No.", Category."Source Field No.", Category."Document Category GUID", Text);
-
-                    //                      TempLookupRecID."Table Filter GUID" := Category."Document Category GUID";
-
-
-                    //  */
-                    //                     recref.Open(TemplateField."Source Table No.");
-                    //                     fldref := recref.Field(TableFilterField."Field No.");
-                    //                     FilterRecRefWithLookupRecID(recref, TemplateField, Rec);
-                    //                     fldref := recref.Field(TemplateField."Source Field No.");
-                    //                     Message('%1', fldref.Value);
-
-                    //TemplateField."Source Table Filter GUID"
-                    //RecIDMgt.ShowTableFields("Source Table No.", "Template No.", Type, TRUE, "Source Table Filter GUID");
-                end;
-            }
-        }
         addafter("Remove Template Field")
         {
             action(MasterTemplate)
