@@ -564,7 +564,7 @@ codeunit 61001 "ALR Advanced Line Capture"
                 SourceFieldRef := SourceRecordRef.Field(CDCTableFilterField."Field No.");
                 if SetLinkedFieldFilter(SourceRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
                     SourceFieldRef := SourceRecordRef.Field(CDCTemplateField."Linked table field number");
-                    Word := CopyStr(SourceFieldRef.Value, 1, MaxStrLen(Word));
+                    Word := CopyStr(Format(SourceFieldRef.Value), 1, MaxStrLen(Word));
                     ApplyAdvancedStringFunctions(CDCTemplateField, Word);
                     CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false);
                 end;

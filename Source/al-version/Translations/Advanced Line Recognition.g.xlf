@@ -113,15 +113,15 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 2329053619 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The primary key of the table cannot contain more than one field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType Text001</note>
-        </trans-unit>
-        <trans-unit id="Page 2329053619 - NamedType 3752334001" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 2329053619 - NamedType 318310726" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lookup in this field is not possible.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType Text002</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType FieldLookupNotPossibleLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - NamedType 563194629" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The primary key of the table cannot contain more than one field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType PrimaryKeyOnlyOneFieldLbl</note>
         </trans-unit>
         <trans-unit id="Page 2329053619 - Control 823559016 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the caption of the field.</source>
