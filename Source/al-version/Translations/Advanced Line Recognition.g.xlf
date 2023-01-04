@@ -108,6 +108,66 @@
           <note from="Developer" annotates="general" priority="2">Show when the template does not have at least one line field marked as required. %1 = selected ALR option</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Advanced Line Capture - NamedType NoMandatoryFieldsFoundLbl</note>
         </trans-unit>
+        <trans-unit id="Page 2329053619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Table Filters</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The primary key of the table cannot contain more than one field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType Text001</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - NamedType 3752334001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lookup in this field is not possible.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - NamedType Text002</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 823559016 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the caption of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control Field Caption - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 823559016 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Caption</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control Field Caption - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 1203998530 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether the filter is either a fixed filter or if the filter value should be taken from another field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control FilterTypeColumn - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 1203998530 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Filter Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control FilterTypeColumn - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 1203998530 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fixed Filter,Document Field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control FilterTypeColumn - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 4200184881 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of the field in the source table to apply a filter.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 4200184881 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 1131619133 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the filter to apply to the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control Value - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2329053619 - Control 1131619133 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Filter</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ALR Table Filter Field List - Control Value - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 4231034024 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Copies the documents XML configuration to the Master template</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -313,10 +373,25 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 2749515459 - Control 3849825275 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
-          <source>Enable to get the field value from the fields lookup configuration</source>
+        <trans-unit id="PageExtension 2749515459 - Control 1538887793 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the linked table that should be used to get the value from</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Get value from lookup - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control LinkedTable - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Control 1538887793 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Linked Table</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control LinkedTable - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Control 3792952007 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the field in the of the lookup table that should be used to get the value from</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control LinkedTableField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Control 2984465142 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Specifies the number of filters applied to the linked table if some records from the linked table should be filtered out. </source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control No. of Linked Table Filters - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Advanced Line Recognition</source>
@@ -503,10 +578,20 @@
           <note from="Developer" annotates="general" priority="2">Ask user to use automatic PO number filtering.</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template - Field Auto PO search filter - Method OnLookup - NamedType NewPONumberFilterLbl</note>
         </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - NamedType 878451737" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
+          <source>%1 cannot be changed because this field already have a value on one or more documents.</source>
+          <note from="Developer" annotates="general" priority="2">%1 will be replace by field name</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType FieldCannotChangedDueToExistingValuesLbl</note>
+        </trans-unit>
         <trans-unit id="TableExtension 1325761703 - NamedType 3782991566" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
           <source>Field from</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType FieldFromSourceTableNameLbl</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - NamedType 3811093198" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
+          <source>Linked Table Field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType LinkedFieldNoFieldCaptioLbl</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - NamedType 4167378776" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
           <source>Source Record Field</source>
@@ -598,11 +683,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Fixed Replacement Value - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 1325761703 - Field 3849825275 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
-          <source>Get value from lookup</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Get value from lookup - Property Caption</note>
-        </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3536138344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Get value from source field</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -612,6 +692,26 @@
           <source>Linked to field</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Linked Field - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 1765043618 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Field from linked table</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Linked table field number - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 1811091100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Source Table Filter GUID</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Linked Table Filter GUID - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 2491281788 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Linked Table</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Linked Table No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 2984465142 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>No. of Linked Table Filters</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field No. of Linked Table Filters - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3134861838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Offset Height</source>

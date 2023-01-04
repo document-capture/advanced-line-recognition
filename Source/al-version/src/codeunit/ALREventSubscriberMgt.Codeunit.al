@@ -29,7 +29,7 @@ codeunit 61005 "ALR Event Subscriber Mgt."
         ALRAdvancedLineCapture.GetSourceFieldValues(Document, 0);
 
         // Get lookup field values of header fields
-        ALRAdvancedLineCapture.GetLookupFieldValue(Document, 0);
+        ALRAdvancedLineCapture.GetLinkedTableFieldValue(Document, 0);
 
         // Process advanced line capturing
         ALRAdvancedLineCapture.RunLineCapture(Document);

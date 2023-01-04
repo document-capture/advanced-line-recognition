@@ -42,11 +42,63 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                         CurrPage.UPDATE(TRUE);
                     end;
                 }
-
-                field("Get value from lookup"; Rec."Get value from lookup")
+                field(LinkedTable; LinkedTable)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Enable to get the field value from the fields lookup configuration';
+                    Caption = 'Linked Table';
+                    ToolTip = 'Specifies the linked table that should be used to get the value from';
+
+                    trigger OnLookup(var Text: Text): Boolean
+                    var
+                        AllObjWithCaption: Record AllObjWithCaption;
+                        RecIDMgt: Codeunit "CDC Record ID Mgt.";
+                    begin
+                        EXIT(RecIDMgt.LookupObject(AllObjWithCaption."Object Type"::Table, Text));
+                    end;
+
+                    trigger OnValidate()
+                    var
+                        AllObjWithCaption: Record AllObjWithCaption;
+                        RecIDMgt: Codeunit "CDC Record ID Mgt.";
+                    begin
+                        Rec.Validate("Linked Table No.", RecIDMgt.GetObjectID(AllObjWithCaption."Object Type"::Table, LinkedTable));
+                        CurrPage.UPDATE(TRUE);
+                    end;
+                }
+                field("No. of Linked Table Filters"; Rec."No. of Linked Table Filters")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number of filters applied to the linked table if some records from the linked table should be filtered out. ';
+
+                    trigger OnDrillDown()
+                    begin
+                        RecIDMgt_ShowTableFields(Rec."Linked Table No.", Rec."Template No.", Rec.Type, TRUE, Rec."Linked Table Filter GUID");
+                        CurrPage.UPDATE(TRUE);
+                    end;
+                }
+                field(LinkedTableField; LinkedTableField)
+                {
+                    ApplicationArea = All;
+                    CaptionClass = Rec.GetLinkedFieldCaption();
+                    ToolTip = 'Specifies the field in the of the lookup table that should be used to get the value from';
+
+                    trigger OnLookup(var Text: Text): Boolean
+                    var
+                        LinkedFieldText: Text[250];
+                    begin
+                        LinkedFieldText := CopyStr(Text, 1, MaxStrLen(LinkedFieldText));
+                        if CDCRecordIDMgt.LookupField(LinkedFieldText, Rec."Linked Table No.", false) then begin
+                            Text := LinkedFieldText;
+                            exit(true);
+                        end;
+                    end;
+
+                    trigger OnValidate()
+                    var
+                    begin
+                        Rec.VALIDATE("Linked table field number", RecIdMgt_GetFieldID(Rec."Linked Table No.", LinkedTableField));
+                        CurrPage.UPDATE(TRUE);
+                    end;
                 }
             }
         }
@@ -316,8 +368,10 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
 
     procedure UpdateALRFields()
     var
+        AllObjWithCaption: Record AllObjWithCaption;
         CDCDocumentCategory: Record "CDC Document Category";
         CDCTemplate: Record "CDC Template";
+
     begin
         IsLinkedFieldSearch := Rec."Advanced Line Recognition Type" = Rec."Advanced Line Recognition Type"::LinkedToAnchorField;
         ShowPositionDependendFields := (Rec."Advanced Line Recognition Type" in [Rec."Advanced Line Recognition Type"::FindFieldByColumnHeading, Rec."Advanced Line Recognition Type"::FindFieldByCaptionInPosition]);
@@ -331,6 +385,8 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
             if CDCDocumentCategory.Get(CDCTemplate."Category Code") then
                 CopySourceField := CDCRecordIDMgt.GetFieldCaption(CDCDocumentCategory."Source Table No.", Rec."Get value from source field");
 
+        LinkedTableField := CDCRecordIDMgt.GetFieldCaption(Rec."Linked Table No.", Rec."Linked table field number");
+        LinkedTable := CDCRecordIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table, Rec."Linked Table No.");
         IsNormalField := (CDCTemplate.Type = CDCTemplate.Type::" ");
     end;
 
@@ -344,6 +400,31 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
             Field.SETRANGE("Field Caption", Text);
             IF Field.FindFirst() THEN
                 EXIT(Field."No.");
+        END;
+    end;
+
+    internal procedure RecIdMgt_ShowTableFields(TableNo: Integer; TemplNo: Code[20]; TemplFieldType: Option Header,Line; ShowFieldType: Boolean; var SourceGUID: Guid)
+    var
+        "Field": Record "Field";
+        //CDCTableFilterField: Record "CDC Table Filter Field";
+        ALRTableFilterFieldList: Page "ALR Table Filter Field List";
+        EmptyGUID: Guid;
+    begin
+        IF TableNo = 0 THEN
+            EXIT;
+
+        IF SourceGUID = EmptyGUID THEN
+            SourceGUID := CreateGuid();
+
+        Field.FILTERGROUP(4);
+        Field.SETRANGE(TableNo, TableNo);
+        Field.SETRANGE(Enabled, TRUE);
+        Field.SETRANGE(Class, Field.Class::Normal);
+        Field.FILTERGROUP(0);
+        IF Field.FindFirst() THEN BEGIN
+            ALRTableFilterFieldList.SetParam(TemplNo, TemplFieldType, SourceGUID, ShowFieldType);
+            ALRTableFilterFieldList.SETTABLEVIEW(Field);
+            ALRTableFilterFieldList.RunModal();
         END;
     end;
 
@@ -368,4 +449,6 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         [InDataSet]
         ShowPositionDependendFields: Boolean;
         CopySourceField: Text[250];
+        LinkedTable: Text[250];
+        LinkedTableField: Text[250];
 }

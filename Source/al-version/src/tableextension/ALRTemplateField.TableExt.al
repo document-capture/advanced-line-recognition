@@ -143,35 +143,88 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 
             trigger OnValidate()
             var
+                CDCDocumentCategory: Record "CDC Document Category";
                 CDCTemplate: Record "CDC Template";
                 "Field": Record "Field";
-                DocCat: Record "CDC Document Category";
             begin
-                Rec.TestField("Get value from lookup", false);
+                Rec.TestField("Linked Table No.", 0);
+                Rec.TestField("Linked table field number", 0);
 
                 if ("Get value from source field" = xRec."Get value from source field") OR ("Get value from source field" = 0) then
                     exit;
 
                 CDCTemplate.Get("Template No.");
-                DocCat.Get(CDCTemplate."Category Code");
-                DocCat.TestField("Source Table No.");
+                CDCDocumentCategory.Get(CDCTemplate."Category Code");
+                CDCDocumentCategory.TestField("Source Table No.");
 
-                Field.Get(DocCat."Source Table No.", "Get value from source field");
+                Field.Get(CDCDocumentCategory."Source Table No.", "Get value from source field");
                 Field.TestField(Enabled);
                 Field.TestField(Class, Field.Class::Normal);
             end;
         }
-        field(61004; "Get value from lookup"; Boolean)
+        field(61004; "Linked Table No."; Integer)
         {
+            BlankZero = true;
+            Caption = 'Linked Table';
             DataClassification = CustomerContent;
+            TableRelation = AllObj."Object ID" WHERE("Object Type" = CONST(Table));
+
             trigger OnValidate()
+            var
+                DCLogMgt: Codeunit "CDC Log Mgt.";
+                RecIDMgt: Codeunit "CDC Record ID Mgt.";
             begin
-                Rec.Testfield("Get value from source field", 0);
-                Rec.TestField("Data Type", Rec."Data Type"::Lookup);
-                Rec.TestField("Source Table No.");
-                Rec.TestField("Source Field No.");
+                IF "Source Table No." <> 0 THEN
+                    TESTFIELD("Data Type", "Data Type"::Lookup);
+
+                DCLogMgt.IsLogActive2("Source Table No.", TRUE);
+
+                IF "Source Table No." = xRec."Source Table No." THEN
+                    EXIT;
+
+                RecIDMgt_CheckDocValue(Type = Type::Line, Code, "Template No.", CopyStr(FIELDCAPTION("Linked Table No."), 1, 30));
+                RecIDMgt.DeleteTableFilter("Source Table Filter GUID");
+                CLEAR("Source Table Filter GUID");
+                "Fixed Value (Rec. ID Tree ID)" := 0;
+                "Source Field No." := RecIDMgt_GetFirstKeyField("Source Table No.");
             end;
         }
+        field(61005; "Linked Table Filter GUID"; Guid)
+        {
+            Caption = 'Source Table Filter GUID';
+            DataClassification = CustomerContent;
+        }
+        field(61006; "No. of Linked Table Filters"; Integer)
+        {
+            BlankZero = true;
+            CalcFormula = Count("CDC Table Filter Field" WHERE("Table Filter GUID" = FIELD("Linked Table Filter GUID")));
+            Caption = 'No. of Linked Table Filters';
+            Editable = false;
+            FieldClass = FlowField;
+        }
+        field(61007; "Linked table field number"; Integer)
+        {
+            DataClassification = CustomerContent;
+            BlankZero = true;
+            Caption = 'Field from linked table';
+            TableRelation = Field."No.";
+
+            trigger OnValidate()
+            var
+                "Field": Record "Field";
+            begin
+                Rec.Testfield("Get value from source field", 0);
+                Rec.TestField("Linked Table No.");
+
+                if ("Linked table field number" = xRec."Linked table field number") OR ("Linked table field number" = 0) then
+                    exit;
+
+                Field.Get("Linked Table No.", "Linked table field number");
+                Field.TestField(Enabled);
+                Field.TestField(Class, Field.Class::Normal);
+            end;
+        }
+
         field(61030; "Enable DelChr"; Boolean)
         {
             Caption = 'Delete characters from string';
@@ -210,9 +263,9 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 
     internal procedure GetSourceFieldCaption() FieldCap: Text[250]
     var
-        CDCTemplate: Record "CDC Template";
-        CDCDocumentCategory: Record "CDC Document Category";
         AllObjWithCaption: Record AllObjWithCaption;
+        CDCDocumentCategory: Record "CDC Document Category";
+        CDCTemplate: Record "CDC Template";
         CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
         SourceFieldLbl: Label '%1 %2', Comment = '%1 is replaced by table name, %2 by object caption', Locked = true;
     begin
@@ -225,7 +278,52 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 
     end;
 
+    internal procedure GetLinkedFieldCaption() FieldCap: Text[250]
     var
-        SourceNoFieldCaptioLbl: Label 'Source Record Field';
+        AllObjWithCaption: Record AllObjWithCaption;
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
+        LookupFieldLbl: Label '%1 %2', Comment = '%1 is replaced by table name, %2 by object caption', Locked = true;
+    begin
+        FieldCap := StrSubstNo(LookupFieldLbl, FieldFromSourceTableNameLbl, CDCRecordIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table, Rec."Linked Table No."));
+        IF FieldCap = '' THEN
+            FieldCap := LinkedFieldNoFieldCaptioLbl;
+
+    end;
+
+    local procedure RecIdMgt_CheckDocValue(IsLineField: Boolean; "Code": Code[20]; TemplNo: Code[20]; FieldCap: Text[30])
+    var
+        CDCDocumentValue: Record "CDC Document Value";
+    begin
+        CDCDocumentValue.SETRANGE(Code, Code);
+        CDCDocumentValue.SETRANGE("Template No.", TemplNo);
+        IF IsLineField THEN
+            CDCDocumentValue.SETFILTER("Line No.", '<>%1', 0);
+        CDCDocumentValue.SETFILTER("Value (Record ID Tree ID)", '<>%1', 0);
+        IF NOT CDCDocumentValue.ISEMPTY THEN
+            ERROR(FieldCannotChangedDueToExistingValuesLbl, FieldCap);
+    end;
+
+    internal procedure RecIdMgt_GetFirstKeyField(TableNo: Integer): Integer
+    var
+        [SecurityFiltering(SecurityFilter::Ignored)]
+        FirstKeyRecordRef: RecordRef;
+        FieldRef: FieldRef;
+        KeyRef: KeyRef;
+    begin
+        IF TableNo = 0 THEN
+            EXIT(0);
+
+        FirstKeyRecordRef.OPEN(TableNo);
+        //RecRef.SETPERMISSIONFILTER;  Not supported from NAV 2013 and forward
+        IF FirstKeyRecordRef.FindFirst() THEN;
+        KeyRef := FirstKeyRecordRef.KEYINDEX(1);
+        FieldRef := KeyRef.FIELDINDEX(1);
+        EXIT(FieldRef.NUMBER);
+    end;
+
+    var
         FieldFromSourceTableNameLbl: Label 'Field from';
+        LinkedFieldNoFieldCaptioLbl: Label 'Linked Table Field';
+        SourceNoFieldCaptioLbl: Label 'Source Record Field';
+        FieldCannotChangedDueToExistingValuesLbl: Label '%1 cannot be changed because this field already have a value on one or more documents.', Comment = '%1 will be replace by field name';
 }

@@ -59,11 +59,11 @@ codeunit 61001 "ALR Advanced Line Capture"
                 OnBeforeLineFinalProcessing(CDCDocument, TempCDCTempDocumentLine, Handled);
 
                 if not Handled then begin
-                    // Get source table values of header fields
+                    // Get source table values of line fields
                     GetSourceFieldValues(CDCDocument, TempCDCTempDocumentLine."Line No.");
 
-                    // Get lookup field values of header fields
-                    GetLookupFieldValue(CDCDocument, TempCDCTempDocumentLine."Line No.");
+                    // Get linked field values of line fields
+                    GetLinkedTableFieldValue(CDCDocument, TempCDCTempDocumentLine."Line No.");
 
                     // Process fields that are still empty and look for 
                     EmptyValueProcessing(TempCDCTempDocumentLine);
@@ -536,7 +536,7 @@ codeunit 61001 "ALR Advanced Line Capture"
     end;
 
     //
-    internal procedure GetLookupFieldValue(var CDCDocument: Record "CDC Document"; LineNo: Integer)
+    internal procedure GetLinkedTableFieldValue(var CDCDocument: Record "CDC Document"; LineNo: Integer)
     var
         CDCTableFilterField: Record "CDC Table Filter Field";
         CDCTemplateField: Record "CDC Template Field";
@@ -550,20 +550,20 @@ codeunit 61001 "ALR Advanced Line Capture"
         else
             CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
 
-        CDCTemplateField.SetRange("Get value from lookup", true);
+        CDCTemplateField.SetFilter("Linked table field number", '>0');
         if CDCTemplateField.IsEmpty then
             exit;
 
         if CDCTemplateField.FindSet() then
             repeat
-                CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Source Table Filter GUID");
+                CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Linked Table Filter GUID");
                 if CDCTableFilterField.IsEmpty then
                     exit;
 
-                SourceRecordRef.Open(CDCTemplateField."Source Table No.");
+                SourceRecordRef.Open(CDCTemplateField."Linked Table No.");
                 SourceFieldRef := SourceRecordRef.Field(CDCTableFilterField."Field No.");
-                if SetLookupFieldFilter(SourceRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
-                    SourceFieldRef := SourceRecordRef.Field(CDCTemplateField."Source Field No.");
+                if SetLinkedFieldFilter(SourceRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
+                    SourceFieldRef := SourceRecordRef.Field(CDCTemplateField."Linked table field number");
                     Word := CopyStr(SourceFieldRef.Value, 1, MaxStrLen(Word));
                     ApplyAdvancedStringFunctions(CDCTemplateField, Word);
                     CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false);
@@ -571,28 +571,30 @@ codeunit 61001 "ALR Advanced Line Capture"
             until CDCTemplateField.Next() = 0;
     end;
 
-    internal procedure SetLookupFieldFilter(var LookupRecordRef: RecordRef; CDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document"; LineNo: Integer): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
+    internal procedure SetLinkedFieldFilter(var LinkedRecordRef: RecordRef; CDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document"; LineNo: Integer): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
     var
         CDCTableFilterField: Record "CDC Table Filter Field";
-        LookupCDCTemplateField: Record "CDC Template Field";
+        LinkedCDCTemplateField: Record "CDC Template Field";
         FieldRef: FieldRef;
-        Values: Text[250];
+        FilterValue: Text[250];
     begin
-        CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Source Table Filter GUID");
+        CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Linked Table Filter GUID");
         IF CDCTableFilterField.FindSet() THEN
             REPEAT
-                FieldRef := LookupRecordRef.FIELD(CDCTableFilterField."Field No.");
+                FieldRef := LinkedRecordRef.FIELD(CDCTableFilterField."Field No.");
                 IF CDCTableFilterField."Filter Type" = CDCTableFilterField."Filter Type"::"Fixed Filter" THEN BEGIN
-                    CDCTableFilterField.GetValues(Values, CDCTableFilterField."Filter Type");
-                    FieldRef.SETFILTER(Values);
+                    CDCTableFilterField.GetValues(FilterValue, CDCTableFilterField."Filter Type");
+                    FieldRef.SETFILTER(FilterValue);
                 END ELSE
-                    IF LookupCDCTemplateField.GET(CDCTableFilterField."Template No.", CDCTableFilterField."Template Field Type",
+                    IF LinkedCDCTemplateField.GET(CDCTableFilterField."Template No.", CDCTableFilterField."Template Field Type",
                       CDCTableFilterField."Template Field Code")
-                    THEN
-                        FieldRef.SETFILTER(CDCCaptureManagement.GetValueAsText(CDCDocument."No.", LineNo, LookupCDCTemplateField));
+                    THEN begin
+                        FilterValue := CopyStr(CDCCaptureManagement.GetValueAsText(CDCDocument."No.", LineNo, LinkedCDCTemplateField), 1, MaxStrLen(FilterValue));
+                        FieldRef.SETFILTER(FilterValue);
+                    end;
             UNTIL CDCTableFilterField.Next() = 0;
 
-        EXIT(LookupRecordRef.FindSet());
+        EXIT(LinkedRecordRef.FindSet());
     end;
 
     local procedure GetRangeToNextLine(CDCDocument: Record "CDC Document"; var CDCTempDocumentLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
