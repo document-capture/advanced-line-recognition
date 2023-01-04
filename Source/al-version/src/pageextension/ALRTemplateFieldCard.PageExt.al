@@ -37,6 +37,13 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                         CurrPage.UPDATE(TRUE);
                     end;
                 }
+
+                field("Get value from lookup"; Rec."Get value from lookup")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enable to get the field value from the lookup configuration';
+
+                }
             }
         }
 

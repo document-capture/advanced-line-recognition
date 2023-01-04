@@ -108,6 +108,16 @@
           <note from="Developer" annotates="general" priority="2">Show when the template does not have at least one line field marked as required. %1 = selected ALR option</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Advanced Line Capture - NamedType NoMandatoryFieldsFoundLbl</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1597454623 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>TODO</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action TestLookupFieldValue - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1572782768 - Action 1597454623 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
+          <source>Get Lookup Field Value</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR DocList Ext - Action TestLookupFieldValue - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1572782768 - Action 4231034024 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4105952328">
           <source>Copies the documents XML configuration to the Master template</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -312,6 +322,11 @@
           <source>Specifies the field in the source table whose value is to be used as field value.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Control 3849825275 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Enable to get the field value from the lookup configuration</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Get value from lookup - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Advanced Line Recognition</source>
@@ -592,6 +607,11 @@
           <source>Fixed replacement value</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Fixed Replacement Value - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 3849825275 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Get value from lookup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Get value from lookup - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3536138344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Get value from source field</source>

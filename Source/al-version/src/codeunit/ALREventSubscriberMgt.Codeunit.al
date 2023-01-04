@@ -17,18 +17,21 @@ codeunit 61005 "ALR Event Subscriber Mgt."
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Engine", 'OnBeforeRunLineCaptureCodeunit', '', true, true)]
     local procedure CDCCaptureEngine_OnBeforeRunLineCaptureCodeunit(Document: Record "CDC Document"; var Handled: Boolean)
-    var
-        TempDocLine: Record "CDC Temp. Document Line" temporary;
-        CDCTemplateField: Record "CDC Template Field";
-        TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
     begin
-        ALRCapture.RunLineCapture(Document, Handled);
+        //ALRCapture.RunLineCapture(Document, Handled);
     end;
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Engine", 'OnBeforeAfterCapture', '', true, true)]
     local procedure CaptureEngine_OnBeforeAfterCapture(var Document: Record "CDC Document"; var IsHandled: Boolean)
     begin
-        ALRCapture.GetSourceFieldValues(Document, IsHandled)
+        // Get source table values of header fields
+        ALRCapture.GetSourceFieldValues(Document, 0);
+
+        // Get lookup field values of header fields
+        ALRCapture.GetLookupFieldValue(Document, 0);
+
+        // Process advanced line capturing
+        ALRCapture.RunLineCapture(Document);
     end;
 }

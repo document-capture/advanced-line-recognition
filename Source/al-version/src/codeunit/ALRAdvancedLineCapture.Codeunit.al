@@ -23,23 +23,16 @@ codeunit 61001 "ALR Advanced Line Capture"
         Codeunit.Run(CDCTemplate."Codeunit ID: Line Capture", Rec);
     end;
 
-    internal procedure RunLineCapture(Document: Record "CDC Document"; var Handled: Boolean)
+    internal procedure RunLineCapture(Document: Record "CDC Document")
     var
         TempDocLine: Record "CDC Temp. Document Line" temporary;
         CDCTemplateField: Record "CDC Template Field";
         TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
+        Handled: Boolean;
     begin
-        //[EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Engine", 'OnBeforeRunLineCaptureCodeunit', '', true, true)]
-        //local procedure CDCCaptureEngine_OnBeforeRunLineCaptureCodeunit(Document: Record "CDC Document"; var Handled: Boolean)
-
-        //begin
         CleanupPrevValues(Document);
         if not CDCTemplate.Get(Document."Template No.") then
             exit;
-
-        //RUN STANDARD LINE CAPTURING CODEUNIT
-        if (CDCTemplate."Codeunit ID: Line Capture" <> 0) then
-            Codeunit.Run(CDCTemplate."Codeunit ID: Line Capture", Document);
 
         OnAfterStandardLineRecognition(Document, Handled);
         if Handled then
@@ -65,7 +58,21 @@ codeunit 61001 "ALR Advanced Line Capture"
                         end;
                     until TempSortedDocumentField.Next() = 0;
 
-                EmptyValueProcssing(TempDocLine);
+                OnBeforeLineFinalProcessing(Document, TempDocLine, Handled);
+
+                if not Handled then begin
+                    // Get source table values of header fields
+                    GetSourceFieldValues(Document, TempDocLine."Line No.");
+
+                    // Get lookup field values of header fields
+                    GetLookupFieldValue(Document, TempDocLine."Line No.");
+
+                    // Process fields that are still empty and look for 
+                    EmptyValueProcessing(TempDocLine);
+                end;
+
+                OnAfterLineFinalProcessing(Document, TempDocLine);
+                Clear(Handled);
             until TempDocLine.Next() = 0;
             CleanupTempValues(Document);
         end;
@@ -320,7 +327,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         end;
     end;
 
-    local procedure EmptyValueProcssing(var TempDocLine: Record "CDC Temp. Document Line")
+    local procedure EmptyValueProcessing(var TempDocLine: Record "CDC Temp. Document Line")
     var
         DocumentValue: Record "CDC Document Value";
         TemplateField: Record "CDC Template Field";
@@ -499,7 +506,7 @@ codeunit 61001 "ALR Advanced Line Capture"
                 Word := CopyStr(CopyStr(Word, Field."CopyStr Pos", Field."CopyStr Length"), 1, MaxStrLen(Word));
     end;
 
-    internal procedure GetSourceFieldValues(var Document: Record "CDC Document"; var Handled: Boolean)
+    internal procedure GetSourceFieldValues(var Document: Record "CDC Document"; LineNo: Integer)
     var
         DocCat: Record "CDC Document Category";
         Template: Record "CDC Template";
@@ -511,7 +518,12 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     begin
         TemplateField.SetRange("Template No.", Document."Template No.");
-        TemplateField.SetRange(Type, TemplateField.Type::Header);
+
+        if LineNo = 0 then
+            TemplateField.SetRange(Type, TemplateField.Type::Header)
+        else
+            TemplateField.SetRange(Type, TemplateField.Type::Line);
+
         TemplateField.SetFilter("Get value from source field", '>0');
         if TemplateField.IsEmpty then
             exit;
@@ -533,8 +545,81 @@ codeunit 61001 "ALR Advanced Line Capture"
             SourceRecFieldRef := RecRef.Field(TemplateField."Get value from source field");
             if Format(SourceRecFieldRef.Value) <> '' then
                 if TemplateField.Type = TemplateField.Type::Header then
-                    CaptureMgt.UpdateFieldValue(Document."No.", 1, 0, TemplateField, CopyStr(Format(SourceRecFieldRef.Value), 1, 1024), false, false)
+                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(SourceRecFieldRef.Value), 1, 1024), false, false)
         until TemplateField.Next() = 0;
+    end;
+
+    //
+    internal procedure GetLookupFieldValue(var Document: Record "CDC Document"; LineNo: Integer)
+    var
+        TemplateField: Record "CDC Template Field";
+        TableFilterField: Record "CDC Table Filter Field";
+        RecRef: RecordRef;
+        FldRef: FieldRef;
+    begin
+        TemplateField.SetRange("Template No.", Document."Template No.");
+        //TemplateField.SetRange(Type, TemplateField.Type::Header);
+        TemplateField.SetRange("Get value from lookup", true);
+        if TemplateField.IsEmpty then
+            exit;
+
+        if TemplateField.FindSet() then
+            repeat
+                TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
+                if TableFilterField.IsEmpty then
+                    exit;
+
+                RecRef.Open(TemplateField."Source Table No.");
+                FldRef := RecRef.Field(TableFilterField."Field No.");
+                if SetLookupFieldFilter(RecRef, TemplateField, Document) then begin
+                    FldRef := RecRef.Field(TemplateField."Source Field No.");
+
+                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(FldRef.Value), 1, 1024), false, false);
+                end
+            until TemplateField.Next() = 0;
+
+
+
+        //LookupRecID."Table No." := Category."Source Table No.";
+
+        /* IF Text <> '' THEN
+             LookupRecID."Record ID Tree ID" :=
+               recidmgt.GetRecIDTreeID2(LookupRecID."Table No.", Category."Source Field No.", Category."Document Category GUID", Text);
+
+         TempLookupRecID."Table Filter GUID" := Category."Document Category GUID";
+        */
+
+    end;
+
+    internal procedure SetLookupFieldFilter(var RecRef: RecordRef; TemplateField: Record "CDC Template Field"; Document: Record "CDC Document"): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
+    var
+        TableFilterField: Record "CDC Table Filter Field";
+        TemplField: Record "CDC Template Field";
+        CaptureMgt: Codeunit "CDC Capture Management";
+        FieldRef: FieldRef;
+        OldFilterGroup: Integer;
+        Values: Text[100];
+    begin
+        //OldFilterGroup := RecRef.FILTERGROUP;
+        //RecRef.FILTERGROUP(2);
+        TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
+        IF TableFilterField.FINDSET THEN
+            REPEAT
+                FieldRef := RecRef.FIELD(TableFilterField."Field No.");
+                IF TableFilterField."Filter Type" = TableFilterField."Filter Type"::"Fixed Filter" THEN BEGIN
+                    TableFilterField.GetValues(Values, TableFilterField."Filter Type");
+                    FieldRef.SETFILTER(Values);
+                END ELSE BEGIN
+                    IF TemplField.GET(TableFilterField."Template No.", TableFilterField."Template Field Type",
+                      TableFilterField."Template Field Code")
+                    THEN
+                        FieldRef.SETFILTER(CaptureMgt.GetValueAsText(Document."No.", 0, TemplField));
+                END;
+            UNTIL TableFilterField.NEXT = 0;
+
+        //RecRef.FILTERGROUP(OldFilterGroup);
+
+        EXIT(RecRef.FINDSET);
     end;
 
     local procedure GetRangeToNextLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
@@ -1056,6 +1141,16 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     [IntegrationEvent(TRUE, false)]
     local procedure OnAfterStandardLineRecognition(var Document: Record "CDC Document"; var Handled: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeLineFinalProcessing(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line" temporary; Handled: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterLineFinalProcessing(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line" temporary)
     begin
     end;
 }

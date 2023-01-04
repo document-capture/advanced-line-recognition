@@ -149,6 +149,8 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
                 DocCat: Record "CDC Document Category";
                 RecIDMgt: Codeunit "CDC Record ID Mgt.";
             begin
+                Rec.TestField("Get value from lookup", false);
+
                 if ("Get value from source field" = xRec."Get value from source field") OR ("Get value from source field" = 0) then
                     exit;
 
@@ -159,6 +161,17 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
                 Field.Get(DocCat."Source Table No.", "Get value from source field");
                 Field.TestField(Enabled);
                 Field.TestField(Class, Field.Class::Normal);
+            end;
+        }
+        field(61004; "Get value from lookup"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                Rec.Testfield("Get value from source field", 0);
+                Rec.TestField("Data Type", Rec."Data Type"::Lookup);
+                Rec.TestField("Source Table No.");
+                Rec.TestField("Source Field No.");
             end;
         }
         field(61030; "Enable DelChr"; Boolean)
