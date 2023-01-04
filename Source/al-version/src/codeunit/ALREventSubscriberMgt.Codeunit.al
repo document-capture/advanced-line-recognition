@@ -18,7 +18,7 @@ codeunit 61005 "ALR Event Subscriber Mgt."
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CDC Capture Engine", 'OnBeforeRunLineCaptureCodeunit', '', true, true)]
     local procedure CDCCaptureEngine_OnBeforeRunLineCaptureCodeunit(Document: Record "CDC Document"; var Handled: Boolean)
     begin
-        //ALRCapture.RunLineCapture(Document, Handled);
+        ALRCapture.CleanupPrevValues(Document);
     end;
 
 

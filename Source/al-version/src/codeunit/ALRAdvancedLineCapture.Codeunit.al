@@ -30,7 +30,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
         Handled: Boolean;
     begin
-        CleanupPrevValues(Document);
+        //CleanupPrevValues(Document);
         if not CDCTemplate.Get(Document."Template No.") then
             exit;
 
@@ -544,8 +544,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         repeat
             SourceRecFieldRef := RecRef.Field(TemplateField."Get value from source field");
             if Format(SourceRecFieldRef.Value) <> '' then
-                if TemplateField.Type = TemplateField.Type::Header then
-                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(SourceRecFieldRef.Value), 1, 1024), false, false)
+                CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(SourceRecFieldRef.Value), 1, 1024), false, false)
         until TemplateField.Next() = 0;
     end;
 
@@ -558,7 +557,11 @@ codeunit 61001 "ALR Advanced Line Capture"
         FldRef: FieldRef;
     begin
         TemplateField.SetRange("Template No.", Document."Template No.");
-        //TemplateField.SetRange(Type, TemplateField.Type::Header);
+        if LineNo = 0 then
+            TemplateField.SetRange(Type, TemplateField.Type::Header)
+        else
+            TemplateField.SetRange(Type, TemplateField.Type::Line);
+
         TemplateField.SetRange("Get value from lookup", true);
         if TemplateField.IsEmpty then
             exit;
@@ -571,27 +574,15 @@ codeunit 61001 "ALR Advanced Line Capture"
 
                 RecRef.Open(TemplateField."Source Table No.");
                 FldRef := RecRef.Field(TableFilterField."Field No.");
-                if SetLookupFieldFilter(RecRef, TemplateField, Document) then begin
+                if SetLookupFieldFilter(RecRef, TemplateField, Document, LineNo) then begin
                     FldRef := RecRef.Field(TemplateField."Source Field No.");
 
                     CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(FldRef.Value), 1, 1024), false, false);
                 end
             until TemplateField.Next() = 0;
-
-
-
-        //LookupRecID."Table No." := Category."Source Table No.";
-
-        /* IF Text <> '' THEN
-             LookupRecID."Record ID Tree ID" :=
-               recidmgt.GetRecIDTreeID2(LookupRecID."Table No.", Category."Source Field No.", Category."Document Category GUID", Text);
-
-         TempLookupRecID."Table Filter GUID" := Category."Document Category GUID";
-        */
-
     end;
 
-    internal procedure SetLookupFieldFilter(var RecRef: RecordRef; TemplateField: Record "CDC Template Field"; Document: Record "CDC Document"): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
+    internal procedure SetLookupFieldFilter(var RecRef: RecordRef; TemplateField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
     var
         TableFilterField: Record "CDC Table Filter Field";
         TemplField: Record "CDC Template Field";
@@ -600,8 +591,6 @@ codeunit 61001 "ALR Advanced Line Capture"
         OldFilterGroup: Integer;
         Values: Text[100];
     begin
-        //OldFilterGroup := RecRef.FILTERGROUP;
-        //RecRef.FILTERGROUP(2);
         TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
         IF TableFilterField.FINDSET THEN
             REPEAT
@@ -613,11 +602,9 @@ codeunit 61001 "ALR Advanced Line Capture"
                     IF TemplField.GET(TableFilterField."Template No.", TableFilterField."Template Field Type",
                       TableFilterField."Template Field Code")
                     THEN
-                        FieldRef.SETFILTER(CaptureMgt.GetValueAsText(Document."No.", 0, TemplField));
+                        FieldRef.SETFILTER(CaptureMgt.GetValueAsText(Document."No.", LineNo, TemplField));
                 END;
             UNTIL TableFilterField.NEXT = 0;
-
-        //RecRef.FILTERGROUP(OldFilterGroup);
 
         EXIT(RecRef.FINDSET);
     end;
@@ -964,7 +951,7 @@ codeunit 61001 "ALR Advanced Line Capture"
             until Field.Next() = 0;
     end;
 
-    local procedure CleanupPrevValues(Document: Record "CDC Document")
+    internal procedure CleanupPrevValues(Document: Record "CDC Document")
     var
         DocumentValue: Record "CDC Document Value";
     begin

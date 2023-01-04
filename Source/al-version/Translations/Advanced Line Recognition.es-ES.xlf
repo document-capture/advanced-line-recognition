@@ -294,30 +294,6 @@
           <target>Versión</target>
           <note from="Xliff Generator" annotates="general" priority="0"></note>
         </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Open master template of current selected Document</source>
-          <target>Open master template of current selected Document</target>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3872926505 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Exclude all</source>
-          <target>Exclude all</target>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action ExcludeAll - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Open master template of current selected Document</source>
-          <target>Open master template of current selected Document</target>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3933725828 - Action 3775745775 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
-          <source>Include all</source>
-          <target>Include all</target>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Temp. Config Subpage - Action IncludeAll - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 3933725828 - Control 2558506169 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 700704962">
           <source>Specifies the record being imported or exported. Expand to view the subordinate records.</source>
           <target>Specifies the record being imported or exported. Expand to view the subordinate records.</target>
@@ -373,6 +349,12 @@
           <target>Especifica el campo de la tabla de origen cuyo valor debe utilizarse como valor de campo.</target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control CopySourceField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749515459 - Control 3849825275 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
+          <source>Enable to get the field value from the lookup configuration</source>
+          <target>Enable to get the field value from the lookup configuration</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Template Field Card - Control Get value from lookup - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2749515459 - Control 1714390921 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3007587958">
           <source>Advanced Line Recognition</source>
@@ -665,6 +647,12 @@
           <target>Fixed replacement value</target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Fixed Replacement Value - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1325761703 - Field 3849825275 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
+          <source>Get value from lookup</source>
+          <target>Get value from lookup</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - Field Get value from lookup - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3536138344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Get value from source field</source>

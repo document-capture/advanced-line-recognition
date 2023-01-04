@@ -7,7 +7,7 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         {
             group(CopyValueFrom)
             {
-                Visible = not IsLineField;
+                //Visible = not IsLineField;
                 Caption = 'Copy value from';
 
                 field(CopySourceField; CopySourceField)
@@ -41,8 +41,7 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                 field("Get value from lookup"; Rec."Get value from lookup")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Enable to get the field value from the lookup configuration';
-
+                    ToolTip = 'Enable to get the field value from the fields lookup configuration';
                 }
             }
         }
