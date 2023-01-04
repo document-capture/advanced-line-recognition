@@ -23,85 +23,85 @@
           <note from="Developer" annotates="general" priority="2">%1 is the warning message</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Purch. - Line Valid. - NamedType WarningTxt</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3925175699" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3477037397" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 (Data %2) | Business Central version:%3 (Build %4)</source>
           <note from="Developer" annotates="general" priority="2">%1 = ALR app version |%2 = ALR data version | %3 = BC version | %4 = BC build</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoText</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ALRVersionNoTextLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 1882241122" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3741626024" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error during field setup.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ErrorDuringFieldSetup</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType ErrorDuringFieldSetupLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3356558191" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3468213777" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value of field "%1" will now been searched via the caption in the current line.</source>
           <note from="Developer" annotates="general" priority="2">%1 = field description</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsCapturedByCaption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsCapturedByCaptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3812887959" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 1722132473" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" will now be searched via the column heading "%2".</source>
           <note from="Developer" annotates="general" priority="2">%1 = field description | %2 = caption of column heading</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsCapturedByColumnHeading</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsCapturedByColumnHeadingLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 325433647" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 1004078417" size-unit="char" translate="yes" xml:space="preserve">
           <source>The field "%1" is now linked to field "%2"!</source>
           <note from="Developer" annotates="general" priority="2">%1 = field description of selected field | %2 = field description of linked field</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsLinkedToSourceField</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldIsLinkedToSourceFieldLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 2155055126" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 1177160444" size-unit="char" translate="yes" xml:space="preserve">
           <source>Field setup aborted because no field was selected!</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldSetupCanceled</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType FieldSetupCanceledLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 2294241521" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 1708579327" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for for %1 (%2) in line %3 is missing! Please train this value first!</source>
           <note from="Developer" annotates="general" priority="2">Label gives an error when no field value has been captured for a selected field. %1 = Field description, %2 = Field code, %3 = current line no.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType lblMissingFieldExampleValue</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType lblMissingFieldExampleValueLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 105322588" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 97536918" size-unit="char" translate="yes" xml:space="preserve">
           <source>The value for source field "%1" in line %2 is missing! Please train this value first!</source>
           <note from="Developer" annotates="general" priority="2">%1 = source field description | %2 = line no</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType MissingSourceFieldValue</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType MissingSourceFieldValueLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 153526915" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 4060323845" size-unit="char" translate="yes" xml:space="preserve">
           <source>There are not fields configured for advanced line recognition, that can be reset.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType NoALRFieldsForReset</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType NoALRFieldsForResetLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3368211824" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3282171914" size-unit="char" translate="yes" xml:space="preserve">
           <source>No mandatory field with the option "Required" was found in line %1! Configure a mandatory field first.</source>
           <note from="Developer" annotates="general" priority="2">%1 = line no.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType NoRequiredFieldFound</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType NoRequiredFieldFoundLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3995791139" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 1070554533" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choose the field whose value should be found by the caption in the current line.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectFieldForCaptionSearch</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectFieldForCaptionSearchLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 1880864858" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3020011360" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select the field that should be found by the column heading.</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectFieldForColumnHeaderSearch</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectFieldForColumnHeaderSearchLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 1660936068" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 2364553854" size-unit="char" translate="yes" xml:space="preserve">
           <source>Please select first the source field on the basis of which position the value should be found. </source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectOffsetSourceFieldFirst</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectOffsetSourceFieldFirstLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3750022258" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 2960630328" size-unit="char" translate="yes" xml:space="preserve">
           <source>Please choose the field, which should be linked with the source field "%1".</source>
           <note from="Developer" annotates="general" priority="2"> %1 = field description of source field</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectTheOffsetField</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType SelectTheOffsetFieldLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3935478471" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 2272986473" size-unit="char" translate="yes" xml:space="preserve">
           <source>No caption has been configured for field "%1". You must configure the caption first.</source>
           <note from="Developer" annotates="general" priority="2"> %1 = field description</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType TrainCaptionFirstForField</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType TrainCaptionFirstForFieldLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1519467207 - NamedType 3198427306" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1519467207 - NamedType 3617487984" size-unit="char" translate="yes" xml:space="preserve">
           <source>You are using version advanced line recognition version: %1</source>
           <note from="Developer" annotates="general" priority="2">%1 Displays the current version of the Advanced line recognition to the user including the build</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType YouAreUsingALRVersion</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ALR Adv. Recognition Mgt. - NamedType YouAreUsingALRVersionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 28597237 - NamedType 2796480165" maxwidth="999" size-unit="char" translate="yes" xml:space="preserve">
           <source>You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!</source>
@@ -508,10 +508,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType FieldFromSourceTableNameLbl</note>
         </trans-unit>
-        <trans-unit id="TableExtension 1325761703 - NamedType 4259979588" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
+        <trans-unit id="TableExtension 1325761703 - NamedType 4167378776" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1325761703">
           <source>Source Record Field</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType SourceNoFieldCaption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension ALR Template Field - NamedType SourceNoFieldCaptioLbl</note>
         </trans-unit>
         <trans-unit id="TableExtension 1325761703 - Field 3024729169 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4237587410">
           <source>Advanced Line Recognition Type</source>

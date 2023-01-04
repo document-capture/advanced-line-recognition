@@ -1,114 +1,114 @@
 codeunit 61007 "ALR Template Helper"
 {
-    internal procedure OpenMasterTemplate(Rec: Record "CDC Document"; IsXmlTemplate: Boolean)
+    internal procedure OpenMasterTemplate(CDCDocument: Record "CDC Document"; IsXmlTemplate: Boolean)
     var
-        Template: Record "CDC Template";
-        TemplateCard: page "CDC Template Card";
+        CDCTemplate: Record "CDC Template";
+        CDCCDCTemplateCard: page "CDC Template Card";
     begin
         if IsXMLTemplate then begin
-            Rec.TestField("XML Master Template No.");
-            if not Template.Get(Rec."XML Master Template No.") then
+            CDCDocument.TestField("XML Master Template No.");
+            if not CDCTemplate.Get(CDCDocument."XML Master Template No.") then
                 exit;
         end else begin
-            Rec.TestField("Template No.");
-            if not Template.Get(Rec."Template No.") then
+            CDCDocument.TestField("Template No.");
+            if not CDCTemplate.Get(CDCDocument."Template No.") then
                 exit;
-            if not Template.Get(Template."Master Template No.") then
+            if not CDCTemplate.Get(CDCTemplate."Master Template No.") then
                 exit;
         end;
 
-        TemplateCard.SetRecord(Template);
-        TemplateCard.Run();
+        CDCCDCTemplateCard.SetRecord(CDCTemplate);
+        CDCCDCTemplateCard.Run();
     end;
 
-    internal procedure OpenIdentificationTemplate(Rec: Record "CDC Document"; IsXMLTemplate: Boolean)
+    internal procedure OpenIdentificationTemplate(CDCDocument: Record "CDC Document"; IsXMLTemplate: Boolean)
     var
-        Template: Record "CDC Template";
-        TemplateCard: page "CDC Template Card";
+        CDCTemplate: Record "CDC Template";
+        CDCTemplateCard: page "CDC Template Card";
     begin
         if IsXMLTemplate then begin
-            Rec.TestField("XML Ident. Template No.");
-            if not Template.Get(Rec."XML Ident. Template No.") then
+            CDCDocument.TestField("XML Ident. Template No.");
+            if not CDCTemplate.Get(CDCDocument."XML Ident. Template No.") then
                 exit;
         end else begin
-            Template.SetRange(Type, Template.Type::Identification);
-            Template.SetRange("Data Type", Template."Data Type"::PDF);
-            if not Template.FindFirst() then
+            CDCTemplate.SetRange(Type, CDCTemplate.Type::Identification);
+            CDCTemplate.SetRange("Data Type", CDCTemplate."Data Type"::PDF);
+            if not CDCTemplate.FindFirst() then
                 exit;
         end;
-        TemplateCard.SetRecord(Template);
-        TemplateCard.Run();
+        CDCTemplateCard.SetRecord(CDCTemplate);
+        CDCTemplateCard.Run();
     end;
 
-    internal procedure CopyFieldSettingsToMasterTemplate(Rec: Record "CDC Document")
+    internal procedure CopyFieldSettingsToMasterTemplate(CDCDocument: Record "CDC Document")
     var
-        Template: Record "CDC Template";
-        TemplateField: Record "CDC Template Field";
-        MasterField: Record "CDC Template Field";
+        CDCTemplate: Record "CDC Template";
+        CDCTemplateField: Record "CDC Template Field";
+        MasterCDCTemplateField: Record "CDC Template Field";
     begin
-        Rec.TestField("XML Master Template No.");
-        if Template.Get(Rec."Template No.") then begin
-            TemplateField.SetRange("Template No.", Rec."Template No.");
-            TemplateField.SetFilter("XML Path", '<>%1', '');
-            if TemplateField.FindSet() then
+        CDCDocument.TestField("XML Master Template No.");
+        if CDCTemplate.Get(CDCDocument."Template No.") then begin
+            CDCTemplateField.SetRange("Template No.", CDCDocument."Template No.");
+            CDCTemplateField.SetFilter("XML Path", '<>%1', '');
+            if CDCTemplateField.FindSet() then
                 repeat
-                    if MasterField.Get(Rec."XML Master Template No.", TemplateField.Type, TemplateField.Code) then begin
-                        MasterField."XML Path" := TemplateField."XML Path";
-                        MasterField.Modify();
+                    if MasterCDCTemplateField.Get(CDCDocument."XML Master Template No.", CDCTemplateField.Type, CDCTemplateField.Code) then begin
+                        MasterCDCTemplateField."XML Path" := CDCTemplateField."XML Path";
+                        MasterCDCTemplateField.Modify();
                     end;
-                until TemplateField.Next() = 0;
+                until CDCTemplateField.Next() = 0;
         end;
     end;
 
     internal procedure OpenDocumentCategoryCard(DocumentCategory: Code[10])
     var
-        DocCat: Record "CDC Document Category";
-        DocCatCard: Page "CDC Document Category Card";
+        CDCDocumentCategory: Record "CDC Document Category";
+        CDCDocumentCategoryCard: Page "CDC Document Category Card";
     begin
-        if DocCat.Get(DocumentCategory) then begin
-            DocCatCard.SetRecord(DocCat);
-            DocCatCard.Run();
+        if CDCDocumentCategory.Get(DocumentCategory) then begin
+            CDCDocumentCategoryCard.SetRecord(CDCDocumentCategory);
+            CDCDocumentCategoryCard.Run();
         end
     end;
 
-    internal procedure OpenMasterTemplateField(TemplateField: Record "CDC Template Field")
+    internal procedure OpenMasterTemplateField(CDCTemplateField: Record "CDC Template Field")
     var
-        Template: Record "CDC Template";
-        MasterTemplateField: Record "CDC Template Field";
-        TemplateFieldCard: page "CDC Template Field Card";
+        CDCTemplate: Record "CDC Template";
+        MasterCDCTemplateField: Record "CDC Template Field";
+        CDCTemplateFieldCard: page "CDC Template Field Card";
     begin
-        if not Template.Get(TemplateField."Template No.") then
+        if not CDCTemplate.Get(CDCTemplateField."Template No.") then
             exit;
 
-        Template.TestField(Type, Template.Type::" ");
+        CDCTemplate.TestField(Type, CDCTemplate.Type::" ");
 
         // Accept to raise an error, if master template doesn't exist anymore
-        MasterTemplateField.Get(Template."Master Template No.", TemplateField.Type, TemplateField.Code);
+        MasterCDCTemplateField.Get(CDCTemplate."Master Template No.", CDCTemplateField.Type, CDCTemplateField.Code);
 
-        TemplateFieldCard.SetRecord(MasterTemplateField);
-        TemplateFieldCard.Caption := 'Master Template Field Card';
-        TemplateFieldCard.RunModal();
+        CDCTemplateFieldCard.SetRecord(MasterCDCTemplateField);
+        CDCTemplateFieldCard.Caption := 'Master Template Field Card';
+        CDCTemplateFieldCard.RunModal();
     end;
 
-    internal procedure CopyTemplateField(SourceField: Record "CDC Template Field")
+    internal procedure CopyTemplateField(SourceCDCTemplateField: Record "CDC Template Field")
     var
-        Template: Record "CDC Template";
-        TargetField: Record "CDC Template Field";
-        TemplateList: Page "CDC Template List";
-        TemplateCard: Page "CDC Template Card";
+        CDCTemplate: Record "CDC Template";
+        TargetCDCTemplateFieldTarget: Record "CDC Template Field";
+        CDCTemplateList: Page "CDC Template List";
+        CDCTemplateCard: Page "CDC Template Card";
     begin
-        Template.SetCurrentKey("Category Code", "Source Record ID Tree ID");
-        TemplateList.SetTableView(Template);
-        TemplateList.LookupMode := true;
-        if TemplateList.RunModal() = Action::LookupOK then begin
-            TemplateList.GetRecord(Template);
-            TargetField.Init();
-            TargetField.TransferFields(SourceField, true);
-            TargetField."Template No." := Template."No.";
-            TargetField.Insert(true);
-            if Confirm('The field has been successfully copied. Click yes to open the template card of %1 (%2)', false, Template.Description, Template."No.") then begin
-                TemplateCard.SetRecord(Template);
-                TemplateCard.Run();
+        CDCTemplate.SetCurrentKey("Category Code", "Source Record ID Tree ID");
+        CDCTemplateList.SetTableView(CDCTemplate);
+        CDCTemplateList.LookupMode := true;
+        if CDCTemplateList.RunModal() = Action::LookupOK then begin
+            CDCTemplateList.GetRecord(CDCTemplate);
+            TargetCDCTemplateFieldTarget.Init();
+            TargetCDCTemplateFieldTarget.TransferFields(SourceCDCTemplateField, true);
+            TargetCDCTemplateFieldTarget."Template No." := CDCTemplate."No.";
+            TargetCDCTemplateFieldTarget.Insert(true);
+            if Confirm('The field has been successfully copied. Click yes to open the template card of %1 (%2)', false, CDCTemplate.Description, CDCTemplate."No.") then begin
+                CDCTemplateCard.SetRecord(CDCTemplate);
+                CDCTemplateCard.Run();
             end;
         end;
 

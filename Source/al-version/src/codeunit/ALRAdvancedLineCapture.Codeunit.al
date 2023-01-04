@@ -1,16 +1,15 @@
-#pragma warning disable AA0072
 codeunit 61001 "ALR Advanced Line Capture"
 {
     TableNo = "CDC Document";
 
     var
-#pragma warning disable AA0237
-        TempMandatoryField: Record "CDC Temp. Document Field" temporary;
+        TempMandatoryCDCTempDocumentField: Record "CDC Temp. Document Field" temporary;
         CDCTemplate: Record "CDC Template";
-        CaptureMgt: Codeunit "CDC Capture Management";
-        LineManagementSI: Codeunit "ALR Single Instance Mgt.";
+        CDCCaptureManagement: Codeunit "CDC Capture Management";
+        CDCCaptureEngine: Codeunit "CDC Capture Engine";
+        ALRSingleInstanceMGt: Codeunit "ALR Single Instance Mgt.";
         NoMandatoryFieldsFoundLbl: Label 'You cannot use the advanced line recognition option %1 when the template does not have at least one line field marked as required!', Comment = 'Show when the template does not have at least one line field marked as required. %1 = selected ALR option', MaxLength = 999, Locked = false;
-#pragma warning restore AA0237
+
     trigger OnRun()
     begin
         //Reset template to standard line capture as we can now use an event
@@ -23,58 +22,58 @@ codeunit 61001 "ALR Advanced Line Capture"
         Codeunit.Run(CDCTemplate."Codeunit ID: Line Capture", Rec);
     end;
 
-    internal procedure RunLineCapture(Document: Record "CDC Document")
+    internal procedure RunLineCapture(CDCDocument: Record "CDC Document")
     var
-        TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
-        TempDocLine: Record "CDC Temp. Document Line" temporary;
+        TempSortedCDCTempDocumentField: Record "CDC Temp. Document Field" temporary;
+        TempCDCTempDocumentLine: Record "CDC Temp. Document Line" temporary;
         CDCTemplateField: Record "CDC Template Field";
         Handled: Boolean;
     begin
         //CleanupPrevValues(Document);
-        if not CDCTemplate.Get(Document."Template No.") then
+        if not CDCTemplate.Get(CDCDocument."Template No.") then
             exit;
 
-        OnAfterStandardLineRecognition(Document, Handled);
+        OnAfterStandardLineRecognition(CDCDocument, Handled);
         if Handled then
             exit;
 
         //BUILD TEMPORARY LINE TABLE AND LOOP LINES
-        Document.BuildTempLinesTable(TempDocLine);
+        CDCDocument.BuildTempLinesTable(TempCDCTempDocumentLine);
 
-        if TempDocLine.FindSet() then begin
-            FillSortedFieldBuffer(TempSortedDocumentField, TempMandatoryField, TempDocLine);
+        if TempCDCTempDocumentLine.FindSet() then begin
+            FillSortedFieldBuffer(TempSortedCDCTempDocumentField, TempMandatoryCDCTempDocumentField, TempCDCTempDocumentLine);
             repeat
-                TempSortedDocumentField.SetCurrentKey("Document No.", "Sort Order");
-                if TempSortedDocumentField.FindSet() then
+                TempSortedCDCTempDocumentField.SetCurrentKey("Document No.", "Sort Order");
+                if TempSortedCDCTempDocumentField.FindSet() then
                     repeat
-                        CDCTemplateField.Get(TempDocLine."Template No.", CDCTemplateField.Type::Line, TempSortedDocumentField."Field Code");
+                        CDCTemplateField.Get(TempCDCTempDocumentLine."Template No.", CDCTemplateField.Type::Line, TempSortedCDCTempDocumentField."Field Code");
                         case CDCTemplateField."Advanced Line Recognition Type" of
                             CDCTemplateField."Advanced Line Recognition Type"::LinkedToAnchorField:
-                                FindValueFromOffsetField(TempDocLine, CDCTemplateField);
+                                FindValueFromOffsetField(TempCDCTempDocumentLine, CDCTemplateField);
                             CDCTemplateField."Advanced Line Recognition Type"::FindFieldByCaptionInPosition:
-                                FindValueByCaptionInPosition(TempDocLine, CDCTemplateField, Document);
+                                FindValueByCaptionInPosition(TempCDCTempDocumentLine, CDCTemplateField, CDCDocument);
                             CDCTemplateField."Advanced Line Recognition Type"::FindFieldByColumnHeading:
-                                FindFieldByColumnHeading(TempDocLine, CDCTemplateField, Document);
+                                FindFieldByColumnHeading(TempCDCTempDocumentLine, CDCTemplateField, CDCDocument);
                         end;
-                    until TempSortedDocumentField.Next() = 0;
+                    until TempSortedCDCTempDocumentField.Next() = 0;
 
-                OnBeforeLineFinalProcessing(Document, TempDocLine, Handled);
+                OnBeforeLineFinalProcessing(CDCDocument, TempCDCTempDocumentLine, Handled);
 
                 if not Handled then begin
                     // Get source table values of header fields
-                    GetSourceFieldValues(Document, TempDocLine."Line No.");
+                    GetSourceFieldValues(CDCDocument, TempCDCTempDocumentLine."Line No.");
 
                     // Get lookup field values of header fields
-                    GetLookupFieldValue(Document, TempDocLine."Line No.");
+                    GetLookupFieldValue(CDCDocument, TempCDCTempDocumentLine."Line No.");
 
                     // Process fields that are still empty and look for 
-                    EmptyValueProcessing(TempDocLine);
+                    EmptyValueProcessing(TempCDCTempDocumentLine);
                 end;
 
-                OnAfterLineFinalProcessing(Document, TempDocLine);
+                OnAfterLineFinalProcessing(CDCDocument, TempCDCTempDocumentLine);
                 Clear(Handled);
-            until TempDocLine.Next() = 0;
-            CleanupTempValues(Document);
+            until TempCDCTempDocumentLine.Next() = 0;
+            CleanupTempValues(CDCDocument);
         end;
 
         Handled := true;
@@ -82,12 +81,12 @@ codeunit 61001 "ALR Advanced Line Capture"
 
 
 
-    local procedure FindValueFromOffsetField(TempDocLine: Record "CDC Temp. Document Line" temporary; var OffsetField: Record "CDC Template Field")
+    local procedure FindValueFromOffsetField(CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary; var OffsetCDCTemplateField: Record "CDC Template Field")
     var
-        CurrPage: Record "CDC Document Page";
-        DocumentValue: Record "CDC Document Value";
-        OffsetSourceFieldValue: Record "CDC Document Value";
-        OffsetSourceField: Record "CDC Template Field";
+        CurrCDCDocumentPage: Record "CDC Document Page";
+        CDCDocumentValue: Record "CDC Document Value";
+        OffsetSourceCDCDocumentValue: Record "CDC Document Value";
+        OffsetSourceCDCTemplateField: Record "CDC Template Field";
         CurrBottom: Integer;
         CurrLeft: Integer;
         CurrRight: Integer;
@@ -96,33 +95,32 @@ codeunit 61001 "ALR Advanced Line Capture"
         //This function will capture the field value based on the offset/distance of a source field value
 
         //Get Line Identification Field Position
-        if not OffsetSourceField.Get(TempDocLine."Template No.", OffsetSourceField.Type::Line, OffsetField."Linked Field") then
+        if not OffsetSourceCDCTemplateField.Get(CDCTempDocumentLine."Template No.", OffsetSourceCDCTemplateField.Type::Line, OffsetCDCTemplateField."Linked Field") then
             exit;
 
         // Get current value record of offset source field
-        if not OffsetSourceFieldValue.Get(TempDocLine."Document No.", true, OffsetSourceField.Code, TempDocLine."Line No.") then
+        if not OffsetSourceCDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, OffsetSourceCDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
             exit;
 
-        CurrPage.Get(TempDocLine."Document No.", OffsetSourceFieldValue."Page No.");
+        CurrCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", OffsetSourceCDCDocumentValue."Page No.");
 
         // Create offset area for value capturing
-        CurrTop := OffsetSourceFieldValue.Top + OffsetField."Offset Top";
-        CurrLeft := OffsetSourceFieldValue.Left + OffsetField."Offset Left";
-        CurrBottom := CurrTop + OffsetField."Offset Bottom";
-        CurrRight := CurrLeft + OffsetField."Offset Right";
-        CaptureMgt.CaptureFromPos(CurrPage, OffsetField, TempDocLine."Line No.", true, CurrTop, CurrLeft, CurrBottom, CurrRight, DocumentValue);
-        if DocumentValue.Get(TempDocLine."Document No.", true, OffsetField.Code, TempDocLine."Line No.") then
-            if ((DocumentValue."Value (Text)" = '') and (DocumentValue."Value (Decimal)" = 0)) or (not DocumentValue."Is Valid") then
-                DocumentValue.Delete();
+        CurrTop := OffsetSourceCDCDocumentValue.Top + OffsetCDCTemplateField."Offset Top";
+        CurrLeft := OffsetSourceCDCDocumentValue.Left + OffsetCDCTemplateField."Offset Left";
+        CurrBottom := CurrTop + OffsetCDCTemplateField."Offset Bottom";
+        CurrRight := CurrLeft + OffsetCDCTemplateField."Offset Right";
+        CDCCaptureManagement.CaptureFromPos(CurrCDCDocumentPage, OffsetCDCTemplateField, CDCTempDocumentLine."Line No.", true, CurrTop, CurrLeft, CurrBottom, CurrRight, CDCDocumentValue);
+        if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, OffsetCDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
+            if ((CDCDocumentValue."Value (Text)" = '') and (CDCDocumentValue."Value (Decimal)" = 0)) or (not CDCDocumentValue."Is Valid") then
+                CDCDocumentValue.Delete();
 
     end;
 
-    local procedure FindValueByCaptionInPosition(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document"): Boolean
+    local procedure FindValueByCaptionInPosition(var CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary; var CurrCDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document"): Boolean
     var
-        CurrPage: Record "CDC Document Page";
-        DocumentValue: Record "CDC Document Value";
-        DocumentValueCopy: Record "CDC Document Value";
-        CaptureEngine: Codeunit "CDC Capture Engine";
+        CurrCDCDocumentPage: Record "CDC Document Page";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCDocumentValueCopy: Record "CDC Document Value";
         FromTopPage: Integer;
         FromTopPos: Integer;
         i: Integer;
@@ -131,75 +129,75 @@ codeunit 61001 "ALR Advanced Line Capture"
         Word: Text[1024];
     begin
         // We cannot proceed if there is no line field in the template defined as required=true
-        if TempMandatoryField.Count = 0 then
-            error(NoMandatoryFieldsFoundLbl, CurrField."Advanced Line Recognition Type");
+        if TempMandatoryCDCTempDocumentField.Count = 0 then
+            error(NoMandatoryFieldsFoundLbl, CurrCDCTemplateField."Advanced Line Recognition Type");
 
         //This function will capture the field value based on the caption(s) in the area between the previous and next
-        if not Document.Get(TempDocLine."Document No.") then
+        if not CDCDocument.Get(CDCTempDocumentLine."Document No.") then
             exit;
 
         //Delete current value
-        if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, TempDocLine."Line No.") then
-            DocumentValue.Delete();
+        if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CurrCDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
+            CDCDocumentValue.Delete();
 
         Clear(Word);
 
         // Get valid range depended of search direction
         // 1. above the standard recognized line: range is between standard standard line and previous line
         // 2. below the standard recognized line: range is between standard standard line and next line
-        if (CurrField."Field value position" = CurrField."Field value position"::AboveStandardLine) then
-            GetRangeToPrevLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos)
+        if (CurrCDCTemplateField."Field value position" = CurrCDCTemplateField."Field value position"::AboveStandardLine) then
+            GetRangeToPrevLine(CDCDocument, CDCTempDocumentLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos)
         else
-            GetRangeToNextLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
+            GetRangeToNextLine(CDCDocument, CDCTempDocumentLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
 
         if (FromTopPage > 0) and (ToBottomPage > 0) then   //there are some situations where the system couldn't find the range
             for i := FromTopPage to ToBottomPage do begin
-                if not CurrPage.Get(TempDocLine."Document No.", i) then
+                if not CurrCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", i) then
                     exit;
 
-                CurrField."Caption Offset X" := CurrField."ALR Value Caption Offset X";
-                CurrField."Caption Offset Y" := CurrField."ALR Value Caption Offset Y";
-                CurrField."Typical Field Width" := CurrField."ALR Typical Value Field Width";
+                CurrCDCTemplateField."Caption Offset X" := CurrCDCTemplateField."ALR Value Caption Offset X";
+                CurrCDCTemplateField."Caption Offset Y" := CurrCDCTemplateField."ALR Value Caption Offset Y";
+                CurrCDCTemplateField."Typical Field Width" := CurrCDCTemplateField."ALR Typical Value Field Width";
 
                 // set the line region
                 if i < ToBottomPage then
-                    LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, CurrPage."Bottom Word Pos.")
+                    ALRSingleInstanceMGt.SetLineRegion(CDCTempDocumentLine."Document No.", i, FromTopPos, i, CurrCDCDocumentPage."Bottom Word Pos.")
                 else
                     if (i > FromTopPage) and (i < ToBottomPage) then
-                        LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, CurrPage."Bottom Word Pos.")
+                        ALRSingleInstanceMGt.SetLineRegion(CDCTempDocumentLine."Document No.", i, 0, i, CurrCDCDocumentPage."Bottom Word Pos.")
                     else
                         if FromTopPos > ToBottomPos then
-                            LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, 0, i, ToBottomPos)
+                            ALRSingleInstanceMGt.SetLineRegion(CDCTempDocumentLine."Document No.", i, 0, i, ToBottomPos)
                         else
-                            LineManagementSI.SetLineRegion(TempDocLine."Document No.", i, FromTopPos, i, ToBottomPos);
+                            ALRSingleInstanceMGt.SetLineRegion(CDCTempDocumentLine."Document No.", i, FromTopPos, i, ToBottomPos);
 
                 // Find value in predefined line region
-                Word := CaptureEngine.CaptureField(Document, CurrPage."Page No.", CurrField, false);
+                Word := CDCCaptureEngine.CaptureField(CDCDocument, CurrCDCDocumentPage."Page No.", CurrCDCTemplateField, false);
 
                 if Word <> '' then begin
-                    if (DocumentValue.Get(Document."No.", true, CurrField.Code, 0)) then begin
-                        DocumentValueCopy := DocumentValue;
-                        DocumentValueCopy."Line No." := TempDocLine."Line No.";
-                        DocumentValueCopy.Type := DocumentValueCopy.Type::Line;
-                        DocumentValueCopy.Insert();
-                        DocumentValue.Delete();
+                    if (CDCDocumentValue.Get(CDCDocument."No.", true, CurrCDCTemplateField.Code, 0)) then begin
+                        CDCDocumentValueCopy := CDCDocumentValue;
+                        CDCDocumentValueCopy."Line No." := CDCTempDocumentLine."Line No.";
+                        CDCDocumentValueCopy.Type := CDCDocumentValueCopy.Type::Line;
+                        CDCDocumentValueCopy.Insert();
+                        CDCDocumentValue.Delete();
                     end;
-                    CaptureMgt.UpdateFieldValue(Document."No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, Word, false, false);
+                    CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", CDCTempDocumentLine."Page No.", CDCTempDocumentLine."Line No.", CurrCDCTemplateField, Word, false, false);
 
                     exit(true);
                 end;
             end;
     end;
 
-    local procedure FindFieldByColumnHeading(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document")
+    local procedure FindFieldByColumnHeading(var CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary; var CurrCDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document")
     var
-        CaptionPage: Record "CDC Document Page";
-        CurrPage: Record "CDC Document Page";
-        CaptionValue: Record "CDC Document Value";
-        DocumentValue: Record "CDC Document Value";
-        DocumentValueNew: Record "CDC Document Value";
-        TempDocumentValue: Record "CDC Document Value" temporary;
-        CaptionEndWord: array[100] of Record "CDC Document Word";
+        CaptionCDCDocumentPage: Record "CDC Document Page";
+        CurrCDCDocumentPage: Record "CDC Document Page";
+        CaptionCDCDocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCDocumentValueNew: Record "CDC Document Value";
+        TempCDCDocumentValue: Record "CDC Document Value" temporary;
+        CaptionEndCDCDocumentWord: array[100] of Record "CDC Document Word";
         CaptionStartWord: array[100] of Record "CDC Document Word";
         CaptionFound: Boolean;
         PageStop: Boolean;
@@ -219,24 +217,24 @@ codeunit 61001 "ALR Advanced Line Capture"
         Top: Integer;
     begin
         // We cannot proceed if there is no line field in the template defined as required=true
-        if TempMandatoryField.Count = 0 then
-            error(NoMandatoryFieldsFoundLbl, CurrField."Advanced Line Recognition Type");
+        if TempMandatoryCDCTempDocumentField.Count = 0 then
+            error(NoMandatoryFieldsFoundLbl, CurrCDCTemplateField."Advanced Line Recognition Type");
 
         //This function will capture the field value based on a column heading, actualy like the default line recognition but filtered on the area between the prev. and next line
-        if not Document.Get(TempDocLine."Document No.") then
+        if not CDCDocument.Get(CDCTempDocumentLine."Document No.") then
             exit;
 
-        if not CDCTemplate.Get(TempDocLine."Template No.") then
+        if not CDCTemplate.Get(CDCTempDocumentLine."Template No.") then
             exit;
 
         // Delete old values
-        if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, TempDocLine."Line No.") then
-            DocumentValue.Delete();
+        if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CurrCDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
+            CDCDocumentValue.Delete();
 
         // Find the Caption position on current or previous pages
-        CaptionPageNo := TempDocLine."Page No.";
+        CaptionPageNo := CDCTempDocumentLine."Page No.";
         repeat
-            CaptionFound := GetStartAndEndCaption(CaptionStartWord, CaptionEndWord, CurrField, TempDocLine."Document No.", CaptionPageNo);
+            CaptionFound := GetStartAndEndCaption(CaptionStartWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo);
             if not CaptionFound then
                 CaptionPageNo -= 1;
         until (CaptionPageNo = 0) or CaptionFound;
@@ -244,54 +242,54 @@ codeunit 61001 "ALR Advanced Line Capture"
         if (not CaptionFound) then
             exit;
 
-        if not CaptionPage.Get(TempDocLine."Document No.", CaptionPageNo) then
+        if not CaptionCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", CaptionPageNo) then
             exit;
 
-        GetPositionOfCaption(CaptionPage, CurrField, CaptionStartWord[1], CaptionEndWord[1], CaptionValue, FieldLeft, FieldWidth, Bottom, Top);
+        GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top);
 
         // Get position of next or previous line
-        if (CurrField."Field value position" = CurrField."Field value position"::AboveStandardLine) then begin
-            GetRangeToPrevLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
+        if (CurrCDCTemplateField."Field value position" = CurrCDCTemplateField."Field value position"::AboveStandardLine) then begin
+            GetRangeToPrevLine(CDCDocument, CDCTempDocumentLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
             if FromTopPos > Top then
                 Top := FromTopPos;
         end else begin
-            GetRangeToNextLine(Document, TempDocLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
+            GetRangeToNextLine(CDCDocument, CDCTempDocumentLine, FromTopPage, FromTopPos, ToBottomPage, ToBottomPos);
             Top := FromTopPos;
         end;
 
         NewBottom := 0;
-        LineNo := 1000 * TempDocLine."Page No.";
+        LineNo := 1000 * CDCTempDocumentLine."Page No.";
         LineHeight := 12;
 
 
         Bottom := Top + LineHeight;
 
         PageStop := false;
-        if not CurrPage.Get(TempDocLine."Document No.", FromTopPage) then
+        if not CurrCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", FromTopPage) then
             exit;
         repeat
             LineNo += 1;
             Right := FieldLeft + FieldWidth;
-            NewBottom := CaptureTableCell(CDCTemplate, CurrPage, CurrField, LineNo, Top, FieldLeft, Bottom, Right);
+            NewBottom := CaptureTableCell(CDCTemplate, CurrCDCDocumentPage, CurrCDCTemplateField, LineNo, Top, FieldLeft, Bottom, Right);
             if NewBottom > 0 then begin
                 if NewBottom > Bottom then
                     Bottom := NewBottom;
 
-                if not IsFieldValid(CurrField, Document, LineNo) then begin
-                    DocumentValue.Reset();
+                if not IsFieldValid(CurrCDCTemplateField, CDCDocument, LineNo) then begin
+                    CDCDocumentValue.Reset();
                     ;
-                    DocumentValue.SetRange("Document No.", Document."No.");
-                    DocumentValue.SetRange("Line No.", LineNo);
-                    DocumentValue.DeleteAll(true);
+                    CDCDocumentValue.SetRange("Document No.", CDCDocument."No.");
+                    CDCDocumentValue.SetRange("Line No.", LineNo);
+                    CDCDocumentValue.DeleteAll(true);
                 end else begin
 
                     LastFoundLineNo := LineNo;
                     // Stop search, when search direction is upwards from standard line
-                    PageStop := (CurrField."Field value search direction" = CurrField."Field value search direction"::Downwards);
-                    if DocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, LastFoundLineNo) then begin
-                        TempDocumentValue := DocumentValue;
-                        TempDocumentValue.Insert();
-                        DocumentValue.Delete();
+                    PageStop := (CurrCDCTemplateField."Field value search direction" = CurrCDCTemplateField."Field value search direction"::Downwards);
+                    if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CurrCDCTemplateField.Code, LastFoundLineNo) then begin
+                        TempCDCDocumentValue := CDCDocumentValue;
+                        TempCDCDocumentValue.Insert();
+                        CDCDocumentValue.Delete();
                     end;
                 end;
             end;
@@ -300,140 +298,129 @@ codeunit 61001 "ALR Advanced Line Capture"
                 Top := Bottom;
                 Bottom := Top + LineHeight;
 
-                if (Bottom > CurrPage."Bottom Word Pos.") and (CurrPage."Page No." < ToBottomPage) then begin
+                if (Bottom > CurrCDCDocumentPage."Bottom Word Pos.") and (CurrCDCDocumentPage."Page No." < ToBottomPage) then begin
                     //New page - some variables must be reset
-                    CurrPage.Get(CurrPage."Document No.", CurrPage."Page No." + 1);
-                    CaptionPageNo := CurrPage."Page No.";
-                    LineNo := 1000 * CurrPage."Page No.";
-                    if GetStartAndEndCaption(CaptionStartWord, CaptionEndWord, CurrField, TempDocLine."Document No.", CaptionPageNo) then begin
-                        CaptionPage.Get(TempDocLine."Document No.", CurrPage."Page No.");
-                        if GetPositionOfCaption(CaptionPage, CurrField, CaptionStartWord[1], CaptionEndWord[1], CaptionValue, FieldLeft, FieldWidth, Bottom, Top) then
+                    CurrCDCDocumentPage.Get(CurrCDCDocumentPage."Document No.", CurrCDCDocumentPage."Page No." + 1);
+                    CaptionPageNo := CurrCDCDocumentPage."Page No.";
+                    LineNo := 1000 * CurrCDCDocumentPage."Page No.";
+                    if GetStartAndEndCaption(CaptionStartWord, CaptionEndCDCDocumentWord, CurrCDCTemplateField, CDCTempDocumentLine."Document No.", CaptionPageNo) then begin
+                        CaptionCDCDocumentPage.Get(CDCTempDocumentLine."Document No.", CurrCDCDocumentPage."Page No.");
+                        if GetPositionOfCaption(CaptionCDCDocumentPage, CurrCDCTemplateField, CaptionStartWord[1], CaptionEndCDCDocumentWord[1], CaptionCDCDocumentValue, FieldLeft, FieldWidth, Bottom, Top) then
                             Bottom := Top + LineHeight;
 
                     end;
                 end else
-                    if (Bottom > CurrPage."Bottom Word Pos.") or ((Bottom > ToBottomPos) and (CurrPage."Page No." = ToBottomPage)) then
+                    if (Bottom > CurrCDCDocumentPage."Bottom Word Pos.") or ((Bottom > ToBottomPos) and (CurrCDCDocumentPage."Page No." = ToBottomPage)) then
                         PageStop := true;
             end;
         until PageStop;
 
         //Zeilennr. speichern
-        if TempDocumentValue.Get(TempDocLine."Document No.", true, CurrField.Code, LastFoundLineNo) then begin
-            DocumentValueNew := TempDocumentValue;
-            DocumentValueNew."Line No." := TempDocLine."Line No.";
-            DocumentValueNew.Insert();
-            TempDocumentValue.Delete();
-            CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", CurrField, DocumentValueNew."Value (Text)", false, false);
+        if TempCDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CurrCDCTemplateField.Code, LastFoundLineNo) then begin
+            CDCDocumentValueNew := TempCDCDocumentValue;
+            CDCDocumentValueNew."Line No." := CDCTempDocumentLine."Line No.";
+            CDCDocumentValueNew.Insert();
+            TempCDCDocumentValue.Delete();
+            CDCCaptureManagement.UpdateFieldValue(CDCTempDocumentLine."Document No.", CDCTempDocumentLine."Page No.", CDCTempDocumentLine."Line No.", CurrCDCTemplateField, CDCDocumentValueNew."Value (Text)", false, false);
         end;
     end;
 
-    local procedure EmptyValueProcessing(var TempDocLine: Record "CDC Temp. Document Line")
+    local procedure EmptyValueProcessing(var CDCTempDocumentLine: Record "CDC Temp. Document Line")
     var
-        DocumentValue: Record "CDC Document Value";
-        TemplateField: Record "CDC Template Field";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCTemplateField: Record "CDC Template Field";
         LineDeleted: Boolean;
     begin
-        TemplateField.SetRange("Template No.", TempDocLine."Template No.");
-        TemplateField.SetRange(Type, TemplateField.Type::Line);
-        TemplateField.SetFilter("Empty value handling", '>%1', TemplateField."Empty value handling"::Ignore);
-        if TemplateField.IsEmpty then
+        CDCTemplateField.SetRange("Template No.", CDCTempDocumentLine."Template No.");
+        CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
+        CDCTemplateField.SetFilter("Empty value handling", '>%1', CDCTemplateField."Empty value handling"::Ignore);
+        if CDCTemplateField.IsEmpty then
             exit;
 
-        if TemplateField.FindSet() then
+        if CDCTemplateField.FindSet() then
             repeat
-                if not DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No.") then
-                    case TemplateField."Empty value handling" of
+                if not CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CDCTemplateField.Code, CDCTempDocumentLine."Line No.") then
+                    case CDCTemplateField."Empty value handling" of
 
                         "ALR Empty Field Value Handling"::CopyPrevLineValue:
-                            begin
-                                SetValueFromPreviousLineValue(TempDocLine, TemplateField);
-                            end;
+                            SetValueFromPreviousLineValue(CDCTempDocumentLine, CDCTemplateField);
                         "ALR Empty Field Value Handling"::CopyHeaderFieldValue,
                         "ALR Empty Field Value Handling"::CopyLineFieldValue:
-                            begin
-                                if TemplateField."Replacement Field" <> '' then
-                                    SetValueFromReplacementFieldValue(TempDocLine, TemplateField);
-                            end;
+                            if CDCTemplateField."Replacement Field" <> '' then
+                                SetValueFromReplacementFieldValue(CDCTempDocumentLine, CDCTemplateField);
                         "ALR Empty Field Value Handling"::FixedValue:
-                            begin
-                                if TemplateField."Fixed Replacement Value" <> '' then
-                                    SetValueFromFixedReplacementValue(TempDocLine, TemplateField);
-                            end;
+                            if CDCTemplateField."Fixed Replacement Value" <> '' then
+                                SetValueFromFixedReplacementValue(CDCTempDocumentLine, CDCTemplateField);
                         "ALR Empty Field Value Handling"::DeleteLine:
-                            begin
-                                LineDeleted := DeleteEmptyValueLine(TempDocLine);
-                            end;
+                            LineDeleted := DeleteEmptyValueLine(CDCTempDocumentLine);
                     end;
-            until (TemplateField.Next() = 0) or (LineDeleted);
+            until (CDCTemplateField.Next() = 0) or (LineDeleted);
     end;
 
     local procedure SetValueFromFixedReplacementValue(var
-                                                          TempDocLine: Record "CDC Temp. Document Line" temporary;
-                                                          TemplateField: Record "CDC Template Field")
+                                                          CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary;
+                                                          CDCTemplateField: Record "CDC Template Field")
     begin
-        CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", TemplateField, TemplateField."Fixed Replacement Value", false, false);
+        CDCCaptureManagement.UpdateFieldValue(CDCTempDocumentLine."Document No.", CDCTempDocumentLine."Page No.", CDCTempDocumentLine."Line No.", CDCTemplateField, CDCTemplateField."Fixed Replacement Value", false, false);
     end;
 
-    local procedure SetValueFromReplacementFieldValue(var TempDocLine: Record "CDC Temp. Document Line"; TemplateField: Record "CDC Template Field")
+    local procedure SetValueFromReplacementFieldValue(var CDCTempDocumentLine: Record "CDC Temp. Document Line"; CDCTemplateField: Record "CDC Template Field")
     var
-        DocumentValue: Record "CDC Document Value";
-        SubstitutionDocumentValue: Record "CDC Document Value";
-        SubstitutionField: Record "CDC Template Field";
+        CDCDocumentValue: Record "CDC Document Value";
+        SubstitutionCDCDocumentValue: Record "CDC Document Value";
+        SubstitutionCDCTemplateField: Record "CDC Template Field";
         TempLineNo: Integer;
     begin
-        if TemplateField."Empty value handling" = TemplateField."Empty value handling"::CopyHeaderFieldValue then begin
-            if not SubstitutionField.Get(TempDocLine."Template No.", SubstitutionField.Type::Header, TemplateField."Replacement Field") then
+        if CDCTemplateField."Empty value handling" = CDCTemplateField."Empty value handling"::CopyHeaderFieldValue then begin
+            if not SubstitutionCDCTemplateField.Get(CDCTempDocumentLine."Template No.", SubstitutionCDCTemplateField.Type::Header, CDCTemplateField."Replacement Field") then
                 exit;
 
             TempLineNo := 0; // Header fields have line no = 0
         end else begin
-            if not SubstitutionField.Get(TempDocLine."Template No.", SubstitutionField.Type::Line, TemplateField."Replacement Field") then
+            if not SubstitutionCDCTemplateField.Get(CDCTempDocumentLine."Template No.", SubstitutionCDCTemplateField.Type::Line, CDCTemplateField."Replacement Field") then
                 exit;
 
-            TempLineNo := TempDocLine."Line No.";
+            TempLineNo := CDCTempDocumentLine."Line No.";
         end;
 
-        if SubstitutionDocumentValue.Get(TempDocLine."Document No.", true, SubstitutionField.Code, TempLineNo) then begin
-            CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", TemplateField, SubstitutionDocumentValue."Value (Text)", false, false);
-            if DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No.") then begin
+        if SubstitutionCDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, SubstitutionCDCTemplateField.Code, TempLineNo) then begin
+            CDCCaptureManagement.UpdateFieldValue(CDCTempDocumentLine."Document No.", CDCTempDocumentLine."Page No.", CDCTempDocumentLine."Line No.", CDCTemplateField, SubstitutionCDCDocumentValue."Value (Text)", false, false);
+            if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CDCTemplateField.Code, CDCTempDocumentLine."Line No.") then begin
                 // Set positions of replacement value to show rectangles in preview window
-                DocumentValue.Top := SubstitutionDocumentValue.Top;
-                DocumentValue.Bottom := SubstitutionDocumentValue.Bottom;
-                DocumentValue.Left := SubstitutionDocumentValue.Left;
-                DocumentValue.Right := SubstitutionDocumentValue.Right;
-                DocumentValue.Modify();
+                CDCDocumentValue.Top := SubstitutionCDCDocumentValue.Top;
+                CDCDocumentValue.Bottom := SubstitutionCDCDocumentValue.Bottom;
+                CDCDocumentValue.Left := SubstitutionCDCDocumentValue.Left;
+                CDCDocumentValue.Right := SubstitutionCDCDocumentValue.Right;
+                CDCDocumentValue.Modify();
             end;
         end;
     end;
 
-    local procedure SetValueFromPreviousLineValue(var TempDocLine: Record "CDC Temp. Document Line"; TemplateField: Record "CDC Template Field")
+    local procedure SetValueFromPreviousLineValue(var CDCTempDocumentLine: Record "CDC Temp. Document Line"; CDCTemplateField: Record "CDC Template Field")
     var
-        DocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
     begin
-        if DocumentValue.Get(TempDocLine."Document No.", true, TemplateField.Code, TempDocLine."Line No." - 1) then
-            CaptureMgt.UpdateFieldValue(TempDocLine."Document No.", TempDocLine."Page No.", TempDocLine."Line No.", TemplateField, DocumentValue."Value (Text)", false, false);
+        if CDCDocumentValue.Get(CDCTempDocumentLine."Document No.", true, CDCTemplateField.Code, CDCTempDocumentLine."Line No." - 1) then
+            CDCCaptureManagement.UpdateFieldValue(CDCTempDocumentLine."Document No.", CDCTempDocumentLine."Page No.", CDCTempDocumentLine."Line No.", CDCTemplateField, CDCDocumentValue."Value (Text)", false, false);
     end;
 
-    local procedure DeleteEmptyValueLine(var TempDocLine: Record "CDC Temp. Document Line"): Boolean
+    local procedure DeleteEmptyValueLine(var CDCTempDocumentLine: Record "CDC Temp. Document Line"): Boolean
     var
-        DocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
     begin
-        DocumentValue.SetRange("Document No.", TempDocLine."Document No.");
-        DocumentValue.SetRange(Type, DocumentValue.Type::Line);
-        DocumentValue.SetRange("Line No.", TempDocLine."Line No.");
-        DocumentValue.DeleteAll(true);
+        CDCDocumentValue.SetRange("Document No.", CDCTempDocumentLine."Document No.");
+        CDCDocumentValue.SetRange(Type, CDCDocumentValue.Type::Line);
+        CDCDocumentValue.SetRange("Line No.", CDCTempDocumentLine."Line No.");
+        CDCDocumentValue.DeleteAll(true);
 
-        exit(TempDocLine.Delete(true));
+        exit(CDCTempDocumentLine.Delete(true));
     end;
 
-    internal procedure FindAllPONumbersInDocument(var Document: Record "CDC Document")
+    internal procedure FindAllPONumbersInDocument(var CDCDocument: Record "CDC Document")
     var
-        DocumentWord: Record "CDC Document Word";
-        DocumentValue: Record "CDC Document Value";
-#pragma warning disable AA0237
-        Template: Record "CDC Template";
-        TemplateField: Record "CDC Template Field";
-#pragma warning restore AA0237
+        CDCDocumentWord: Record "CDC Document Word";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCTemplateField: Record "CDC Template Field";
         PurchaseHeader: Record "Purchase Header";
         TempPurchaseHeader: Record "Purchase Header" temporary;
         CDCModuleLicense: Codeunit "CDC Module License";
@@ -442,181 +429,179 @@ codeunit 61001 "ALR Advanced Line Capture"
         if not CDCModuleLicense.IsMatchingActivated(false) then
             exit;
 
-        if not Template.GET(Document."Template No.") then
+        if not CDCTemplate.GET(CDCDocument."Template No.") then
             exit;
 
-        if ((NOT Template."Auto PO search") OR (StrLen(Template."Auto PO search filter") < 2)) then
+        if ((NOT CDCTemplate."Auto PO search") OR (StrLen(CDCTemplate."Auto PO search filter") < 2)) then
             exit;
 
         // Get order no. field first.
-        if not TemplateField.GET(Document."Template No.", TemplateField.Type::Header, 'OURDOCNO') then
+        if not CDCTemplateField.GET(CDCDocument."Template No.", CDCTemplateField.Type::Header, 'OURDOCNO') then
             exit;
 
-        DocumentWord.SETRANGE("Document No.", Document."No.");
+        CDCDocumentWord.SETRANGE("Document No.", CDCDocument."No.");
 
         // Iterate through Document Word table and filter for our PO number filter string
-        DocumentWord.SetFilter(Word, Template."Auto PO search filter");
-        if DocumentWord.FindSet() then
+        CDCDocumentWord.SetFilter(Word, CDCTemplate."Auto PO search filter");
+        if CDCDocumentWord.FindSet() then
             repeat
                 // Check if there is a PO in the system with the matched word
-                IF PurchaseHeader.GET(PurchaseHeader."Document Type"::Order, CopyStr(UPPERCASE(DocumentWord.Word), 1, MAXSTRLEN(PurchaseHeader."No."))) THEN
+                IF PurchaseHeader.GET(PurchaseHeader."Document Type"::Order, CopyStr(UPPERCASE(CDCDocumentWord.Word), 1, MAXSTRLEN(PurchaseHeader."No."))) THEN
                     // Check if the number exists in the temp. PO buffer
                     if not TempPurchaseHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.") then begin
                         TempPurchaseHeader := PurchaseHeader;
                         TempPurchaseHeader.Insert();
                     end;
-            until DocumentWord.Next() = 0;
+            until CDCDocumentWord.Next() = 0;
 
         // Iterate through all found PO's and create the string, that can be used for order matching
         if TempPurchaseHeader.FindSet() then
             repeat
-                if (STRLEN(FoundPurchaseOrders) + STRLEN(TempPurchaseHeader."No.") + 1) <= MAXSTRLEN(DocumentValue."Value (Text)") then begin
+                if (STRLEN(FoundPurchaseOrders) + STRLEN(TempPurchaseHeader."No.") + 1) <= MAXSTRLEN(CDCDocumentValue."Value (Text)") then begin
                     if (STRLEN(FoundPurchaseOrders) > 0) then
                         FoundPurchaseOrders += ',';
                     FoundPurchaseOrders += TempPurchaseHeader."No.";
                 END;
             until TempPurchaseHeader.Next() = 0;
 
-        TemplateField.GET(Document."Template No.", TemplateField.Type::Header, 'OURDOCNO');
-        CaptureMgt.UpdateFieldValue(Document."No.", 0, 0, TemplateField, FoundPurchaseOrders, FALSE, FALSE);
+        CDCTemplateField.GET(CDCDocument."Template No.", CDCTemplateField.Type::Header, 'OURDOCNO');
+        CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 0, 0, CDCTemplateField, FoundPurchaseOrders, FALSE, FALSE);
     end;
 
-    internal procedure ApplyAdvancedStringFunctions(Field: Record "CDC Template Field"; var Word: Text[1024])
+    internal procedure ApplyAdvancedStringFunctions(CDCTemplateField: Record "CDC Template Field"; var Word: Text[1024])
     var
     begin
-        if Field."Enable DelChr" then begin
-            if (Field."Characters to delete" = '') then
-                Field."Characters to delete" := ' ';
+        if CDCTemplateField."Enable DelChr" then begin
+            if (CDCTemplateField."Characters to delete" = '') then
+                CDCTemplateField."Characters to delete" := ' ';
 
             case
-                Field."Pos. of characters" of
-                Field."Pos. of characters"::All:
-                    Word := DelChr(Word, '=', Field."Characters to delete");
-                Field."Pos. of characters"::Leading:
-                    Word := DelChr(Word, '<', Field."Characters to delete");
-                Field."Pos. of characters"::Trailing:
-                    Word := DelChr(Word, '>', Field."Characters to delete");
+                CDCTemplateField."Pos. of characters" of
+                CDCTemplateField."Pos. of characters"::All:
+                    Word := DelChr(Word, '=', CDCTemplateField."Characters to delete");
+                CDCTemplateField."Pos. of characters"::Leading:
+                    Word := DelChr(Word, '<', CDCTemplateField."Characters to delete");
+                CDCTemplateField."Pos. of characters"::Trailing:
+                    Word := DelChr(Word, '>', CDCTemplateField."Characters to delete");
             end;
         end;
 
-        if (Field."Extract string by CopyStr") and (Field."CopyStr Pos" > 0) then
-            if Field."CopyStr Length" = 0 then
-                Word := CopyStr(Word, Field."CopyStr Pos", MaxStrLen(Word))
+        if (CDCTemplateField."Extract string by CopyStr") and (CDCTemplateField."CopyStr Pos" > 0) then
+            if CDCTemplateField."CopyStr Length" = 0 then
+                Word := CopyStr(Word, CDCTemplateField."CopyStr Pos", MaxStrLen(Word))
             else
-                Word := CopyStr(CopyStr(Word, Field."CopyStr Pos", Field."CopyStr Length"), 1, MaxStrLen(Word));
+                Word := CopyStr(CopyStr(Word, CDCTemplateField."CopyStr Pos", CDCTemplateField."CopyStr Length"), 1, MaxStrLen(Word));
     end;
 
-    internal procedure GetSourceFieldValues(var Document: Record "CDC Document"; LineNo: Integer)
+    internal procedure GetSourceFieldValues(var CDCDocument: Record "CDC Document"; LineNo: Integer)
     var
-        DocCat: Record "CDC Document Category";
-        Template: Record "CDC Template";
-        TemplateField: Record "CDC Template Field";
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
+        CDCDocumentCategory: Record "CDC Document Category";
+        CDCTemplateField: Record "CDC Template Field";
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
         SourceRecordId: RecordId;
-        RecRef: RecordRef;
+        SourceRecordRef: RecordRef;
         SourceRecFieldRef: FieldRef;
         Word: Text[1024];
     begin
-        TemplateField.SetRange("Template No.", Document."Template No.");
+        CDCTemplateField.SetRange("Template No.", CDCDocument."Template No.");
 
         if LineNo = 0 then
-            TemplateField.SetRange(Type, TemplateField.Type::Header)
+            CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Header)
         else
-            TemplateField.SetRange(Type, TemplateField.Type::Line);
+            CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
 
-        TemplateField.SetFilter("Get value from source field", '>0');
-        if TemplateField.IsEmpty then
+#pragma warning disable AA0210
+        CDCTemplateField.SetFilter("Get value from source field", '>0');
+#pragma warning restore AA0210
+        if CDCTemplateField.IsEmpty then
             exit;
 
-        if not Template.Get(Document."Template No.") then
+        if not CDCTemplate.Get(CDCDocument."Template No.") then
             exit;
 
-        if not DocCat.Get(Template."Category Code") then
+        if not CDCDocumentCategory.Get(CDCTemplate."Category Code") then
             exit;
 
-        if not RecIDMgt.GetRecIDFromTreeID(Document."Source Record ID Tree ID", SourceRecordId) then
+        if not CDCRecordIDMgt.GetRecIDFromTreeID(CDCDocument."Source Record ID Tree ID", SourceRecordId) then
             exit;
 
-        if not RecRef.Get(SourceRecordId) then
+        if not SourceRecordRef.Get(SourceRecordId) then
             exit;
 
-        TemplateField.FindSet();
+        CDCTemplateField.FindSet();
         repeat
-            SourceRecFieldRef := RecRef.Field(TemplateField."Get value from source field");
+            SourceRecFieldRef := SourceRecordRef.Field(CDCTemplateField."Get value from source field");
             Word := CopyStr(Format(SourceRecFieldRef.Value), 1, MaxStrLen(Word));
-            ApplyAdvancedStringFunctions(TemplateField, Word);
+            ApplyAdvancedStringFunctions(CDCTemplateField, Word);
             if Word <> '' then
-                CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, Word, false, false)
-        until TemplateField.Next() = 0;
+                CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false)
+        until CDCTemplateField.Next() = 0;
     end;
 
     //
-    internal procedure GetLookupFieldValue(var Document: Record "CDC Document"; LineNo: Integer)
+    internal procedure GetLookupFieldValue(var CDCDocument: Record "CDC Document"; LineNo: Integer)
     var
-        TableFilterField: Record "CDC Table Filter Field";
-        TemplateField: Record "CDC Template Field";
-        RecRef: RecordRef;
-        FldRef: FieldRef;
+        CDCTableFilterField: Record "CDC Table Filter Field";
+        CDCTemplateField: Record "CDC Template Field";
+        SourceRecordRef: RecordRef;
+        SourceFieldRef: FieldRef;
         Word: Text[1024];
     begin
-        TemplateField.SetRange("Template No.", Document."Template No.");
+        CDCTemplateField.SetRange("Template No.", CDCDocument."Template No.");
         if LineNo = 0 then
-            TemplateField.SetRange(Type, TemplateField.Type::Header)
+            CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Header)
         else
-            TemplateField.SetRange(Type, TemplateField.Type::Line);
+            CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Line);
 
-        TemplateField.SetRange("Get value from lookup", true);
-        if TemplateField.IsEmpty then
+        CDCTemplateField.SetRange("Get value from lookup", true);
+        if CDCTemplateField.IsEmpty then
             exit;
 
-        if TemplateField.FindSet() then
+        if CDCTemplateField.FindSet() then
             repeat
-                TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
-                if TableFilterField.IsEmpty then
+                CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Source Table Filter GUID");
+                if CDCTableFilterField.IsEmpty then
                     exit;
 
-                RecRef.Open(TemplateField."Source Table No.");
-                FldRef := RecRef.Field(TableFilterField."Field No.");
-                if SetLookupFieldFilter(RecRef, TemplateField, Document, LineNo) then begin
-                    FldRef := RecRef.Field(TemplateField."Source Field No.");
-                    Word := CopyStr(FldRef.Value, 1, MaxStrLen(Word));
-                    ApplyAdvancedStringFunctions(TemplateField, Word);
-                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, Word, false, false);
+                SourceRecordRef.Open(CDCTemplateField."Source Table No.");
+                SourceFieldRef := SourceRecordRef.Field(CDCTableFilterField."Field No.");
+                if SetLookupFieldFilter(SourceRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
+                    SourceFieldRef := SourceRecordRef.Field(CDCTemplateField."Source Field No.");
+                    Word := CopyStr(SourceFieldRef.Value, 1, MaxStrLen(Word));
+                    ApplyAdvancedStringFunctions(CDCTemplateField, Word);
+                    CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false);
                 end;
-            until TemplateField.Next() = 0;
+            until CDCTemplateField.Next() = 0;
     end;
 
-    internal procedure SetLookupFieldFilter(var RecRef: RecordRef; TemplateField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
+    internal procedure SetLookupFieldFilter(var LookupRecordRef: RecordRef; CDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document"; LineNo: Integer): Boolean  // LookupRecID: Record "CDC Temp. Lookup Record ID"
     var
-        TableFilterField: Record "CDC Table Filter Field";
-        TemplField: Record "CDC Template Field";
-        CaptureMgt: Codeunit "CDC Capture Management";
+        CDCTableFilterField: Record "CDC Table Filter Field";
+        LookupCDCTemplateField: Record "CDC Template Field";
         FieldRef: FieldRef;
-        OldFilterGroup: Integer;
-        Values: Text[100];
+        Values: Text[250];
     begin
-        TableFilterField.SETRANGE("Table Filter GUID", TemplateField."Source Table Filter GUID");
-        IF TableFilterField.FINDSET THEN
+        CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Source Table Filter GUID");
+        IF CDCTableFilterField.FindSet() THEN
             REPEAT
-                FieldRef := RecRef.FIELD(TableFilterField."Field No.");
-                IF TableFilterField."Filter Type" = TableFilterField."Filter Type"::"Fixed Filter" THEN BEGIN
-                    TableFilterField.GetValues(Values, TableFilterField."Filter Type");
+                FieldRef := LookupRecordRef.FIELD(CDCTableFilterField."Field No.");
+                IF CDCTableFilterField."Filter Type" = CDCTableFilterField."Filter Type"::"Fixed Filter" THEN BEGIN
+                    CDCTableFilterField.GetValues(Values, CDCTableFilterField."Filter Type");
                     FieldRef.SETFILTER(Values);
-                END ELSE BEGIN
-                    IF TemplField.GET(TableFilterField."Template No.", TableFilterField."Template Field Type",
-                      TableFilterField."Template Field Code")
+                END ELSE
+                    IF LookupCDCTemplateField.GET(CDCTableFilterField."Template No.", CDCTableFilterField."Template Field Type",
+                      CDCTableFilterField."Template Field Code")
                     THEN
-                        FieldRef.SETFILTER(CaptureMgt.GetValueAsText(Document."No.", LineNo, TemplField));
-                END;
-            UNTIL TableFilterField.NEXT = 0;
+                        FieldRef.SETFILTER(CDCCaptureManagement.GetValueAsText(CDCDocument."No.", LineNo, LookupCDCTemplateField));
+            UNTIL CDCTableFilterField.Next() = 0;
 
-        EXIT(RecRef.FINDSET);
+        EXIT(LookupRecordRef.FindSet());
     end;
 
-    local procedure GetRangeToNextLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
+    local procedure GetRangeToNextLine(CDCDocument: Record "CDC Document"; var CDCTempDocumentLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
     var
-        CurrPage: Record "CDC Document Page";
-        DocumentValue: Record "CDC Document Value";
+        CurrCDCDocumentPage: Record "CDC Document Page";
+        CDCDocumentValue: Record "CDC Document Value";
         StopPos: array[100] of Integer;
     begin
         // This function calculates the range until the next position/line
@@ -625,65 +610,65 @@ codeunit 61001 "ALR Advanced Line Capture"
         Clear(SearchToPage);
         Clear(SearchToPos);
 
-        DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
-        DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
-        DocumentValue.SetRange(DocumentValue."Is Value", true);
-        DocumentValue.SetRange(DocumentValue.Type, DocumentValue.Type::Line);
-        DocumentValue.SetFilter(DocumentValue."Page No.", '>%1', 0);
+        CDCDocumentValue.SetCurrentKey(CDCDocumentValue."Document No.", CDCDocumentValue."Is Value", CDCDocumentValue.Code, CDCDocumentValue."Line No.");
+        CDCDocumentValue.SetRange(CDCDocumentValue."Document No.", CDCDocument."No.");
+        CDCDocumentValue.SetRange(CDCDocumentValue."Is Value", true);
+        CDCDocumentValue.SetRange(CDCDocumentValue.Type, CDCDocumentValue.Type::Line);
+        CDCDocumentValue.SetFilter(CDCDocumentValue."Page No.", '>%1', 0);
 
-        GetCurrLinePosition(DocumentValue, TempDocLine."Line No.", SearchFromPage, SearchFromPos, SearchToPage, SearchToPos);
+        GetCurrLinePosition(CDCDocumentValue, CDCTempDocumentLine."Line No.", SearchFromPage, SearchFromPos, SearchToPage, SearchToPos);
         // Filter for next line
-        DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." + 1);
-        if DocumentValue.FindSet() then
+        CDCDocumentValue.SetRange(CDCDocumentValue."Line No.", CDCTempDocumentLine."Line No." + 1);
+        if CDCDocumentValue.FindSet() then
             repeat
-                if (SearchToPage < DocumentValue."Page No.") or (SearchToPage = 0) then begin
-                    SearchToPage := DocumentValue."Page No.";
+                if (SearchToPage < CDCDocumentValue."Page No.") or (SearchToPage = 0) then begin
+                    SearchToPage := CDCDocumentValue."Page No.";
                     SearchToPos := 0;
                 end;
 
-                if SearchToPage = DocumentValue."Page No." then
-                    if (SearchToPos < DocumentValue.Bottom) or (SearchToPos = 0) then
-                        SearchToPos := DocumentValue.Bottom;
+                if SearchToPage = CDCDocumentValue."Page No." then
+                    if (SearchToPos < CDCDocumentValue.Bottom) or (SearchToPos = 0) then
+                        SearchToPos := CDCDocumentValue.Bottom;
 
-            until DocumentValue.Next() = 0
+            until CDCDocumentValue.Next() = 0
         else begin
             // As there is no next line, calculate to next header value or bottom of current page
-            DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
-            DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
-            DocumentValue.SetRange(DocumentValue."Is Value", false);
-            DocumentValue.SetRange(DocumentValue.Type, DocumentValue.Type::Header);
-            DocumentValue.SetRange(DocumentValue."Page No.", SearchToPage);
-            DocumentValue.SetFilter(DocumentValue.Top, '>%1', SearchToPos);
-            DocumentValue.SetRange(DocumentValue."Line No.", 0);
-            if DocumentValue.FindSet(false, false) then begin
-                if DocumentValue."Page No." > SearchToPage then
-                    SearchToPage := DocumentValue."Page No.";
+            CDCDocumentValue.SetCurrentKey(CDCDocumentValue."Document No.", CDCDocumentValue."Is Value", CDCDocumentValue.Code, CDCDocumentValue."Line No.");
+            CDCDocumentValue.SetRange(CDCDocumentValue."Document No.", CDCDocument."No.");
+            CDCDocumentValue.SetRange(CDCDocumentValue."Is Value", false);
+            CDCDocumentValue.SetRange(CDCDocumentValue.Type, CDCDocumentValue.Type::Header);
+            CDCDocumentValue.SetRange(CDCDocumentValue."Page No.", SearchToPage);
+            CDCDocumentValue.SetFilter(CDCDocumentValue.Top, '>%1', SearchToPos);
+            CDCDocumentValue.SetRange(CDCDocumentValue."Line No.", 0);
+            if CDCDocumentValue.FindSet(false, false) then begin
+                if CDCDocumentValue."Page No." > SearchToPage then
+                    SearchToPage := CDCDocumentValue."Page No.";
 
-                SearchToPos := DocumentValue.Top
+                SearchToPos := CDCDocumentValue.Top
             end else begin
-                DocumentValue.SetFilter(DocumentValue."Page No.", '>%1', SearchToPage);
-                DocumentValue.SetRange(DocumentValue.Top);
-                if DocumentValue.FindFirst() then begin
-                    if DocumentValue."Page No." > SearchToPage then
-                        SearchToPage := DocumentValue."Page No.";
+                CDCDocumentValue.SetFilter(CDCDocumentValue."Page No.", '>%1', SearchToPage);
+                CDCDocumentValue.SetRange(CDCDocumentValue.Top);
+                if CDCDocumentValue.FindFirst() then begin
+                    if CDCDocumentValue."Page No." > SearchToPage then
+                        SearchToPage := CDCDocumentValue."Page No.";
 
-                    SearchToPos := DocumentValue.Top
+                    SearchToPos := CDCDocumentValue.Top
                 end else begin
-                    CurrPage.Get(Document."No.", SearchToPage);
-                    SearchToPos := CurrPage."Bottom Word Pos.";
+                    CurrCDCDocumentPage.Get(CDCDocument."No.", SearchToPage);
+                    SearchToPos := CurrCDCDocumentPage."Bottom Word Pos.";
                 end;
             end;
 
 
-            GetStopLineRecognitionPositions(StopPos, SearchToPage, Document);
+            GetStopLineRecognitionPositions(StopPos, SearchToPage, CDCDocument);
             if (StopPos[SearchToPage] > 0) and (StopPos[SearchToPage] <= SearchToPos) then
                 SearchToPos := StopPos[SearchToPage];
         end;
     end;
 
-    local procedure GetRangeToPrevLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var RangeTopPage: Integer; var RangeTopPos: Integer; var RangeBottomPage: Integer; var RangeBottomPos: Integer)
+    local procedure GetRangeToPrevLine(CDCDocument: Record "CDC Document"; var CDCTempDocumentLine: Record "CDC Temp. Document Line"; var RangeTopPage: Integer; var RangeTopPos: Integer; var RangeBottomPage: Integer; var RangeBottomPos: Integer)
     var
-        DocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
         CurrLineBottomPage: Integer;
         CurrLineBottomPos: Integer;
         CurrLineTopPage: Integer;
@@ -699,46 +684,46 @@ codeunit 61001 "ALR Advanced Line Capture"
         Clear(PrevLineBottomPage);
         Clear(PrevLineBottomPos);
 
-        DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
-        DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
-        DocumentValue.SetRange(DocumentValue."Is Value", true);
-        DocumentValue.SetRange(DocumentValue.Type, DocumentValue.Type::Line);
-        DocumentValue.SetFilter(DocumentValue."Page No.", '>%1', 0);
+        CDCDocumentValue.SetCurrentKey(CDCDocumentValue."Document No.", CDCDocumentValue."Is Value", CDCDocumentValue.Code, CDCDocumentValue."Line No.");
+        CDCDocumentValue.SetRange(CDCDocumentValue."Document No.", CDCDocument."No.");
+        CDCDocumentValue.SetRange(CDCDocumentValue."Is Value", true);
+        CDCDocumentValue.SetRange(CDCDocumentValue.Type, CDCDocumentValue.Type::Line);
+        CDCDocumentValue.SetFilter(CDCDocumentValue."Page No.", '>%1', 0);
 
-        GetCurrLinePosition(DocumentValue, TempDocLine."Line No.", CurrLineTopPage, CurrLineTopPos, CurrLineBottomPage, CurrLineBottomPos);
+        GetCurrLinePosition(CDCDocumentValue, CDCTempDocumentLine."Line No.", CurrLineTopPage, CurrLineTopPos, CurrLineBottomPage, CurrLineBottomPos);
         // Filter for Prev line
-        DocumentValue.SetRange(DocumentValue."Line No.", TempDocLine."Line No." - 1);
-        if DocumentValue.FindSet() then
+        CDCDocumentValue.SetRange(CDCDocumentValue."Line No.", CDCTempDocumentLine."Line No." - 1);
+        if CDCDocumentValue.FindSet() then
             repeat
-                if (DocumentValue."Page No." < PrevLineTopPage) or (PrevLineTopPage = 0) then begin
-                    PrevLineTopPage := DocumentValue."Page No.";
+                if (CDCDocumentValue."Page No." < PrevLineTopPage) or (PrevLineTopPage = 0) then begin
+                    PrevLineTopPage := CDCDocumentValue."Page No.";
                     Clear(PrevLineTopPos);
                 end;
 
-                if (DocumentValue."Page No." > PrevLineBottomPage) or (PrevLineBottomPage = 0) then begin
-                    PrevLineBottomPage := DocumentValue."Page No.";
+                if (CDCDocumentValue."Page No." > PrevLineBottomPage) or (PrevLineBottomPage = 0) then begin
+                    PrevLineBottomPage := CDCDocumentValue."Page No.";
                     Clear(PrevLineBottomPos);
                 end;
 
-                if PrevLineTopPage = DocumentValue."Page No." then
-                    if (DocumentValue.Top < PrevLineTopPos) or (PrevLineTopPos = 0) then
-                        PrevLineTopPos := DocumentValue.Top;
+                if PrevLineTopPage = CDCDocumentValue."Page No." then
+                    if (CDCDocumentValue.Top < PrevLineTopPos) or (PrevLineTopPos = 0) then
+                        PrevLineTopPos := CDCDocumentValue.Top;
 
-                if PrevLineBottomPage = DocumentValue."Page No." then
-                    if (DocumentValue.Bottom > PrevLineBottomPos) or (PrevLineBottomPos = 0) then
-                        PrevLineBottomPos := DocumentValue.Bottom;
-            until DocumentValue.Next() = 0
+                if PrevLineBottomPage = CDCDocumentValue."Page No." then
+                    if (CDCDocumentValue.Bottom > PrevLineBottomPos) or (PrevLineBottomPos = 0) then
+                        PrevLineBottomPos := CDCDocumentValue.Bottom;
+            until CDCDocumentValue.Next() = 0
         else begin
             // As there is no Prev line, calculate to Prev header value or bottom of current page
-            DocumentValue.SetCurrentKey(DocumentValue."Document No.", DocumentValue."Is Value", DocumentValue.Code, DocumentValue."Line No.");
-            DocumentValue.SetRange(DocumentValue."Document No.", Document."No.");
-            DocumentValue.SetRange(DocumentValue."Is Value", false);
-            DocumentValue.SetRange(DocumentValue.Type, DocumentValue.Type::Header);
-            DocumentValue.SetFilter(DocumentValue."Page No.", '<=%1', DocumentValue."Page No.");
-            DocumentValue.SetFilter(DocumentValue.Top, '<%1', CurrLineTopPos);
-            if DocumentValue.FindFirst() then begin
-                PrevLineBottomPos := DocumentValue.Bottom;
-                PrevLineBottomPage := DocumentValue."Page No.";
+            CDCDocumentValue.SetCurrentKey(CDCDocumentValue."Document No.", CDCDocumentValue."Is Value", CDCDocumentValue.Code, CDCDocumentValue."Line No.");
+            CDCDocumentValue.SetRange(CDCDocumentValue."Document No.", CDCDocument."No.");
+            CDCDocumentValue.SetRange(CDCDocumentValue."Is Value", false);
+            CDCDocumentValue.SetRange(CDCDocumentValue.Type, CDCDocumentValue.Type::Header);
+            CDCDocumentValue.SetFilter(CDCDocumentValue."Page No.", '<=%1', CDCDocumentValue."Page No.");
+            CDCDocumentValue.SetFilter(CDCDocumentValue.Top, '<%1', CurrLineTopPos);
+            if CDCDocumentValue.FindFirst() then begin
+                PrevLineBottomPos := CDCDocumentValue.Bottom;
+                PrevLineBottomPage := CDCDocumentValue."Page No.";
             end else begin
                 PrevLineBottomPos := 0;
                 PrevLineBottomPage := CurrLineTopPage;
@@ -753,280 +738,245 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     end;
 
-    local procedure GetCurrLinePosition(var DocumentValue: Record "CDC Document Value"; LineNo: Integer; var CurrLineTopPage: Integer; var CurrLineTopPos: Integer; var CurrLineBottomPage: Integer; var CurrLineBottomPos: Integer)
+    local procedure GetCurrLinePosition(var CDCDocumentValue: Record "CDC Document Value"; LineNo: Integer; var CurrLineTopPage: Integer; var CurrLineTopPos: Integer; var CurrLineBottomPage: Integer; var CurrLineBottomPos: Integer)
     begin
         // Filter for current line
-        DocumentValue.SetRange(DocumentValue."Line No.", LineNo);
-        if DocumentValue.FindSet() then
+        CDCDocumentValue.SetRange(CDCDocumentValue."Line No.", LineNo);
+        if CDCDocumentValue.FindSet() then
             repeat
-                if TempMandatoryField.Get(DocumentValue.GetFilter("Document No."), DocumentValue.Code) then begin
-                    if (DocumentValue."Page No." < CurrLineTopPage) or (CurrLineTopPage = 0) then begin
-                        CurrLineTopPage := DocumentValue."Page No.";
+                if TempMandatoryCDCTempDocumentField.Get(CDCDocumentValue.GetFilter("Document No."), CDCDocumentValue.Code) then begin
+                    if (CDCDocumentValue."Page No." < CurrLineTopPage) or (CurrLineTopPage = 0) then begin
+                        CurrLineTopPage := CDCDocumentValue."Page No.";
                         Clear(CurrLineTopPos);
                     end;
 
-                    if (DocumentValue."Page No." > CurrLineBottomPage) or (CurrLineBottomPage = 0) then begin
-                        CurrLineBottomPage := DocumentValue."Page No.";
+                    if (CDCDocumentValue."Page No." > CurrLineBottomPage) or (CurrLineBottomPage = 0) then begin
+                        CurrLineBottomPage := CDCDocumentValue."Page No.";
                         Clear(CurrLineBottomPos);
                     end;
 
-                    if CurrLineTopPage = DocumentValue."Page No." then
-                        if (DocumentValue.Top < CurrLineTopPos) or (CurrLineTopPos = 0) then
-                            CurrLineTopPos := DocumentValue.Top;
+                    if CurrLineTopPage = CDCDocumentValue."Page No." then
+                        if (CDCDocumentValue.Top < CurrLineTopPos) or (CurrLineTopPos = 0) then
+                            CurrLineTopPos := CDCDocumentValue.Top;
 
-                    if CurrLineBottomPage = DocumentValue."Page No." then
-                        if (DocumentValue.Bottom > CurrLineBottomPos) or (CurrLineBottomPos = 0) then
-                            CurrLineBottomPos := DocumentValue.Bottom;
+                    if CurrLineBottomPage = CDCDocumentValue."Page No." then
+                        if (CDCDocumentValue.Bottom > CurrLineBottomPos) or (CurrLineBottomPos = 0) then
+                            CurrLineBottomPos := CDCDocumentValue.Bottom;
                 end;
-            until DocumentValue.Next() = 0;
+            until CDCDocumentValue.Next() = 0;
 
     end;
 
-    local procedure GetStartAndEndCaption(var CaptionStartWord: array[100] of Record "CDC Document Word" temporary; var CaptionEndWord: array[100] of Record "CDC Document Word" temporary; "Field": Record "CDC Template Field"; DocNo: Code[20]; PageNo: Integer): Boolean
+    local procedure GetStartAndEndCaption(var CaptionStartCDCDocumentWord: array[100] of Record "CDC Document Word" temporary; var CaptionEndCDCDocumentWord: array[100] of Record "CDC Document Word" temporary; CDCTemplateField: Record "CDC Template Field"; DocNo: Code[20]; PageNo: Integer): Boolean
     var
         CDCTemplateFieldCaption: Record "CDC Template Field Caption";
-        CaptureEngine: Codeunit "CDC Capture Engine";
-    begin
-        Clear(CaptionStartWord);
-        Clear(CaptionEndWord);
 
-        CDCTemplateFieldCaption.SetRange("Template No.", Field."Template No.");
-        CDCTemplateFieldCaption.SetRange(Type, Field.Type);
-        CDCTemplateFieldCaption.SetRange(Code, Field.Code);
+    begin
+        Clear(CaptionStartCDCDocumentWord);
+        Clear(CaptionEndCDCDocumentWord);
+
+        CDCTemplateFieldCaption.SetRange("Template No.", CDCTemplateField."Template No.");
+        CDCTemplateFieldCaption.SetRange(Type, CDCTemplateField.Type);
+        CDCTemplateFieldCaption.SetRange(Code, CDCTemplateField.Code);
         if CDCTemplateFieldCaption.FindSet() then
             repeat
-                if CaptureEngine.FindCaption(DocNo, PageNo, Field, CDCTemplateFieldCaption, CaptionStartWord, CaptionEndWord) then
+                if CDCCaptureEngine.FindCaption(DocNo, PageNo, CDCTemplateField, CDCTemplateFieldCaption, CaptionStartCDCDocumentWord, CaptionEndCDCDocumentWord) then
                     exit(true);
-            until (CDCTemplateFieldCaption.Next() = 0) or ((CaptionStartWord[1].Word <> '') and (CaptionEndWord[1].Word <> ''));
+            until (CDCTemplateFieldCaption.Next() = 0) or ((CaptionStartCDCDocumentWord[1].Word <> '') and (CaptionEndCDCDocumentWord[1].Word <> ''));
     end;
 
-    local procedure GetPositionOfCaption(CurrPage: Record "CDC Document Page"; CaptionTemplateField: Record "CDC Template Field"; CaptionStartWord: Record "CDC Document Word"; CaptionEndWord: Record "CDC Document Word"; DocumentValue: Record "CDC Document Value"; var FieldLeft: Integer; var FieldWidth: Integer; var Bottom: Integer; var Top: Integer) CaptionValueFound: Boolean
-    var
-        CaptureEngine: Codeunit "CDC Capture Engine";
+    local procedure GetPositionOfCaption(CurrCDCDocumentPage: Record "CDC Document Page"; CaptionCDCTemplateField: Record "CDC Template Field"; CaptionStartCDCDocumentWord: Record "CDC Document Word"; CaptionEndCDCDocumentWord: Record "CDC Document Word"; CDCDocumentValue: Record "CDC Document Value"; var FieldLeft: Integer; var FieldWidth: Integer; var Bottom: Integer; var Top: Integer) CaptionValueFound: Boolean
     begin
-        CDCTemplate.Get(CaptionTemplateField."Template No.");
+        CDCTemplate.Get(CaptionCDCTemplateField."Template No.");
 
         //Hole Positionen der caption
-        CaptionValueFound := CaptureMgt.CaptureFromPos(CurrPage, CaptionTemplateField, 0, false, CaptionStartWord.Top, CaptionStartWord.Left,
-          CaptionEndWord.Bottom, CaptionEndWord.Right, DocumentValue) <> '';
+        CaptionValueFound := CDCCaptureManagement.CaptureFromPos(CurrCDCDocumentPage, CaptionCDCTemplateField, 0, false, CaptionStartCDCDocumentWord.Top, CaptionStartCDCDocumentWord.Left,
+          CaptionEndCDCDocumentWord.Bottom, CaptionEndCDCDocumentWord.Right, CDCDocumentValue) <> '';
 
         if CaptionValueFound then begin
-            FieldLeft := CaptionStartWord.Left +
-            Round(CaptionTemplateField."Caption Offset X" * CaptureEngine.GetDPIFactor(CaptionTemplateField."Offset DPI", CurrPage."TIFF Image Resolution"), 1);
+            FieldLeft := CaptionStartCDCDocumentWord.Left +
+            Round(CaptionCDCTemplateField."Caption Offset X" * CDCCaptureEngine.GetDPIFactor(CaptionCDCTemplateField."Offset DPI", CurrCDCDocumentPage."TIFF Image Resolution"), 1);
 
             if not CDCTemplate."First Table Line Has Captions" then
-                Bottom := CaptionStartWord.Top
+                Bottom := CaptionStartCDCDocumentWord.Top
             else
-                if CaptionStartWord.Bottom > Bottom then
-                    Bottom := CaptionStartWord.Bottom;
+                if CaptionStartCDCDocumentWord.Bottom > Bottom then
+                    Bottom := CaptionStartCDCDocumentWord.Bottom;
 
-            if FieldWidth < CaptionEndWord.Right - CaptionStartWord.Left then
-                FieldWidth := CaptionEndWord.Right - CaptionStartWord.Left;
+            if FieldWidth < CaptionEndCDCDocumentWord.Right - CaptionStartCDCDocumentWord.Left then
+                FieldWidth := CaptionEndCDCDocumentWord.Right - CaptionStartCDCDocumentWord.Left;
 
-            Top := CaptionStartWord.Top;
+            Top := CaptionStartCDCDocumentWord.Top;
         end;
     end;
 
-    local procedure CaptureTableCell(var CDCTemplateParam: Record "CDC Template"; var "Page": Record "CDC Document Page"; var "Field": Record "CDC Template Field"; LineNo: Integer; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer): Integer
+    local procedure CaptureTableCell(var CDCTemplateParam: Record "CDC Template"; var CDCDocumentPage: Record "CDC Document Page"; var CDCTemplateField: Record "CDC Template Field"; LineNo: Integer; Top: Integer; Left: Integer; Bottom: Integer; Right: Integer): Integer
     var
-        Value: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
     begin
         if (Right - Left <= 0) or (Bottom - Top <= 0) then
             exit;
 
-        CaptureMgt.CaptureFromPos(Page, Field, LineNo, true, Top, Left, Bottom, Right, Value);
-        Value.Find('=');
+        CDCCaptureManagement.CaptureFromPos(CDCDocumentPage, CDCTemplateField, LineNo, true, Top, Left, Bottom, Right, CDCDocumentValue);
+        CDCDocumentValue.Find('=');
 
-        if (Value.IsBlank()) or TableCellAlreadyCaptured(CDCTemplateParam, Page, Value) then
-            Value.Delete()
+        if (CDCDocumentValue.IsBlank()) or TableCellAlreadyCaptured(CDCTemplateParam, CDCDocumentPage, CDCDocumentValue) then
+            CDCDocumentValue.Delete()
         else
-            exit(Value.Bottom);
+            exit(CDCDocumentValue.Bottom);
     end;
 
-    local procedure TableCellAlreadyCaptured(var CDCTemplateParam: Record "CDC Template"; var "Page": Record "CDC Document Page"; var Value: Record "CDC Document Value"): Boolean
+    local procedure TableCellAlreadyCaptured(var CDCTemplateParam: Record "CDC Template"; var CDCDocumentPage: Record "CDC Document Page"; var CDCDocumentValue: Record "CDC Document Value"): Boolean
     var
-        Value2: Record "CDC Document Value";
-        CaptureEngine: Codeunit "CDC Capture Engine";
+        CDCDocumentValue2: Record "CDC Document Value";
     begin
-        Value2.SetCurrentKey("Document No.", "Is Value", Type, "Page No.");
+        CDCDocumentValue2.SetCurrentKey("Document No.", "Is Value", Type, "Page No.");
         if not CDCTemplateParam."First Table Line Has Captions" then
-            Value2.SetRange("Is Value", true);
-        Value2.SetRange("Document No.", Page."Document No.");
-        Value2.SetRange(Type, Value2.Type::Line);
-        Value2.SetRange("Page No.", Value."Page No.");
+            CDCDocumentValue2.SetRange("Is Value", true);
+        CDCDocumentValue2.SetRange("Document No.", CDCDocumentPage."Document No.");
+        CDCDocumentValue2.SetRange(Type, CDCDocumentValue2.Type::Line);
+        CDCDocumentValue2.SetRange("Page No.", CDCDocumentValue."Page No.");
 
-        Value.Top := Value.Top + Round((Value.Bottom - Value.Top) / 2, 1);
-        Value.Left := Value.Left + 3;
+        CDCDocumentValue.Top := CDCDocumentValue.Top + Round((CDCDocumentValue.Bottom - CDCDocumentValue.Top) / 2, 1);
+        CDCDocumentValue.Left := CDCDocumentValue.Left + 3;
 
-        if Value2.FindSet(false, false) then
+        if CDCDocumentValue2.FindSet(false, false) then
             repeat
-                if (not ((Value2.Code = Value.Code) and (Value2."Line No." = Value."Line No."))) then
-                    if CaptureEngine.IntersectsWith(Value, Value2) then
+                if (not ((CDCDocumentValue2.Code = CDCDocumentValue.Code) and (CDCDocumentValue2."Line No." = CDCDocumentValue."Line No."))) then
+                    if CDCCaptureEngine.IntersectsWith(CDCDocumentValue, CDCDocumentValue2) then
                         exit(true);
-            until Value2.Next() = 0;
+            until CDCDocumentValue2.Next() = 0;
     end;
 
-    local procedure IsFieldValid(var CaptionField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean
+    local procedure IsFieldValid(var CaptionCDCTemplateField: Record "CDC Template Field"; CDCDocument: Record "CDC Document"; LineNo: Integer): Boolean
     var
-        Value: Record "CDC Document Value";
-        "Field": Record "CDC Template Field";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCTemplateField: Record "CDC Template Field";
     begin
-        case CaptionField."Data Type" of
-            Field."Data Type"::Number:
-                if (not CaptionField.Required) then
-                    if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
-                        if not Value."Is Valid" then
+        case CaptionCDCTemplateField."Data Type" of
+            CDCTemplateField."Data Type"::Number:
+                if (not CaptionCDCTemplateField.Required) then
+                    if CDCDocumentValue.Get(CDCDocument."No.", true, CaptionCDCTemplateField.Code, LineNo) then
+                        if not CDCDocumentValue."Is Valid" then
                             exit
                         else
-                            exit(CaptureMgt.ParseNumber(Field, Value."Value (Text)", Value."Value (Decimal)"));
-            Field."Data Type"::Text:
-                if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
-                    exit(IsValidText(CaptionField, Value."Value (Text)", Document."No."));
-            Field."Data Type"::Date:
-                if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
-                    exit(IsValidDate(CaptionField, Value."Value (Date)"));
-            Field."Data Type"::Lookup:
-                if Value.Get(Document."No.", true, CaptionField.Code, LineNo) then
-                    exit(IsValidLookup(CaptionField, Value."Value (Text)", Document."No."));
+                            exit(CDCCaptureManagement.ParseNumber(CDCTemplateField, CDCDocumentValue."Value (Text)", CDCDocumentValue."Value (Decimal)"));
+            CDCTemplateField."Data Type"::Text:
+                if CDCDocumentValue.Get(CDCDocument."No.", true, CaptionCDCTemplateField.Code, LineNo) then
+                    exit(IsValidText(CaptionCDCTemplateField, CDCDocumentValue."Value (Text)", CDCDocument."No."));
+            CDCTemplateField."Data Type"::Date:
+                if CDCDocumentValue.Get(CDCDocument."No.", true, CaptionCDCTemplateField.Code, LineNo) then
+                    exit(IsValidDate(CaptionCDCTemplateField, CDCDocumentValue."Value (Date)"));
+            CDCTemplateField."Data Type"::Lookup:
+                if CDCDocumentValue.Get(CDCDocument."No.", true, CaptionCDCTemplateField.Code, LineNo) then
+                    exit(IsValidLookup(CaptionCDCTemplateField, CDCDocumentValue."Value (Text)", CDCDocument."No."));
         end;
         exit(true);
     end;
 
-    local procedure FillSortedFieldBuffer(var TempSortedDocumentField: Record "CDC Temp. Document Field"; var MandatoryField: Record "CDC Temp. Document Field"; TempDocLine: Record "CDC Temp. Document Line" temporary)
+    local procedure FillSortedFieldBuffer(var TempSortedCDCTempDocumentField: Record "CDC Temp. Document Field"; var MandatoryCDCTempDocumentField: Record "CDC Temp. Document Field"; CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary)
     var
         CDCTemplateField: Record "CDC Template Field";
     begin
-        CDCTemplateField.SetRange(CDCTemplateField."Template No.", TempDocLine."Template No.");
+        CDCTemplateField.SetRange(CDCTemplateField."Template No.", CDCTempDocumentLine."Template No.");
         CDCTemplateField.SetRange(CDCTemplateField.Type, CDCTemplateField.Type::Line);
         if CDCTemplateField.FindSet() then
             repeat
                 if (CDCTemplateField."Advanced Line Recognition Type" <> CDCTemplateField."Advanced Line Recognition Type"::Default) and
                    (StrLen(CDCTemplateField.Formula) = 0) and (StrLen(CDCTemplateField.GetFixedValue()) = 0) then begin
-                    TempSortedDocumentField."Document No." := TempDocLine."Document No.";
-                    TempSortedDocumentField."Sort Order" := CDCTemplateField.Sorting;
-                    TempSortedDocumentField."Field Code" := CDCTemplateField.Code;
-                    TempSortedDocumentField.Insert();
+                    TempSortedCDCTempDocumentField."Document No." := CDCTempDocumentLine."Document No.";
+                    TempSortedCDCTempDocumentField."Sort Order" := CDCTemplateField.Sorting;
+                    TempSortedCDCTempDocumentField."Field Code" := CDCTemplateField.Code;
+                    TempSortedCDCTempDocumentField.Insert();
                 end else
                     if CDCTemplateField.Required then begin
-                        MandatoryField."Document No." := TempDocLine."Document No.";
-                        MandatoryField."Sort Order" := CDCTemplateField.Sorting;
-                        MandatoryField."Field Code" := CDCTemplateField.Code;
-                        MandatoryField.Insert();
+                        MandatoryCDCTempDocumentField."Document No." := CDCTempDocumentLine."Document No.";
+                        MandatoryCDCTempDocumentField."Sort Order" := CDCTemplateField.Sorting;
+                        MandatoryCDCTempDocumentField."Field Code" := CDCTemplateField.Code;
+                        MandatoryCDCTempDocumentField.Insert();
                     end;
             until CDCTemplateField.Next() = 0;
 
     end;
 
-    local procedure GetStopLineRecognitionPositions(var StopPos: array[100] of Integer; CurrPageNo: Integer; Document: Record "CDC Document")
+    local procedure GetStopLineRecognitionPositions(var StopPos: array[100] of Integer; CurrPageNo: Integer; CDCDocument: Record "CDC Document")
     var
-        Value: Record "CDC Document Value";
-        "Field": Record "CDC Template Field";
+        CDCDocumentValue: Record "CDC Document Value";
+        CDCTemplateField: Record "CDC Template Field";
     begin
-        Field.Reset();
-        Field.SetCurrentKey("Template No.", Type, "Sort Order");
-        Field.SetRange("Template No.", Document."Template No.");
-        Field.SetRange(Type, Field.Type::Header);
-        Field.SetFilter("Stop Lines Recognition", '>%1', Field."Stop Lines Recognition"::" ");
-        if Field.Find() then
+        CDCTemplateField.Reset();
+        CDCTemplateField.SetCurrentKey("Template No.", Type, "Sort Order");
+        CDCTemplateField.SetRange("Template No.", CDCDocument."Template No.");
+        CDCTemplateField.SetRange(Type, CDCTemplateField.Type::Header);
+        CDCTemplateField.SetFilter("Stop Lines Recognition", '>%1', CDCTemplateField."Stop Lines Recognition"::" ");
+        if CDCTemplateField.Find() then
             repeat
-                Value.Reset();
-                Value.SetRange("Document No.", Document."No.");
-                Value.SetRange(Type, Field.Type);
-                Value.SetRange(Code, Field.Code);
-                Value.SetRange("Page No.", CurrPageNo);
+                CDCDocumentValue.Reset();
+                CDCDocumentValue.SetRange("Document No.", CDCDocument."No.");
+                CDCDocumentValue.SetRange(Type, CDCTemplateField.Type);
+                CDCDocumentValue.SetRange(Code, CDCTemplateField.Code);
+                CDCDocumentValue.SetRange("Page No.", CurrPageNo);
 
-                case Field."Stop Lines Recognition" of
-                    Field."Stop Lines Recognition"::"If Caption is on same line",
-                  Field."Stop Lines Recognition"::"If Caption is on same line (continue on next page)":
-                        Value.SetRange("Is Value", false);
-                    Field."Stop Lines Recognition"::"If Value is on same line",
-                  Field."Stop Lines Recognition"::"If Value is on same line (continue on next page)":
-                        Value.SetRange("Is Value", true);
-                    Field."Stop Lines Recognition"::"If Caption or Value is on same line",
-                  Field."Stop Lines Recognition"::"If Caption or Value is on same line (continue on next page)":
-                        Value.SetRange("Is Value");
+                case CDCTemplateField."Stop Lines Recognition" of
+                    CDCTemplateField."Stop Lines Recognition"::"If Caption is on same line",
+                  CDCTemplateField."Stop Lines Recognition"::"If Caption is on same line (continue on next page)":
+                        CDCDocumentValue.SetRange("Is Value", false);
+                    CDCTemplateField."Stop Lines Recognition"::"If Value is on same line",
+                  CDCTemplateField."Stop Lines Recognition"::"If Value is on same line (continue on next page)":
+                        CDCDocumentValue.SetRange("Is Value", true);
+                    CDCTemplateField."Stop Lines Recognition"::"If Caption or Value is on same line",
+                  CDCTemplateField."Stop Lines Recognition"::"If Caption or Value is on same line (continue on next page)":
+                        CDCDocumentValue.SetRange("Is Value");
                 end;
 
-                Value.SetFilter(Top, '>%1', 0);
-                if Value.FindFirst() then
-                    if (StopPos[Value."Page No."] = 0) or (StopPos[Value."Page No."] > Value.Top) then
-                        if (not (Value.Left = Value.Right) and (Value.Bottom = Value.Top)) then
-                            StopPos[Value."Page No."] := Value.Top;
-            until Field.Next() = 0;
+                CDCDocumentValue.SetFilter(Top, '>%1', 0);
+                if CDCDocumentValue.FindFirst() then
+                    if (StopPos[CDCDocumentValue."Page No."] = 0) or (StopPos[CDCDocumentValue."Page No."] > CDCDocumentValue.Top) then
+                        if (not (CDCDocumentValue.Left = CDCDocumentValue.Right) and (CDCDocumentValue.Bottom = CDCDocumentValue.Top)) then
+                            StopPos[CDCDocumentValue."Page No."] := CDCDocumentValue.Top;
+            until CDCTemplateField.Next() = 0;
     end;
 
-    internal procedure CleanupPrevValues(Document: Record "CDC Document")
+    internal procedure CleanupPrevValues(CDCDocument: Record "CDC Document")
     var
-        DocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
     begin
-        DocumentValue.SetRange("Document No.", Document."No.");
-        DocumentValue.SetRange(Type, DocumentValue.Type::Line);
-        DocumentValue.DeleteAll();
+        CDCDocumentValue.SetRange("Document No.", CDCDocument."No.");
+        CDCDocumentValue.SetRange(Type, CDCDocumentValue.Type::Line);
+        CDCDocumentValue.DeleteAll();
         ;
     end;
 
-    local procedure CleanupTempValues(Document: Record "CDC Document")
+    local procedure CleanupTempValues(CDCDocument: Record "CDC Document")
     var
-        DocumentValue: Record "CDC Document Value";
+        CDCDocumentValue: Record "CDC Document Value";
     begin
         // Clean up temporary created values
-        DocumentValue.SetRange("Document No.", Document."No.");
-        DocumentValue.SetRange(Type, DocumentValue.Type::Line);
-        DocumentValue.SetFilter("Line No.", '1000..');
-        DocumentValue.DeleteAll();
+        CDCDocumentValue.SetRange("Document No.", CDCDocument."No.");
+        CDCDocumentValue.SetRange(Type, CDCDocumentValue.Type::Line);
+        CDCDocumentValue.SetFilter("Line No.", '1000..');
+        CDCDocumentValue.DeleteAll();
         ;
     end;
-
-
 
     // The following functions are a copy of the same functions in the Capture Management Codeunit, where they are defined as "local"
 
-
-
-    // local procedure IsValidNumber(var "Field": Record "CDC Template Field"; Number: Decimal): Boolean
-    // var
-    //     FieldRule: Record "CDC Template Field Rule";
-    //     TempTemplateField: Record "CDC Template Field" temporary;
-    // begin
-    //     if Field."Codeunit ID: Capture Value" <> 0 then
-    //         exit(TestCaptureValue(Field, FieldRule, Format(Number)));
-
-    //     if (Number = 0) and Field.Required then
-    //         exit(false);
-
-    //     CaptureMgt.FilterRule(Field, FieldRule);
-
-    //     TempTemplateField."Fixed Value (Decimal)" := Number;
-    //     TempTemplateField.Insert;
-
-    //     if FieldRule.FindSet() then
-    //         repeat
-    //             if FieldRule.Rule <> '' then begin
-    //                 TempTemplateField.SetFilter("Fixed Value (Decimal)", FieldRule.Rule);
-    //                 if TempTemplateField.IsEmpty then
-    //                     exit(false);
-    //             end;
-    //         until FieldRule.Next() = 0;
-
-    //     exit(true);
-    // end;
-
-    local procedure IsValidDate(var "Field": Record "CDC Template Field"; Date: Date): Boolean
+    local procedure IsValidDate(var CDCTemplateField: Record "CDC Template Field"; Date: Date): Boolean
     var
-        FieldRule: Record "CDC Template Field Rule";
+        CDCTemplateFieldRule: Record "CDC Template Field Rule";
     begin
-        if Field."Codeunit ID: Capture Value" <> 0 then
-            exit(TestCaptureValue(Field, FieldRule, Format(Date)));
+        if CDCTemplateField."Codeunit ID: Capture Value" <> 0 then
+            exit(TestCaptureValue(CDCTemplateField, CDCTemplateFieldRule, Format(Date)));
 
         if (Date = 0D) then
-            exit(not Field.Required);
+            exit(not CDCTemplateField.Required);
 
-        if Format(Field."Validation Dateformula From") <> '' then
-            if Date < CalcDate(Field."Validation Dateformula From", Today) then
+        if Format(CDCTemplateField."Validation Dateformula From") <> '' then
+            if Date < CalcDate(CDCTemplateField."Validation Dateformula From", Today) then
                 exit(false);
 
-        if Format(Field."Validation Dateformula To") <> '' then
-            if Date > CalcDate(Field."Validation Dateformula To", Today) then
+        if Format(CDCTemplateField."Validation Dateformula To") <> '' then
+            if Date > CalcDate(CDCTemplateField."Validation Dateformula To", Today) then
                 exit(false);
 
         if Date < 17540101D then
@@ -1035,113 +985,113 @@ codeunit 61001 "ALR Advanced Line Capture"
         exit(true);
     end;
 
-    local procedure IsValidText(var "Field": Record "CDC Template Field"; Text: Text[250]; DocumentNo: Code[20]): Boolean
+    local procedure IsValidText(var CDCTemplateField: Record "CDC Template Field"; Text: Text[250]; DocumentNo: Code[20]): Boolean
     var
-        TempValue: Record "CDC Document Value" temporary;
-        FieldRule: Record "CDC Template Field Rule";
-        RegEx: Codeunit "CDC RegEx Management";
+        TempCDCDocumentValue: Record "CDC Document Value" temporary;
+        CDCTemplateFieldRule: Record "CDC Template Field Rule";
+        CDCRegExManagement: Codeunit "CDC RegEx Management";
         IsValid: Boolean;
     begin
         Text := UpperCase(Text);
 
-        if Field."Codeunit ID: Capture Value" <> 0 then
-            if TestCaptureValue(Field, FieldRule, Text) then
+        if CDCTemplateField."Codeunit ID: Capture Value" <> 0 then
+            if TestCaptureValue(CDCTemplateField, CDCTemplateFieldRule, Text) then
                 exit(true);
 
-        CaptureMgt.FilterRule(Field, FieldRule);
-        if not FieldRule.FindFirst() then
-            exit((Text <> '') or (not Field.Required));
+        CDCCaptureManagement.FilterRule(CDCTemplateField, CDCTemplateFieldRule);
+        if not CDCTemplateFieldRule.FindFirst() then
+            exit((Text <> '') or (not CDCTemplateField.Required));
 
         if Text = '' then
-            exit(not Field.Required);
+            exit(not CDCTemplateField.Required);
 
-        TempValue."Value (Text)" := Text;
-        TempValue.Insert();
+        TempCDCDocumentValue."Value (Text)" := Text;
+        TempCDCDocumentValue.Insert();
 
         repeat
-            FieldRule.Rule := UpperCase(FieldRule.Rule);
-            if (StrPos(FieldRule.Rule, '<') <> 0) or
-              (StrPos(FieldRule.Rule, '>') <> 0) or
-              (StrPos(FieldRule.Rule, '|') <> 0) or
-              (StrPos(FieldRule.Rule, '*') <> 0) or
-              (StrPos(FieldRule.Rule, '&') <> 0)
+            CDCTemplateFieldRule.Rule := UpperCase(CDCTemplateFieldRule.Rule);
+            if (StrPos(CDCTemplateFieldRule.Rule, '<') <> 0) or
+              (StrPos(CDCTemplateFieldRule.Rule, '>') <> 0) or
+              (StrPos(CDCTemplateFieldRule.Rule, '|') <> 0) or
+              (StrPos(CDCTemplateFieldRule.Rule, '*') <> 0) or
+              (StrPos(CDCTemplateFieldRule.Rule, '&') <> 0)
             then begin
-                TempValue.SetFilter("Value (Text)", FieldRule.Rule);
-                IsValid := not TempValue.IsEmpty;
+                TempCDCDocumentValue.SetFilter("Value (Text)", CDCTemplateFieldRule.Rule);
+                IsValid := not TempCDCDocumentValue.IsEmpty;
             end else begin
-                if RegEx.IsMatch(Text, FieldRule.Rule) then
-                    if Field."Codeunit ID: Capture Value" <> 0 then
-                        IsValid := TestCaptureValue(Field, FieldRule, Text)
+                if CDCRegExManagement.IsMatch(Text, CDCTemplateFieldRule.Rule) then
+                    if CDCTemplateField."Codeunit ID: Capture Value" <> 0 then
+                        IsValid := TestCaptureValue(CDCTemplateField, CDCTemplateFieldRule, Text)
                     else
                         IsValid := true;
 
-                if IsValid and Field."Enable Rule Generation" then begin
-                    ClearFldRuleCreatedFromMaster(FieldRule, DocumentNo);
+                if IsValid and CDCTemplateField."Enable Rule Generation" then begin
+                    ClearFldRuleCreatedFromMaster(CDCTemplateFieldRule, DocumentNo);
 
                     // Several rules could have been copied from the master template. Delete these when a rule matches the found value
-                    DelFldRulesCreatedFromMaster(FieldRule."Entry No.");
+                    DelFldRulesCreatedFromMaster(CDCTemplateFieldRule."Entry No.");
                 end;
             end;
-        until (FieldRule.Next() = 0) or (IsValid);
+        until (CDCTemplateFieldRule.Next() = 0) or (IsValid);
 
         exit(IsValid);
     end;
 
-    local procedure IsValidLookup("Field": Record "CDC Template Field"; Value: Text[250]; DocumentNo: Code[20]): Boolean
+    local procedure IsValidLookup(CDCTemplateField: Record "CDC Template Field"; CDCDocumentValue: Text[250]; DocumentNo: Code[20]): Boolean
     begin
-        exit(IsValidText(Field, Value, DocumentNo));
+        exit(IsValidText(CDCTemplateField, CDCDocumentValue, DocumentNo));
     end;
 
-    // local procedure IsValidBoolean(var "Field": Record "CDC Template Field"; Boolean: Boolean): Boolean
+    // local procedure IsValidBoolean(var CDCTemplateField: Record "CDC Template Field"; Boolean: Boolean): Boolean
     // begin
     //     exit(true);
     // end;
 
-    local procedure TestCaptureValue("Field": Record "CDC Template Field"; Rule: Record "CDC Template Field Rule"; Value: Text[1024]): Boolean
+    local procedure TestCaptureValue(CDCTemplateField: Record "CDC Template Field"; CDCTemplateFieldRule: Record "CDC Template Field Rule"; CDCDocumentValue: Text[1024]): Boolean
     var
-        CDCTempCaptureFieldVal: Record "CDC Temp. Capture Field Valid.";
+        CDCTempCaptureFieldValid: Record "CDC Temp. Capture Field Valid.";
     begin
-        CDCTempCaptureFieldVal."Field Type" := Field.Type;
-        CDCTempCaptureFieldVal."Field Code" := Field.Code;
-        CDCTempCaptureFieldVal."File Rule Entry No." := Rule."Entry No.";
-        CDCTempCaptureFieldVal.Rule := Rule.Rule;
-        CDCTempCaptureFieldVal.Value := CopyStr(Value, 1, MaxStrLen(CDCTempCaptureFieldVal.Value));
-        CODEUNIT.Run(Field."Codeunit ID: Capture Value", CDCTempCaptureFieldVal);
-        exit(CDCTempCaptureFieldVal."Is Valid");
+        CDCTempCaptureFieldValid."Field Type" := CDCTemplateField.Type;
+        CDCTempCaptureFieldValid."Field Code" := CDCTemplateField.Code;
+        CDCTempCaptureFieldValid."File Rule Entry No." := CDCTemplateFieldRule."Entry No.";
+        CDCTempCaptureFieldValid.Rule := CDCTemplateFieldRule.Rule;
+        CDCTempCaptureFieldValid.Value := CopyStr(CDCDocumentValue, 1, MaxStrLen(CDCTempCaptureFieldValid.Value));
+        CODEUNIT.Run(CDCTemplateField."Codeunit ID: Capture Value", CDCTempCaptureFieldValid);
+        exit(CDCTempCaptureFieldValid."Is Valid");
     end;
 
-    local procedure ClearFldRuleCreatedFromMaster(var FieldRule: Record "CDC Template Field Rule"; DocumentNo: Code[20])
+    local procedure ClearFldRuleCreatedFromMaster(var CDCTemplateFieldRule: Record "CDC Template Field Rule"; DocumentNo: Code[20])
     begin
-        if FieldRule."Created from Master Template" then begin
-            FieldRule."Created from Master Template" := false;
-            FieldRule."Document No." := DocumentNo;
-            FieldRule.Modify(true);
+        if CDCTemplateFieldRule."Created from Master Template" then begin
+            CDCTemplateFieldRule."Created from Master Template" := false;
+            CDCTemplateFieldRule."Document No." := DocumentNo;
+            CDCTemplateFieldRule.Modify(true);
         end;
     end;
 
     local procedure DelFldRulesCreatedFromMaster(SkipEntryNo: Integer)
     var
-        FieldRule: Record "CDC Template Field Rule";
+        CDCTemplateFieldRule: Record "CDC Template Field Rule";
     begin
-        FieldRule.SetRange("Created from Master Template", true);
-        FieldRule.SetFilter("Entry No.", '<>%1', SkipEntryNo);
-        if not FieldRule.IsEmpty then
-            FieldRule.DeleteAll(true);
+        CDCTemplateFieldRule.SetRange("Created from Master Template", true);
+        CDCTemplateFieldRule.SetFilter("Entry No.", '<>%1', SkipEntryNo);
+        if not CDCTemplateFieldRule.IsEmpty then
+            CDCTemplateFieldRule.DeleteAll(true);
     end;
 
 
     [IntegrationEvent(TRUE, false)]
-    local procedure OnAfterStandardLineRecognition(var Document: Record "CDC Document"; var Handled: Boolean)
+    local procedure OnAfterStandardLineRecognition(var CDCDocument: Record "CDC Document"; var Handled: Boolean)
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeLineFinalProcessing(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line" temporary; Handled: Boolean)
+    local procedure OnBeforeLineFinalProcessing(CDCDocument: Record "CDC Document"; var CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary; Handled: Boolean)
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnAfterLineFinalProcessing(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line" temporary)
+    local procedure OnAfterLineFinalProcessing(CDCDocument: Record "CDC Document"; var CDCTempDocumentLine: Record "CDC Temp. Document Line" temporary)
     begin
     end;
 }

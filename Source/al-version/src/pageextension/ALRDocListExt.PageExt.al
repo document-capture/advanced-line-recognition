@@ -18,7 +18,7 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
 
                 trigger OnAction()
                 begin
-                    TemplateHelper.OpenMasterTemplate(Rec, IsXMLTemplate);
+                    ALRTemplateHelper.OpenMasterTemplate(Rec, IsXMLTemplate);
                 end;
             }
 
@@ -35,7 +35,7 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
 
                 trigger OnAction()
                 begin
-                    TemplateHelper.OpenIdentificationTemplate(Rec, IsXMLTemplate);
+                    ALRTemplateHelper.OpenIdentificationTemplate(Rec, IsXMLTemplate);
                 end;
             }
             action(DocCategory)
@@ -52,7 +52,7 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
                 trigger OnAction()
                 begin
                     Rec.TestField("Document Category Code");
-                    TemplateHelper.OpenDocumentCategoryCard(Rec."Document Category Code");
+                    ALRTemplateHelper.OpenDocumentCategoryCard(Rec."Document Category Code");
                 end;
             }
             action(CopySettingToMaster)
@@ -73,18 +73,18 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
                     if not IsXMLTemplate then
                         exit;
 
-                    TemplateHelper.CopyFieldSettingsToMasterTemplate(Rec);
+                    ALRTemplateHelper.CopyFieldSettingsToMasterTemplate(Rec);
                 end;
             }
         }
     }
 
     var
-        [InDataSet]
-        IsXMLTemplate: Boolean;
+        ALRTemplateHelper: Codeunit "ALR Template Helper";
         [InDataSet]
         IsDocument: Boolean;
-        TemplateHelper: Codeunit "ALR Template Helper";
+        [InDataSet]
+        IsXMLTemplate: Boolean;
 
     trigger OnAfterGetCurrRecord()
     begin

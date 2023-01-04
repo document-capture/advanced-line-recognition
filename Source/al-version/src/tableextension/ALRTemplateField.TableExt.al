@@ -1,4 +1,3 @@
-#pragma warning  disable AA0072
 tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 {
     fields
@@ -144,18 +143,17 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 
             trigger OnValidate()
             var
-                Template: Record "CDC Template";
+                CDCTemplate: Record "CDC Template";
                 "Field": Record "Field";
                 DocCat: Record "CDC Document Category";
-                RecIDMgt: Codeunit "CDC Record ID Mgt.";
             begin
                 Rec.TestField("Get value from lookup", false);
 
                 if ("Get value from source field" = xRec."Get value from source field") OR ("Get value from source field" = 0) then
                     exit;
 
-                Template.Get("Template No.");
-                DocCat.Get(Template."Category Code");
+                CDCTemplate.Get("Template No.");
+                DocCat.Get(CDCTemplate."Category Code");
                 DocCat.TestField("Source Table No.");
 
                 Field.Get(DocCat."Source Table No.", "Get value from source field");
@@ -212,27 +210,22 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
 
     internal procedure GetSourceFieldCaption() FieldCap: Text[250]
     var
-        Template: Record "CDC Template";
-        DocCat: Record "CDC Document Category";
+        CDCTemplate: Record "CDC Template";
+        CDCDocumentCategory: Record "CDC Document Category";
         AllObjWithCaption: Record AllObjWithCaption;
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
+        SourceFieldLbl: Label '%1 %2', Comment = '%1 is replaced by table name, %2 by object caption', Locked = true;
     begin
-        IF Template.GET(Rec."Template No.") THEN
-            DocCat.GET(Template."Category Code");
+        IF CDCTemplate.GET(Rec."Template No.") THEN
+            CDCDocumentCategory.GET(CDCTemplate."Category Code");
 
-        FieldCap := StrSubstNo('%1 %2', FieldFromSourceTableNameLbl, RecIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table, DocCat."Source Table No."));
+        FieldCap := StrSubstNo(SourceFieldLbl, FieldFromSourceTableNameLbl, CDCRecordIDMgt.GetObjectCaption(AllObjWithCaption."Object Type"::Table, CDCDocumentCategory."Source Table No."));
         IF FieldCap = '' THEN
-            FieldCap := SourceNoFieldCaption;
+            FieldCap := SourceNoFieldCaptioLbl;
 
     end;
-    // trigger OnModify()
-    // var
-    //     InstallMgt: Codeunit "ALR Install Management";
-    // begin
-    //     Rec."Data version" := InstallMgt.GetDataVersion();
 
-    // end;
     var
-        SourceNoFieldCaption: Label 'Source Record Field';
+        SourceNoFieldCaptioLbl: Label 'Source Record Field';
         FieldFromSourceTableNameLbl: Label 'Field from';
 }

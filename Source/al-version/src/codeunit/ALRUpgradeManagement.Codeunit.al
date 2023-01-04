@@ -56,32 +56,32 @@ codeunit 61004 "ALR Upgrade Management"
 
     local procedure UpdateEmptyValueReplacementOptions()
     var
-        TemplateField: Record "CDC Template Field";
+        CDCTemplateField: Record "CDC Template Field";
         ModifyField: Boolean;
     begin
-        TemplateField.ModifyAll("Empty value handling", TemplateField."Empty value handling"::Ignore);
-        if TemplateField.FindSet(true, false) then
+        CDCTemplateField.ModifyAll("Empty value handling", CDCTemplateField."Empty value handling"::Ignore);
+        if CDCTemplateField.FindSet(true, false) then
             repeat
-                if TemplateField."Replacement Field" <> '' then begin
+                if CDCTemplateField."Replacement Field" <> '' then begin
                     ModifyField := true;
-                    case TemplateField."Replacement Field Type" of
-                        TemplateField."Replacement Field Type"::Header:
-                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyHeaderFieldValue;
-                        TemplateField."Replacement Field Type"::Line:
-                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyLineFieldValue;
-                        TemplateField."Replacement Field Type"::FixedValue:
-                            TemplateField."Empty value handling" := TemplateField."Empty value handling"::FixedValue;
+                    case CDCTemplateField."Replacement Field Type" of
+                        CDCTemplateField."Replacement Field Type"::Header:
+                            CDCTemplateField."Empty value handling" := CDCTemplateField."Empty value handling"::CopyHeaderFieldValue;
+                        CDCTemplateField."Replacement Field Type"::Line:
+                            CDCTemplateField."Empty value handling" := CDCTemplateField."Empty value handling"::CopyLineFieldValue;
+                        CDCTemplateField."Replacement Field Type"::FixedValue:
+                            CDCTemplateField."Empty value handling" := CDCTemplateField."Empty value handling"::FixedValue;
                     end;
                 end;
 
-                if TemplateField."Copy Value from Previous Value" then begin
-                    TemplateField."Empty value handling" := TemplateField."Empty value handling"::CopyPrevLineValue;
+                if CDCTemplateField."Copy Value from Previous Value" then begin
+                    CDCTemplateField."Empty value handling" := CDCTemplateField."Empty value handling"::CopyPrevLineValue;
                     ModifyField := true;
                 end;
 
                 if ModifyField then
-                    TemplateField.Modify();
+                    CDCTemplateField.Modify();
 
-            until TemplateField.Next() = 0;
+            until CDCTemplateField.Next() = 0;
     end;
 }

@@ -19,20 +19,25 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                     trigger OnLookup(var Text: Text): Boolean
                     var
                         DocCat: Record "CDC Document Category";
-                        Template: Record "CDC Template";
+                        CDCTemplate: Record "CDC Template";
+                        LookupFieldText: Text[250];
                     begin
-                        Template.GET(Rec."Template No.");
-                        DocCat.GET(Template."Category Code");
-                        exit(RecIDMgt.LookupField(Text, DocCat."Source Table No.", FALSE));
+                        CDCTemplate.GET(Rec."Template No.");
+                        DocCat.GET(CDCTemplate."Category Code");
+                        LookupFieldText := CopyStr(Text, 1, MaxStrLen(LookupFieldText));
+                        if CDCRecordIDMgt.LookupField(LookupFieldText, DocCat."Source Table No.", false) then begin
+                            Text := LookupFieldText;
+                            exit(true);
+                        end;
                     end;
 
                     trigger OnValidate()
                     var
-                        Template: Record "CDC Template";
                         DocCat: Record "CDC Document Category";
+                        CDCTemplate: Record "CDC Template";
                     begin
-                        Template.GET(Rec."Template No.");
-                        DocCat.GET(Template."Category Code");
+                        CDCTemplate.GET(Rec."Template No.");
+                        DocCat.GET(CDCTemplate."Category Code");
                         Rec.VALIDATE("Get value from source field", RecIdMgt_GetFieldID(DocCat."Source Table No.", CopySourceField));
                         CurrPage.UPDATE(TRUE);
                     end;
@@ -311,8 +316,8 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
 
     procedure UpdateALRFields()
     var
-        DocCat: Record "CDC Document Category";
-        Template: Record "CDC Template";
+        CDCDocumentCategory: Record "CDC Document Category";
+        CDCTemplate: Record "CDC Template";
     begin
         IsLinkedFieldSearch := Rec."Advanced Line Recognition Type" = Rec."Advanced Line Recognition Type"::LinkedToAnchorField;
         ShowPositionDependendFields := (Rec."Advanced Line Recognition Type" in [Rec."Advanced Line Recognition Type"::FindFieldByColumnHeading, Rec."Advanced Line Recognition Type"::FindFieldByCaptionInPosition]);
@@ -322,12 +327,11 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
         IsTextField := Rec."Data Type" = Rec."Data Type"::Text;
         IsFixedReplacementValue := (Rec."Empty value handling" = Rec."Empty value handling"::FixedValue);
         IsFieldReplacement := (Rec."Empty value handling" = Rec."Empty value handling"::CopyHeaderFieldValue) or (Rec."Empty value handling" = Rec."Empty value handling"::CopyLineFieldValue);
-        IsCopyFromPrevField := (Rec."Empty value handling" = Rec."Empty value handling"::CopyPrevLineValue);
-        if Template.Get(Rec."Template No.") then
-            if DocCat.Get(Template."Category Code") then
-                CopySourceField := RecIDMgt.GetFieldCaption(DocCat."Source Table No.", Rec."Get value from source field");
+        if CDCTemplate.Get(Rec."Template No.") then
+            if CDCDocumentCategory.Get(CDCTemplate."Category Code") then
+                CopySourceField := CDCRecordIDMgt.GetFieldCaption(CDCDocumentCategory."Source Table No.", Rec."Get value from source field");
 
-        IsNormalField := (Template.Type = Template.Type::" ");
+        IsNormalField := (CDCTemplate.Type = CDCTemplate.Type::" ");
     end;
 
     internal procedure RecIdMgt_GetFieldID(TableNo: Integer; Text: Text[250]) FieldNo: Integer
@@ -338,32 +342,30 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
             Field.SETRANGE(TableNo, TableNo);
             Field.SETRANGE(Enabled, TRUE);
             Field.SETRANGE("Field Caption", Text);
-            IF Field.FINDFIRST THEN
+            IF Field.FindFirst() THEN
                 EXIT(Field."No.");
         END;
     end;
 
     var
-        [InDataSet]
-        IsLinkedFieldSearch: Boolean;
-        [InDataSet]
-        ShowPositionDependendFields: Boolean;
-        [InDataSet]
-        IsLineField: Boolean;
-        [InDataSet]
-        IsTextField: Boolean;
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
         [InDataSet]
         CopyStrEnabled: Boolean;
         [InDataset]
         DelChrEnabled: Boolean;
+        [InDataSet]
+        IsFieldReplacement: Boolean;
         [InDataset]
         IsFixedReplacementValue: Boolean;
-        [InDataset]
-        IsFieldReplacement: Boolean;
         [InDataSet]
-        IsCopyFromPrevField: Boolean;
+        IsLineField: Boolean;
+        [InDataSet]
+        IsLinkedFieldSearch: Boolean;
         [InDataSet]
         IsNormalField: Boolean;
+        [InDataSet]
+        IsTextField: Boolean;
+        [InDataSet]
+        ShowPositionDependendFields: Boolean;
         CopySourceField: Text[250];
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
 }

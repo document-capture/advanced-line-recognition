@@ -1,4 +1,3 @@
-#pragma warning disable AA0072
 pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines ListPart"
 {
     ContextSensitiveHelpPage = 'document-lines';
@@ -21,7 +20,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
 
                     trigger OnAction()
                     begin
-                        AdvLineRecognitionMgt.SetToAnchorLinkedField(Rec);
+                        ALRAdvRecognitionMgt.SetToAnchorLinkedField(Rec);
                     end;
                 }
                 action(SearchByColumnHeading)
@@ -33,7 +32,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
 
                     trigger OnAction()
                     begin
-                        AdvLineRecognitionMgt.SetToFieldSearchWithColumnHeding(Rec);
+                        ALRAdvRecognitionMgt.SetToFieldSearchWithColumnHeding(Rec);
                     end;
                 }
                 action(SearchByCaption)
@@ -45,7 +44,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
 
                     trigger OnAction()
                     begin
-                        AdvLineRecognitionMgt.SetToFieldSearchWithCaption(Rec);
+                        ALRAdvRecognitionMgt.SetToFieldSearchWithCaption(Rec);
                     end;
                 }
                 action(ResetFieldToDefault)
@@ -57,7 +56,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
 
                     trigger OnAction()
                     begin
-                        AdvLineRecognitionMgt.ResetFieldFromMenu(Rec);
+                        ALRAdvRecognitionMgt.ResetFieldFromMenu(Rec);
                     end;
                 }
                 action(ShowVersionNo)
@@ -68,7 +67,7 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                     ToolTip = 'Displays the currently used version of the advanced line detection.';
                     trigger OnAction()
                     begin
-                        AdvLineRecognitionMgt.ShowVersionNo();
+                        ALRAdvRecognitionMgt.ShowVersionNo();
                     end;
                 }
                 action(DisableFieldRecognition)
@@ -81,8 +80,8 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                     trigger OnAction()
                     begin
 
-                        ALRMgtSI.FlipAutoFieldRecognition();
-                        ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
+                        ALRSingleInstanceMgt.FlipAutoFieldRecognition();
+                        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
                     end;
                 }
                 action(EnableFieldRecognition)
@@ -94,8 +93,8 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                     Visible = not ShowFieldRecognition;
                     trigger OnAction()
                     begin
-                        ALRMgtSI.FlipAutoFieldRecognition();
-                        ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
+                        ALRSingleInstanceMgt.FlipAutoFieldRecognition();
+                        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
                     end;
                 }
             }
@@ -104,14 +103,13 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
 
     trigger OnOpenPage()
     begin
-        ShowFieldRecognition := ALRMgtSI.GetAutoFieldRecognition();
+        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
     end;
 
 
     var
-        ALRMgtSI: Codeunit "ALR Single Instance Mgt.";
-        AdvLineRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
+        ALRSingleInstanceMgt: Codeunit "ALR Single Instance Mgt.";
+        ALRAdvRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
         [InDataSet]
         ShowFieldRecognition: boolean;
 }
-#pragma warning restore
