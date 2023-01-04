@@ -25,9 +25,9 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     internal procedure RunLineCapture(Document: Record "CDC Document")
     var
+        TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
         TempDocLine: Record "CDC Temp. Document Line" temporary;
         CDCTemplateField: Record "CDC Template Field";
-        TempSortedDocumentField: Record "CDC Temp. Document Field" temporary;
         Handled: Boolean;
     begin
         //CleanupPrevValues(Document);
@@ -84,14 +84,14 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure FindValueFromOffsetField(TempDocLine: Record "CDC Temp. Document Line" temporary; var OffsetField: Record "CDC Template Field")
     var
-        OffsetSourceField: Record "CDC Template Field";
-        OffsetSourceFieldValue: Record "CDC Document Value";
-        DocumentValue: Record "CDC Document Value";
         CurrPage: Record "CDC Document Page";
-        CurrTop: Integer;
-        CurrLeft: Integer;
+        DocumentValue: Record "CDC Document Value";
+        OffsetSourceFieldValue: Record "CDC Document Value";
+        OffsetSourceField: Record "CDC Template Field";
         CurrBottom: Integer;
+        CurrLeft: Integer;
         CurrRight: Integer;
+        CurrTop: Integer;
     begin
         //This function will capture the field value based on the offset/distance of a source field value
 
@@ -119,16 +119,16 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure FindValueByCaptionInPosition(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document"): Boolean
     var
+        CurrPage: Record "CDC Document Page";
         DocumentValue: Record "CDC Document Value";
         DocumentValueCopy: Record "CDC Document Value";
-        CurrPage: Record "CDC Document Page";
         CaptureEngine: Codeunit "CDC Capture Engine";
-        Word: Text[1024];
-        FromTopPos: Integer;
         FromTopPage: Integer;
-        ToBottomPos: Integer;
-        ToBottomPage: Integer;
+        FromTopPos: Integer;
         i: Integer;
+        ToBottomPage: Integer;
+        ToBottomPos: Integer;
+        Word: Text[1024];
     begin
         // We cannot proceed if there is no line field in the template defined as required=true
         if TempMandatoryField.Count = 0 then
@@ -193,30 +193,30 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure FindFieldByColumnHeading(var TempDocLine: Record "CDC Temp. Document Line" temporary; var CurrField: Record "CDC Template Field"; Document: Record "CDC Document")
     var
-        DocumentValue: Record "CDC Document Value";
-        TempDocumentValue: Record "CDC Document Value" temporary;
-        DocumentValueNew: Record "CDC Document Value";
-        CaptionStartWord: array[100] of Record "CDC Document Word";
-        CaptionEndWord: array[100] of Record "CDC Document Word";
         CaptionPage: Record "CDC Document Page";
         CurrPage: Record "CDC Document Page";
         CaptionValue: Record "CDC Document Value";
-        CaptionPageNo: Integer;
+        DocumentValue: Record "CDC Document Value";
+        DocumentValueNew: Record "CDC Document Value";
+        TempDocumentValue: Record "CDC Document Value" temporary;
+        CaptionEndWord: array[100] of Record "CDC Document Word";
+        CaptionStartWord: array[100] of Record "CDC Document Word";
         CaptionFound: Boolean;
         PageStop: Boolean;
-        FromTopPos: Integer;
-        FromTopPage: Integer;
-        ToBottomPos: Integer;
-        ToBottomPage: Integer;
-        NewBottom: Integer;
-        LineNo: Integer;
-        LineHeight: Integer;
-        Top: Integer;
         Bottom: Integer;
-        Right: Integer;
+        CaptionPageNo: Integer;
         FieldLeft: Integer;
         FieldWidth: Integer;
+        FromTopPage: Integer;
+        FromTopPos: Integer;
         LastFoundLineNo: Integer;
+        LineHeight: Integer;
+        LineNo: Integer;
+        NewBottom: Integer;
+        Right: Integer;
+        ToBottomPage: Integer;
+        ToBottomPos: Integer;
+        Top: Integer;
     begin
         // We cannot proceed if there is no line field in the template defined as required=true
         if TempMandatoryField.Count = 0 then
@@ -512,10 +512,10 @@ codeunit 61001 "ALR Advanced Line Capture"
         Template: Record "CDC Template";
         TemplateField: Record "CDC Template Field";
         RecIDMgt: Codeunit "CDC Record ID Mgt.";
+        SourceRecordId: RecordId;
         RecRef: RecordRef;
         SourceRecFieldRef: FieldRef;
-        SourceRecordId: RecordId;
-
+        Word: Text[1024];
     begin
         TemplateField.SetRange("Template No.", Document."Template No.");
 
@@ -543,18 +543,21 @@ codeunit 61001 "ALR Advanced Line Capture"
         TemplateField.FindSet();
         repeat
             SourceRecFieldRef := RecRef.Field(TemplateField."Get value from source field");
-            if Format(SourceRecFieldRef.Value) <> '' then
-                CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(SourceRecFieldRef.Value), 1, 1024), false, false)
+            Word := CopyStr(Format(SourceRecFieldRef.Value), 1, MaxStrLen(Word));
+            ApplyAdvancedStringFunctions(TemplateField, Word);
+            if Word <> '' then
+                CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, Word, false, false)
         until TemplateField.Next() = 0;
     end;
 
     //
     internal procedure GetLookupFieldValue(var Document: Record "CDC Document"; LineNo: Integer)
     var
-        TemplateField: Record "CDC Template Field";
         TableFilterField: Record "CDC Table Filter Field";
+        TemplateField: Record "CDC Template Field";
         RecRef: RecordRef;
         FldRef: FieldRef;
+        Word: Text[1024];
     begin
         TemplateField.SetRange("Template No.", Document."Template No.");
         if LineNo = 0 then
@@ -576,9 +579,10 @@ codeunit 61001 "ALR Advanced Line Capture"
                 FldRef := RecRef.Field(TableFilterField."Field No.");
                 if SetLookupFieldFilter(RecRef, TemplateField, Document, LineNo) then begin
                     FldRef := RecRef.Field(TemplateField."Source Field No.");
-
-                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, CopyStr(Format(FldRef.Value), 1, 1024), false, false);
-                end
+                    Word := CopyStr(FldRef.Value, 1, MaxStrLen(Word));
+                    ApplyAdvancedStringFunctions(TemplateField, Word);
+                    CaptureMgt.UpdateFieldValue(Document."No.", 1, LineNo, TemplateField, Word, false, false);
+                end;
             until TemplateField.Next() = 0;
     end;
 
@@ -611,8 +615,8 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure GetRangeToNextLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var SearchFromPage: Integer; var SearchFromPos: Integer; var SearchToPage: Integer; var SearchToPos: Integer)
     var
-        DocumentValue: Record "CDC Document Value";
         CurrPage: Record "CDC Document Page";
+        DocumentValue: Record "CDC Document Value";
         StopPos: array[100] of Integer;
     begin
         // This function calculates the range until the next position/line
@@ -680,14 +684,14 @@ codeunit 61001 "ALR Advanced Line Capture"
     local procedure GetRangeToPrevLine(Document: Record "CDC Document"; var TempDocLine: Record "CDC Temp. Document Line"; var RangeTopPage: Integer; var RangeTopPos: Integer; var RangeBottomPage: Integer; var RangeBottomPos: Integer)
     var
         DocumentValue: Record "CDC Document Value";
-        CurrLineTopPage: Integer;
-        CurrLineTopPos: Integer;
         CurrLineBottomPage: Integer;
         CurrLineBottomPos: Integer;
-        PrevLineTopPage: Integer;
-        PrevLineTopPos: Integer;
+        CurrLineTopPage: Integer;
+        CurrLineTopPos: Integer;
         PrevLineBottomPage: Integer;
         PrevLineBottomPos: Integer;
+        PrevLineTopPage: Integer;
+        PrevLineTopPos: Integer;
     begin
         // This function calculates the range until the previous position/line
         Clear(PrevLineTopPage);
@@ -864,8 +868,8 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure IsFieldValid(var CaptionField: Record "CDC Template Field"; Document: Record "CDC Document"; LineNo: Integer): Boolean
     var
-        "Field": Record "CDC Template Field";
         Value: Record "CDC Document Value";
+        "Field": Record "CDC Template Field";
     begin
         case CaptionField."Data Type" of
             Field."Data Type"::Number:
@@ -915,8 +919,8 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure GetStopLineRecognitionPositions(var StopPos: array[100] of Integer; CurrPageNo: Integer; Document: Record "CDC Document")
     var
-        "Field": Record "CDC Template Field";
         Value: Record "CDC Document Value";
+        "Field": Record "CDC Template Field";
     begin
         Field.Reset();
         Field.SetCurrentKey("Template No.", Type, "Sort Order");
@@ -1033,8 +1037,8 @@ codeunit 61001 "ALR Advanced Line Capture"
 
     local procedure IsValidText(var "Field": Record "CDC Template Field"; Text: Text[250]; DocumentNo: Code[20]): Boolean
     var
-        FieldRule: Record "CDC Template Field Rule";
         TempValue: Record "CDC Document Value" temporary;
+        FieldRule: Record "CDC Template Field Rule";
         RegEx: Codeunit "CDC RegEx Management";
         IsValid: Boolean;
     begin
