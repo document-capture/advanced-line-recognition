@@ -538,10 +538,9 @@ codeunit 61001 "ALR Advanced Line Capture"
     //
     internal procedure GetLinkedTableFieldValue(var CDCDocument: Record "CDC Document"; LineNo: Integer)
     var
-        CDCTableFilterField: Record "CDC Table Filter Field";
         CDCTemplateField: Record "CDC Template Field";
-        SourceRecordRef: RecordRef;
-        SourceFieldRef: FieldRef;
+        LinkedRecordRef: RecordRef;
+        LinkedFieldRef: FieldRef;
         Word: Text[1024];
     begin
         CDCTemplateField.SetRange("Template No.", CDCDocument."Template No.");
@@ -556,15 +555,10 @@ codeunit 61001 "ALR Advanced Line Capture"
 
         if CDCTemplateField.FindSet() then
             repeat
-                CDCTableFilterField.SETRANGE("Table Filter GUID", CDCTemplateField."Linked Table Filter GUID");
-                if CDCTableFilterField.IsEmpty then
-                    exit;
-
-                SourceRecordRef.Open(CDCTemplateField."Linked Table No.");
-                SourceFieldRef := SourceRecordRef.Field(CDCTableFilterField."Field No.");
-                if SetLinkedFieldFilter(SourceRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
-                    SourceFieldRef := SourceRecordRef.Field(CDCTemplateField."Linked table field number");
-                    Word := CopyStr(Format(SourceFieldRef.Value), 1, MaxStrLen(Word));
+                LinkedRecordRef.Open(CDCTemplateField."Linked Table No.");
+                if SetLinkedFieldFilter(LinkedRecordRef, CDCTemplateField, CDCDocument, LineNo) then begin
+                    LinkedFieldRef := LinkedRecordRef.Field(CDCTemplateField."Linked table field number");
+                    Word := CopyStr(Format(LinkedFieldRef.Value), 1, MaxStrLen(Word));
                     ApplyAdvancedStringFunctions(CDCTemplateField, Word);
                     CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false);
                 end;

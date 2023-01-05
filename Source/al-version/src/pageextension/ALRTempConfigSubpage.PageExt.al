@@ -31,6 +31,7 @@ pageextension 61006 "ALR Temp. Config Subpage" extends "CDC Continia Config. Sub
                 IF CDCTemplate."Source Record No." <> '' THEN
                     Rec."Record Name" += STRSUBSTNO(SourceRecLbl, CDCTemplate."Source Record No.");
 
+                Rec."Table Name" += StrSubstNo(TemplateDataTypeLbl, CDCTemplate."No.");
                 TemplateName := CDCTemplate.Description + STRSUBSTNO(TemplateDataTypeLbl, CDCTemplate."Data Type");
             end;
     end;

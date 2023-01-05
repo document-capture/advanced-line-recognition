@@ -66,14 +66,14 @@ page 61000 "ALR Table Filter Field List"
 
     trigger OnAfterGetRecord()
     var
-        TableFilterField: Record "CDC Table Filter Field";
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
+        CDCTableFilterField: Record "CDC Table Filter Field";
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
     begin
-        TableFilterField.SETRANGE("Table Filter GUID", TableGUID);
-        TableFilterField.SETRANGE("Field No.", Rec."No.");
-        IF NOT TableFilterField.FINDFIRST THEN
-            CLEAR(TableFilterField);
-        TableFilterField.GetValues(Value, FilterType);
+        CDCTableFilterField.SETRANGE("Table Filter GUID", TableGUID);
+        CDCTableFilterField.SETRANGE("Field No.", Rec."No.");
+        IF NOT CDCTableFilterField.FINDFIRST THEN
+            CLEAR(CDCTableFilterField);
+        CDCTableFilterField.GetValues(Value, FilterType);
     end;
 
     var
@@ -97,74 +97,74 @@ page 61000 "ALR Table Filter Field List"
 
     internal procedure GetTableFilterID(): Guid
     var
-        TableFilterField: Record "CDC Table Filter Field";
+        CDCTableFilterField: Record "CDC Table Filter Field";
     begin
-        TableFilterField.SETRANGE("Table Filter GUID", TableGUID);
-        IF NOT TableFilterField.ISEMPTY THEN
+        CDCTableFilterField.SETRANGE("Table Filter GUID", TableGUID);
+        IF NOT CDCTableFilterField.ISEMPTY THEN
             EXIT(TableGUID);
     end;
 
     internal procedure SetValue(NewValue: Text[250])
     var
-        TableFilterField: Record "CDC Table Filter Field";
+        CDCTableFilterField: Record "CDC Table Filter Field";
     begin
-        TableFilterField.SETRANGE("Table Filter GUID", TableGUID);
-        TableFilterField.SETRANGE("Field No.", Rec."No.");
+        CDCTableFilterField.SETRANGE("Table Filter GUID", TableGUID);
+        CDCTableFilterField.SETRANGE("Field No.", Rec."No.");
         IF (NewValue = '') AND (FilterType = 0) THEN BEGIN
-            IF TableFilterField.FINDFIRST THEN
-                TableFilterField.DELETE;
+            IF CDCTableFilterField.FINDFIRST THEN
+                CDCTableFilterField.DELETE;
             EXIT;
         END;
 
-        IF NOT TableFilterField.FINDFIRST THEN BEGIN
-            TableFilterField."Table Filter GUID" := TableGUID;
-            TableFilterField."Table No." := Rec.TableNo;
-            TableFilterField."Field No." := Rec."No.";
-            TableFilterField.INSERT;
+        IF NOT CDCTableFilterField.FINDFIRST THEN BEGIN
+            CDCTableFilterField."Table Filter GUID" := TableGUID;
+            CDCTableFilterField."Table No." := Rec.TableNo;
+            CDCTableFilterField."Field No." := Rec."No.";
+            CDCTableFilterField.INSERT;
         END;
 
-        IF TableFilterField_SetValues(TableFilterField, NewValue, FilterType, TemplateNo, TemplFieldType) THEN
-            TableFilterField.MODIFY(TRUE)
+        IF CDCTableFilterField_SetValues(CDCTableFilterField, NewValue, FilterType, TemplateNo, TemplFieldType) THEN
+            CDCTableFilterField.MODIFY(TRUE)
         ELSE
-            TableFilterField.DELETE;
+            CDCTableFilterField.DELETE;
     end;
 
-    internal procedure TableFilterField_SetValues(var TableFilterField: Record "CDC Table Filter Field"; var Value: Text[250]; var FilterType: Option "Fixed Filter","Document Field"; TemplateNo: Code[20]; TempFieldType: Integer): Boolean
+    internal procedure CDCTableFilterField_SetValues(var CDCTableFilterField: Record "CDC Table Filter Field"; var Value: Text[250]; var FilterType: Option "Fixed Filter","Document Field"; TemplateNo: Code[20]; TempFieldType: Integer): Boolean
     var
         "Field": Record "Field";
-        CaptureMgt: Codeunit "CDC Capture Management";
-        RecRef: RecordRef;
+        //CDCCaptureManagement: Codeunit "CDC Capture Management";
+        TableFilterRecordRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        TableFilterField."Value (Text)" := '';
-        TableFilterField."Value (Integer)" := 0;
-        TableFilterField."Value (Date)" := 0D;
-        TableFilterField."Value (Decimal)" := 0;
-        TableFilterField."Value (Boolean)" := FALSE;
-        TableFilterField."Template No." := '';
-        TableFilterField."Template Field Type" := 0;
-        TableFilterField."Template Field Code" := '';
-        TableFilterField."Filter View" := '';
+        CDCTableFilterField."Value (Text)" := '';
+        CDCTableFilterField."Value (Integer)" := 0;
+        CDCTableFilterField."Value (Date)" := 0D;
+        CDCTableFilterField."Value (Decimal)" := 0;
+        CDCTableFilterField."Value (Boolean)" := FALSE;
+        CDCTableFilterField."Template No." := '';
+        CDCTableFilterField."Template Field Type" := 0;
+        CDCTableFilterField."Template Field Code" := '';
+        CDCTableFilterField."Filter View" := '';
 
         IF FilterType = FilterType::"Fixed Filter" THEN BEGIN
-            Field.GET(TableFilterField."Table No.", TableFilterField."Field No.");
+            Field.GET(CDCTableFilterField."Table No.", CDCTableFilterField."Field No.");
             IF NOT (Field.Type IN [Field.Type::Code, Field.Type::Text, Field.Type::Date, Field.Type::Decimal, Field.Type::Boolean, Field.Type::
               Integer, Field.Type::Option])
             THEN
                 ERROR(PrimaryKeyOnlyOneFieldLbl, FORMAT(Field.Type));
 
-            RecRef.OPEN(TableFilterField."Table No.");
-            FieldRef := RecRef.FIELD(TableFilterField."Field No.");
+            TableFilterRecordRef.OPEN(CDCTableFilterField."Table No.");
+            FieldRef := TableFilterRecordRef.FIELD(CDCTableFilterField."Field No.");
             FieldRef.SETFILTER(Value);
-            TableFilterField.VALIDATE("Filter View", RecRef.GETVIEW);
+            CDCTableFilterField.VALIDATE("Filter View", TableFilterRecordRef.GETVIEW);
         END ELSE BEGIN
-            TableFilterField."Template No." := TemplateNo;
-            TableFilterField."Template Field Type" := TempFieldType;
-            TableFilterField."Template Field Code" := Value;
+            CDCTableFilterField."Template No." := TemplateNo;
+            CDCTableFilterField."Template Field Type" := TempFieldType;
+            CDCTableFilterField."Template Field Code" := Value;
         END;
 
-        TableFilterField."Filter Type" := FilterType;
-        TableFilterField.GetValues(Value, FilterType);
+        CDCTableFilterField."Filter Type" := FilterType;
+        CDCTableFilterField.GetValues(Value, FilterType);
 
         EXIT(TRUE);
     end;
@@ -172,16 +172,16 @@ page 61000 "ALR Table Filter Field List"
     internal procedure LookupValue(var NewValue: Text[250]): Boolean
     var
         CDCTempLookupRecordID: Record "CDC Temp. Lookup Record ID";
-        CDCTableFilterField: Record "CDC Table Filter Field";
+        CDCCDCTableFilterField: Record "CDC Table Filter Field";
         CDCTemplateField: Record "CDC Template Field";
-        RecIDMgt: Codeunit "CDC Record ID Mgt.";
-        RecRef: RecordRef;
+        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
+        RecordRef: RecordRef;
         KeyRef: KeyRef;
         FieldRef: FieldRef;
     begin
         IF FilterType = 0 THEN BEGIN
             IF Rec.Type = Rec.Type::Option THEN BEGIN
-                RecIDMgt_LookupOptionString(Rec.TableNo, Rec."No.", NewValue);
+                CDCRecordIDMgt_LookupOptionString(Rec.TableNo, Rec."No.", NewValue);
                 EXIT(TRUE);
             END;
 
@@ -191,19 +191,19 @@ page 61000 "ALR Table Filter Field List"
                 ERROR(FieldLookupNotPossibleLbl);
 
             CDCTempLookupRecordID."Record ID Tree ID" :=
-              RecIDMgt.GetRecIDTreeID2(CDCTempLookupRecordID."Table No.", Rec."No.", TableGUID, NewValue);
+              CDCRecordIDMgt.GetRecIDTreeID2(CDCTempLookupRecordID."Table No.", Rec."No.", TableGUID, NewValue);
 
             CODEUNIT.RUN(CODEUNIT::"CDC Record ID Lookup", CDCTempLookupRecordID);
 
             IF CDCTempLookupRecordID."Lookup Mode" = CDCTempLookupRecordID."Lookup Mode"::OK THEN BEGIN
-                IF RecIDMgt_GetTableNoFromRecID(CDCTempLookupRecordID."Record ID Tree ID") = 0 THEN
+                IF CDCRecordIDMgt_GetTableNoFromRecID(CDCTempLookupRecordID."Record ID Tree ID") = 0 THEN
                     EXIT;
-                RecRef.OPEN(RecIDMgt_GetTableNoFromRecID(CDCTempLookupRecordID."Record ID Tree ID"));
-                KeyRef := RecRef.KEYINDEX(RecRef.CURRENTKEYINDEX);
+                RecordRef.OPEN(CDCRecordIDMgt_GetTableNoFromRecID(CDCTempLookupRecordID."Record ID Tree ID"));
+                KeyRef := RecordRef.KEYINDEX(RecordRef.CURRENTKEYINDEX);
                 IF KeyRef.FIELDCOUNT > 1 THEN
                     ERROR(PrimaryKeyOnlyOneFieldLbl);
                 FieldRef := KeyRef.FIELDINDEX(1);
-                NewValue := RecIDMgt.GetKeyValue(CDCTempLookupRecordID."Record ID Tree ID", FieldRef.NUMBER);
+                NewValue := CDCRecordIDMgt.GetKeyValue(CDCTempLookupRecordID."Record ID Tree ID", FieldRef.NUMBER);
                 EXIT(TRUE);
             END;
         END ELSE BEGIN
@@ -218,44 +218,44 @@ page 61000 "ALR Table Filter Field List"
         END;
     end;
 
-    internal procedure RecIdMgt_LookupOptionString(TableID: Integer; FldNo: Integer; var NewValue: Text[250]): Boolean
+    internal procedure CDCRecordIDMgt_LookupOptionString(TableID: Integer; FldNo: Integer; var NewValue: Text[250]): Boolean
     var
-        CDCLookupValueTemp: Record "CDC Lookup Value Temp" temporary;
-        RecRef: RecordRef;
+        TempCDCLookupValueTemp: Record "CDC Lookup Value Temp" temporary;
+        RecordRef: RecordRef;
         SourceNoFieldRef: FieldRef;
     begin
-        RecRef.OPEN(TableID);
-        SourceNoFieldRef := RecRef.FIELD(FldNo);
-        ParseOptionString(SourceNoFieldRef.OPTIONCAPTION, CDCLookupValueTemp);
+        RecordRef.OPEN(TableID);
+        SourceNoFieldRef := RecordRef.FIELD(FldNo);
+        ParseOptionString(SourceNoFieldRef.OPTIONCAPTION, TempCDCLookupValueTemp);
 
-        CDCLookupValueTemp.SETRANGE(Value, NewValue);
-        CDCLookupValueTemp.SETRANGE(Value);
-        IF CDCLookupValueTemp.FINDFIRST THEN;
-        IF PAGE.RUNMODAL(0, CDCLookupValueTemp) = ACTION::LookupOK THEN BEGIN
-            NewValue := CDCLookupValueTemp.Value;
+        TempCDCLookupValueTemp.SETRANGE(Value, NewValue);
+        TempCDCLookupValueTemp.SETRANGE(Value);
+        IF TempCDCLookupValueTemp.FINDFIRST THEN;
+        IF PAGE.RUNMODAL(0, TempCDCLookupValueTemp) = ACTION::LookupOK THEN BEGIN
+            NewValue := TempCDCLookupValueTemp.Value;
             EXIT(TRUE);
         END;
     end;
 
-    local procedure ParseOptionString(TextOptString: Text[250]; var LookupTableTemp: Record "CDC Lookup Value Temp" temporary)
+    local procedure ParseOptionString(TextOptString: Text[250]; var TempCDCLookupValueTemp: Record "CDC Lookup Value Temp" temporary)
     var
         Pos: Integer;
     begin
         REPEAT
             Pos := STRPOS(TextOptString, ',');
 
-            LookupTableTemp."Entry No." += 1;
+            TempCDCLookupValueTemp."Entry No." += 1;
             IF Pos <> 0 THEN
-                LookupTableTemp.Value := COPYSTR(TextOptString, 1, Pos - 1)
+                TempCDCLookupValueTemp.Value := COPYSTR(TextOptString, 1, Pos - 1)
             ELSE
-                LookupTableTemp.Value := COPYSTR(TextOptString, 1);
-            LookupTableTemp.INSERT;
+                TempCDCLookupValueTemp.Value := COPYSTR(TextOptString, 1);
+            TempCDCLookupValueTemp.INSERT;
 
             TextOptString := COPYSTR(TextOptString, Pos + 1);
         UNTIL Pos = 0;
     end;
 
-    internal procedure RecIDMgt_GetTableNoFromRecID(RecIDTreeID: Integer): Integer
+    internal procedure CDCRecordIDMgt_GetTableNoFromRecID(RecIDTreeID: Integer): Integer
     var
         CDCRecordIDTree: Record "CDC Record ID Tree";
     begin
@@ -265,15 +265,15 @@ page 61000 "ALR Table Filter Field List"
 
     internal procedure GetTableNo(): Integer
     var
-        RecRef: RecordRef;
+        RecordRef: RecordRef;
         KeyRef: KeyRef;
         FieldRef: FieldRef;
     begin
         IF Rec.RelationTableNo <> 0 THEN
             EXIT(Rec.RelationTableNo);
 
-        RecRef.OPEN(Rec.TableNo);
-        KeyRef := RecRef.KEYINDEX(RecRef.CURRENTKEYINDEX);
+        RecordRef.OPEN(Rec.TableNo);
+        KeyRef := RecordRef.KEYINDEX(RecordRef.CURRENTKEYINDEX);
         FieldRef := KeyRef.FIELDINDEX(1);
         IF Rec."No." = FieldRef.NUMBER THEN
             EXIT(Rec.TableNo)

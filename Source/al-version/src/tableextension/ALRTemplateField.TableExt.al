@@ -174,19 +174,20 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
                 DCLogMgt: Codeunit "CDC Log Mgt.";
                 RecIDMgt: Codeunit "CDC Record ID Mgt.";
             begin
-                IF "Source Table No." <> 0 THEN
-                    TESTFIELD("Data Type", "Data Type"::Lookup);
+                DCLogMgt.IsLogActive2("Linked Table No.", true);
 
-                DCLogMgt.IsLogActive2("Source Table No.", TRUE);
-
-                IF "Source Table No." = xRec."Source Table No." THEN
-                    EXIT;
+                if "Linked Table No." = xRec."Linked Table No." then
+                    exit;
 
                 RecIDMgt_CheckDocValue(Type = Type::Line, Code, "Template No.", CopyStr(FIELDCAPTION("Linked Table No."), 1, 30));
-                RecIDMgt.DeleteTableFilter("Source Table Filter GUID");
-                CLEAR("Source Table Filter GUID");
-                "Fixed Value (Rec. ID Tree ID)" := 0;
-                "Source Field No." := RecIDMgt_GetFirstKeyField("Source Table No.");
+
+                //if "Linked Table No." = 0 then begin
+                RecIDMgt.DeleteTableFilter("Linked Table Filter GUID");
+                Clear("Linked table field number");
+                CLEAR("Linked Table Filter GUID");
+                //end;
+
+
             end;
         }
         field(61005; "Linked Table Filter GUID"; Guid)
@@ -258,7 +259,6 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
             DataClassification = CustomerContent;
             BlankZero = true;
         }
-
     }
 
     internal procedure GetSourceFieldCaption() FieldCap: Text[250]

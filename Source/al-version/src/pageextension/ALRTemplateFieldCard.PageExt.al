@@ -52,8 +52,13 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                     var
                         AllObjWithCaption: Record AllObjWithCaption;
                         RecIDMgt: Codeunit "CDC Record ID Mgt.";
+                        LookupText: Text[250];
                     begin
-                        EXIT(RecIDMgt.LookupObject(AllObjWithCaption."Object Type"::Table, Text));
+                        LookupText := CopyStr(Text, 1, MaxStrLen(LookupText));
+                        if RecIDMgt.LookupObject(AllObjWithCaption."Object Type"::Table, LookupText) then begin
+                            Text := LookupText;
+                            exit(true);
+                        end;
                     end;
 
                     trigger OnValidate()
