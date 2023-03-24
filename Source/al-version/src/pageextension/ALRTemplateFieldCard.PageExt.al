@@ -22,6 +22,9 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                         CDCTemplate: Record "CDC Template";
                         LookupFieldText: Text[250];
                     begin
+                        Rec.TestField("Linked Table No.", 0);
+                        Rec.TestField("Linked table field number", 0);
+
                         CDCTemplate.GET(Rec."Template No.");
                         DocCat.GET(CDCTemplate."Category Code");
                         LookupFieldText := CopyStr(Text, 1, MaxStrLen(LookupFieldText));
