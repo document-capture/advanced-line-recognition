@@ -54,6 +54,7 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                         RecIDMgt: Codeunit "CDC Record ID Mgt.";
                         LookupText: Text[250];
                     begin
+                        Rec.TestField("Get value from source field", 0);
                         LookupText := CopyStr(Text, 1, MaxStrLen(LookupText));
                         if RecIDMgt.LookupObject(AllObjWithCaption."Object Type"::Table, LookupText) then begin
                             Text := LookupText;
@@ -91,6 +92,8 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
                     var
                         LinkedFieldText: Text[250];
                     begin
+                        Rec.TestField("Get value from source field", 0);
+                        Rec.TestField("Linked Table No.");
                         LinkedFieldText := CopyStr(Text, 1, MaxStrLen(LinkedFieldText));
                         if CDCRecordIDMgt.LookupField(LinkedFieldText, Rec."Linked Table No.", false) then begin
                             Text := LinkedFieldText;

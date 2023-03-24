@@ -6,13 +6,15 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
         {
             Caption = 'Replacement field';
             DataClassification = CustomerContent;
-            TableRelation = "CDC Template Field".Code WHERE("Template No." = FIELD("Template No."),
-                                                          Type = Field("Replacement Field Type"));
+            TableRelation = if ("Empty value handling" = filter(CopyHeaderFieldValue))
+                 "CDC Template Field".Code WHERE("Template No." = field("Template No."), Type = const(Header))
+            else
+            if ("Empty value handling" = filter(CopyLineFieldValue))
+                 "CDC Template Field".Code WHERE("Template No." = field("Template No."), Type = const(Line));
             trigger OnValidate()
             begin
-                if Rec."Replacement Field" <> '' then
-                    Rec.Validate("Copy Value from Previous Value", false);
-
+                // if Rec."Replacement Field" <> '' then
+                //     Rec.Validate("Copy Value from Previous Value", false);
             end;
         }
         field(50002; "Linked Field"; Code[20])
@@ -53,6 +55,8 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
             DataClassification = CustomerContent;
             OptionCaption = 'Header Field,Line Field,Fixed Value';
             OptionMembers = Header,Line,FixedValue;
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Replaced by field Empty value handling';
             trigger OnValidate()
             begin
                 if xRec."Replacement Field Type" <> Rec."Replacement Field Type" then begin
@@ -128,6 +132,13 @@ tableextension 61000 "ALR Template Field" extends "CDC Template Field"
             Caption = 'Empty value handling';
             DataClassification = CustomerContent;
             InitValue = "Ignore";
+            trigger OnValidate()
+            begin
+                if Rec."Empty value handling" <> xRec."Empty value handling" then begin
+                    Clear("Replacement Field");
+                    Clear("Fixed Replacement Value");
+                end;
+            end;
         }
         field(61001; "Fixed Replacement Value"; Text[200])
         {
