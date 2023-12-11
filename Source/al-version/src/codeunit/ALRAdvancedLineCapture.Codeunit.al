@@ -562,6 +562,7 @@ codeunit 61001 "ALR Advanced Line Capture"
                     ApplyAdvancedStringFunctions(CDCTemplateField, Word);
                     CDCCaptureManagement.UpdateFieldValue(CDCDocument."No.", 1, LineNo, CDCTemplateField, Word, false, false);
                 end;
+                LinkedRecordRef.Close();
             until CDCTemplateField.Next() = 0;
     end;
 
