@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "Continia",
+        "tradnl",
+        "usefull"
+    ],
+    "al.codeAnalyzers": [
+    //"${AppSourceCop}",
+    "${CodeCop}",
+    "${PerTenantExtensionCop}",
+    "${UICop}"
+    ],
+    "alOutline.enableCodeCopFixes": true
+}
