@@ -253,26 +253,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action AdvancedLineRecognition - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 2720138396 - Action 2973788643 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
-          <source>Disables the automatic field detection.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action DisableFieldRecognition - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 2720138396 - Action 2973788643 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
-          <source>Disable field detection</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action DisableFieldRecognition - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 2720138396 - Action 2359910080 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
-          <source>Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action EnableFieldRecognition - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 2720138396 - Action 2359910080 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
-          <source>Enable field detection</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ALR Document Lines ListPart - Action EnableFieldRecognition - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 2720138396 - Action 1687192353 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887003037">
           <source>The advanced line recognition settings are reset for the desired field.</source>
           <note from="Developer" annotates="general" priority="2"></note>

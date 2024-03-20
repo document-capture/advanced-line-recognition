@@ -70,46 +70,10 @@ pageextension 61001 "ALR Document Lines ListPart" extends "CDC Document Lines Li
                         ALRAdvRecognitionMgt.ShowVersionNo();
                     end;
                 }
-                action(DisableFieldRecognition)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Disable field detection';
-                    Image = SelectField;
-                    ToolTip = 'Disables the automatic field detection.';
-                    Visible = ShowFieldRecognition;
-                    trigger OnAction()
-                    begin
-
-                        ALRSingleInstanceMgt.FlipAutoFieldRecognition();
-                        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
-                    end;
-                }
-                action(EnableFieldRecognition)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Enable field detection';
-                    Image = SelectField;
-                    ToolTip = 'Enable the automatic field detection. The system will use the last captured field during setting up advanced line recognition.';
-                    Visible = not ShowFieldRecognition;
-                    trigger OnAction()
-                    begin
-                        ALRSingleInstanceMgt.FlipAutoFieldRecognition();
-                        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
-                    end;
-                }
             }
         }
     }
 
-    trigger OnOpenPage()
-    begin
-        ShowFieldRecognition := ALRSingleInstanceMgt.GetAutoFieldRecognition();
-    end;
-
-
     var
-        ALRSingleInstanceMgt: Codeunit "ALR Single Instance Mgt.";
         ALRAdvRecognitionMgt: Codeunit "ALR Adv. Recognition Mgt.";
-        [InDataSet]
-        ShowFieldRecognition: boolean;
 }

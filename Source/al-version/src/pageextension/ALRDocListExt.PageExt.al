@@ -81,9 +81,7 @@ pageextension 61003 "ALR DocList Ext" extends "CDC Document List With Image"
 
     var
         ALRTemplateHelper: Codeunit "ALR Template Helper";
-        [InDataSet]
         IsDocument: Boolean;
-        [InDataSet]
         IsXMLTemplate: Boolean;
 
     trigger OnAfterGetCurrRecord()

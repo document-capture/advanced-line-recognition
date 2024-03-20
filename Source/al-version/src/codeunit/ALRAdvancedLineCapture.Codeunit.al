@@ -634,7 +634,7 @@ codeunit 61001 "ALR Advanced Line Capture"
             CDCDocumentValue.SetRange(CDCDocumentValue."Page No.", SearchToPage);
             CDCDocumentValue.SetFilter(CDCDocumentValue.Top, '>%1', SearchToPos);
             CDCDocumentValue.SetRange(CDCDocumentValue."Line No.", 0);
-            if CDCDocumentValue.FindSet(false, false) then begin
+            if CDCDocumentValue.FindSet(false) then begin
                 if CDCDocumentValue."Page No." > SearchToPage then
                     SearchToPage := CDCDocumentValue."Page No.";
 
@@ -837,7 +837,7 @@ codeunit 61001 "ALR Advanced Line Capture"
         CDCDocumentValue.Top := CDCDocumentValue.Top + Round((CDCDocumentValue.Bottom - CDCDocumentValue.Top) / 2, 1);
         CDCDocumentValue.Left := CDCDocumentValue.Left + 3;
 
-        if CDCDocumentValue2.FindSet(false, false) then
+        if CDCDocumentValue2.FindSet(false) then
             repeat
                 if (not ((CDCDocumentValue2.Code = CDCDocumentValue.Code) and (CDCDocumentValue2."Line No." = CDCDocumentValue."Line No."))) then
                     if CDCCaptureEngine.IntersectsWith(CDCDocumentValue, CDCDocumentValue2) then

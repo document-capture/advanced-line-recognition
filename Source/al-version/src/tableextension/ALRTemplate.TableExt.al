@@ -13,11 +13,17 @@ tableextension 61001 "ALR Template" extends "CDC Template"
         {
             Caption = 'Automatic PO search';
             DataClassification = CustomerContent;
+
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Will be removed from ALR with next major release. Use dedicated PTE app going forward: https://github.com/document-capture/Automatic-PO-number-identification';
         }
         field(61002; "Auto PO search filter"; Text[200])
         {
             Caption = 'Automatic PO search filter';
             DataClassification = CustomerContent;
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Will be removed from ALR with next major release. Use dedicated PTE app going forward: https://github.com/document-capture/Automatic-PO-number-identification';
+
             trigger OnLookup()
             var
                 PurchasesPayablesSetup: Record "Purchases & Payables Setup";

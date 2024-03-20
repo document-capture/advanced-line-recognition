@@ -67,11 +67,10 @@ page 61000 "ALR Table Filter Field List"
     trigger OnAfterGetRecord()
     var
         CDCTableFilterField: Record "CDC Table Filter Field";
-        CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
     begin
         CDCTableFilterField.SETRANGE("Table Filter GUID", TableGUID);
         CDCTableFilterField.SETRANGE("Field No.", Rec."No.");
-        IF NOT CDCTableFilterField.FINDFIRST THEN
+        IF NOT CDCTableFilterField.FindFirst() THEN
             CLEAR(CDCTableFilterField);
         CDCTableFilterField.GetValues(Value, FilterType);
     end;
@@ -84,7 +83,6 @@ page 61000 "ALR Table Filter Field List"
         FilterType: Option FixedFilter,DocumentField;
         TemplateNo: Code[20];
         TemplFieldType: Option Header,Line;
-        [InDataSet]
         ShowType: Boolean;
 
     internal procedure SetParam(NewTemplateNo: Code[20]; NewTemplFieldType: Option Header,Line; NewGUID: Guid; NewShowType: Boolean)
@@ -111,22 +109,32 @@ page 61000 "ALR Table Filter Field List"
         CDCTableFilterField.SETRANGE("Table Filter GUID", TableGUID);
         CDCTableFilterField.SETRANGE("Field No.", Rec."No.");
         IF (NewValue = '') AND (FilterType = 0) THEN BEGIN
+#pragma warning disable AA0008
             IF CDCTableFilterField.FINDFIRST THEN
+#pragma warning restore AA0008
+#pragma warning disable AA0008
                 CDCTableFilterField.DELETE;
+#pragma warning restore AA0008
             EXIT;
         END;
 
+#pragma warning disable AA0008
         IF NOT CDCTableFilterField.FINDFIRST THEN BEGIN
+#pragma warning restore AA0008
             CDCTableFilterField."Table Filter GUID" := TableGUID;
             CDCTableFilterField."Table No." := Rec.TableNo;
             CDCTableFilterField."Field No." := Rec."No.";
+#pragma warning disable AA0008
             CDCTableFilterField.INSERT;
+#pragma warning restore AA0008
         END;
 
         IF CDCTableFilterField_SetValues(CDCTableFilterField, NewValue, FilterType, TemplateNo, TemplFieldType) THEN
             CDCTableFilterField.MODIFY(TRUE)
         ELSE
+#pragma warning disable AA0008
             CDCTableFilterField.DELETE;
+#pragma warning restore AA0008
     end;
 
     internal procedure CDCTableFilterField_SetValues(var CDCTableFilterField: Record "CDC Table Filter Field"; var Value: Text[250]; var FilterType: Option "Fixed Filter","Document Field"; TemplateNo: Code[20]; TempFieldType: Integer): Boolean
@@ -156,7 +164,9 @@ page 61000 "ALR Table Filter Field List"
             TableFilterRecordRef.OPEN(CDCTableFilterField."Table No.");
             FieldRef := TableFilterRecordRef.FIELD(CDCTableFilterField."Field No.");
             FieldRef.SETFILTER(Value);
+#pragma warning disable AA0008
             CDCTableFilterField.VALIDATE("Filter View", TableFilterRecordRef.GETVIEW);
+#pragma warning restore AA0008
         END ELSE BEGIN
             CDCTableFilterField."Template No." := TemplateNo;
             CDCTableFilterField."Template Field Type" := TempFieldType;
@@ -172,12 +182,11 @@ page 61000 "ALR Table Filter Field List"
     internal procedure LookupValue(var NewValue: Text[250]): Boolean
     var
         CDCTempLookupRecordID: Record "CDC Temp. Lookup Record ID";
-        CDCCDCTableFilterField: Record "CDC Table Filter Field";
         CDCTemplateField: Record "CDC Template Field";
         CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
         RecordRef: RecordRef;
-        KeyRef: KeyRef;
         FieldRef: FieldRef;
+        KeyRef: KeyRef;
     begin
         IF FilterType = 0 THEN BEGIN
             IF Rec.Type = Rec.Type::Option THEN BEGIN
@@ -185,7 +194,7 @@ page 61000 "ALR Table Filter Field List"
                 EXIT(TRUE);
             END;
 
-            CDCTempLookupRecordID."Table No." := GetTableNo;
+            CDCTempLookupRecordID."Table No." := GetTableNo();
 
             IF CDCTempLookupRecordID."Table No." = 0 THEN
                 ERROR(FieldLookupNotPossibleLbl);
@@ -230,7 +239,7 @@ page 61000 "ALR Table Filter Field List"
 
         TempCDCLookupValueTemp.SETRANGE(Value, NewValue);
         TempCDCLookupValueTemp.SETRANGE(Value);
-        IF TempCDCLookupValueTemp.FINDFIRST THEN;
+        IF TempCDCLookupValueTemp.FindFirst() THEN;
         IF PAGE.RUNMODAL(0, TempCDCLookupValueTemp) = ACTION::LookupOK THEN BEGIN
             NewValue := TempCDCLookupValueTemp.Value;
             EXIT(TRUE);
@@ -249,7 +258,7 @@ page 61000 "ALR Table Filter Field List"
                 TempCDCLookupValueTemp.Value := COPYSTR(TextOptString, 1, Pos - 1)
             ELSE
                 TempCDCLookupValueTemp.Value := COPYSTR(TextOptString, 1);
-            TempCDCLookupValueTemp.INSERT;
+            TempCDCLookupValueTemp.Insert();
 
             TextOptString := COPYSTR(TextOptString, Pos + 1);
         UNTIL Pos = 0;
@@ -266,8 +275,8 @@ page 61000 "ALR Table Filter Field List"
     internal procedure GetTableNo(): Integer
     var
         RecordRef: RecordRef;
-        KeyRef: KeyRef;
         FieldRef: FieldRef;
+        KeyRef: KeyRef;
     begin
         IF Rec.RelationTableNo <> 0 THEN
             EXIT(Rec.RelationTableNo);

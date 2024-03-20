@@ -15,3 +15,7 @@ Objects/1.16/BC20-DC9.02/crowdin.yml
 Source/al-version/.alpackages/*.app
 Source/al-version/.vscode/*.json
 Source/al-version/.vscode/.alcache/*.*
+Source/archive/*/.alpackages/*.app
+Source/archive/*/.vscode/launch.json
+Source/archive/*/.vscode/rad.json
+Source/archive/*/.vscode/.alcache/*

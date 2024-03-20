@@ -1,7 +1,6 @@
 codeunit 61000 "ALR Adv. Recognition Mgt."
 {
     var
-        ALRSingleInstanceMgt: Codeunit "ALR Single Instance Mgt.";
         CDCCaptureEngine: Codeunit "CDC Capture Engine";
         FieldSetupCanceledLbl: Label 'Field setup aborted because no field was selected!';
         FieldIsLinkedToSourceFieldLbl: Label 'The field "%1" is now linked to field "%2"!', Comment = '%1 = field description of selected field | %2 = field description of linked field';
@@ -45,10 +44,6 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         AnchorCDCDocumentValue.SetRange("Template No.", CDCTempDocumentLine."Template No.");
         if not AnchorCDCDocumentValue.FindFirst() then
             Error(MissingSourceFieldValueLbl, AnchorCDCTemplateField.Code, CDCTempDocumentLine."Line No.");
-
-        // Select the field that should be linked with anchor field
-        if (ALRSingleInstanceMgt.GetAutoFieldRecognition() AND (ALRSingleInstanceMgt.GetLastCapturedField() <> '')) then
-            if not LinkedCDCTemplateField.Get(CDCTempDocumentLine."Template No.", LinkedCDCTemplateField.Type::Line, ALRSingleInstanceMgt.GetLastCapturedField()) then;
 
         if LinkedCDCTemplateField.Code = '' then begin
             Message(SelectTheOffsetFieldLbl, AnchorCDCTemplateField."Field Name");
@@ -98,9 +93,6 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         GetLineIdentifierValue(CDCTempDocumentLine, LineIdentFieldCDCDocumentValue);
 
         // Select field
-        if (ALRSingleInstanceMgt.GetAutoFieldRecognition() AND (ALRSingleInstanceMgt.GetLastCapturedField() <> '')) then
-            if not SelectedCDCTemplateField.Get(CDCTempDocumentLine."Template No.", SelectedCDCTemplateField.Type::Line, ALRSingleInstanceMgt.GetLastCapturedField()) then;
-
         if SelectedCDCTemplateField.Code = '' then begin
             Message(SelectFieldForColumnHeaderSearchLbl);
             if not SelectField(SelectedCDCTemplateField, CDCTempDocumentLine."Template No.", '', false) then
@@ -145,9 +137,6 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         GetLineIdentifierValue(CDCTempDocumentLine, LineIdentFieldCDCDocumentValue);
 
         // Select field
-        if (ALRSingleInstanceMgt.GetAutoFieldRecognition() AND (ALRSingleInstanceMgt.GetLastCapturedField() <> '')) then
-            if not SelectedCDCTemplateField.Get(CDCTempDocumentLine."Template No.", SelectedCDCTemplateField.Type::Line, ALRSingleInstanceMgt.GetLastCapturedField()) then;
-
         if SelectedCDCTemplateField.Code = '' then begin
             Message(SelectFieldForCaptionSearchLbl);
             if not SelectField(SelectedCDCTemplateField, CDCTempDocumentLine."Template No.", '', false) then
@@ -218,7 +207,7 @@ codeunit 61000 "ALR Adv. Recognition Mgt."
         Clear(CDCTemplateField."Field value search direction");
         Clear(CDCTemplateField.Sorting);
         Clear(CDCTemplateField."Replacement Field");
-        Clear(CDCTemplateField."Replacement Field Type");
+        //Clear(CDCTemplateField."Replacement Field Type");
         Clear(CDCTemplateField."Copy Value from Previous Value");
         Clear(CDCTemplateField."ALR Typical Value Field Width");
         Clear(CDCTemplateField."Typical Field Height");

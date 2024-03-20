@@ -60,7 +60,7 @@ codeunit 61004 "ALR Upgrade Management"
         ModifyField: Boolean;
     begin
         CDCTemplateField.ModifyAll("Empty value handling", CDCTemplateField."Empty value handling"::Ignore);
-        if CDCTemplateField.FindSet(true, false) then
+        if CDCTemplateField.FindSet(true) then
             repeat
                 if CDCTemplateField."Replacement Field" <> '' then begin
                     ModifyField := true;

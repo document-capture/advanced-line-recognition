@@ -78,7 +78,6 @@ pageextension 61004 "ALR Document Card" extends "CDC Document Card"
     }
     var
         ALRTemplateHelper: Codeunit "ALR Template Helper";
-        [InDataSet]
         IsXMLTemplate: Boolean;
 
     trigger OnAfterGetCurrRecord()

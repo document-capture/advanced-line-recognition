@@ -441,23 +441,14 @@ pageextension 61000 "ALR Template Field Card" extends "CDC Template Field Card"
 
     var
         CDCRecordIDMgt: Codeunit "CDC Record ID Mgt.";
-        [InDataSet]
         CopyStrEnabled: Boolean;
-        [InDataset]
         DelChrEnabled: Boolean;
-        [InDataSet]
         IsFieldReplacement: Boolean;
-        [InDataset]
         IsFixedReplacementValue: Boolean;
-        [InDataSet]
         IsLineField: Boolean;
-        [InDataSet]
         IsLinkedFieldSearch: Boolean;
-        [InDataSet]
         IsNormalField: Boolean;
-        [InDataSet]
         IsTextField: Boolean;
-        [InDataSet]
         ShowPositionDependendFields: Boolean;
         CopySourceField: Text[250];
         LinkedTable: Text[250];
